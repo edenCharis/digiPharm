@@ -1,0 +1,81 @@
+[25-Sep-2025 08:54:43 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:54:43 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(17): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:57:49 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:57:49 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(17): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:58:16 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:58:16 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(17): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:58:32 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 08:58:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(17): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:04:23 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:04:23 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:05:15 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:05:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:05:19 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:05:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:06:03 UTC] PHP Warning:  require_once(env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:06:03 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(176): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:07:03 UTC] PHP Warning:  require_once(/home/u680380822/domains/sgp-galy.com/public_html/config/env.php): Failed to open stream: No such file or directory in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:07:03 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/u680380822/domains/sgp-galy.com/public_html/config/env.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:19
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(177): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 19
+[25-Sep-2025 09:09:35 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "DB_NAME" in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:24
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(177): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 24
+[25-Sep-2025 09:09:58 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "DB_USER" in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:25
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(177): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 25
+[25-Sep-2025 09:10:15 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "DB_PASS" in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php:26
+Stack trace:
+#0 /home/u680380822/domains/sgp-galy.com/public_html/config/database.php(177): Database->__construct()
+#1 /home/u680380822/domains/sgp-galy.com/public_html/config/auth.php(24): include('/home/u68038082...')
+#2 {main}
+  thrown in /home/u680380822/domains/sgp-galy.com/public_html/config/database.php on line 26
