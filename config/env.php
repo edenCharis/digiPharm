@@ -26,9 +26,9 @@ if ($_SERVER['HTTP_HOST'] === 'localhost') {
 define('DB_CONNECTION', 'mysql');
 define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
-define('DB_NAME', 'u680380822_digi');
-define('DB_USER', 'u680380822_digi');
-define('DB_PASS', 'S5sZsinz?');
+define('DB_NAME', 'u680380822_digiPharrm');
+define('DB_USER', 'u680380822_digiPharm');
+define('DB_PASS', '*x6yz6LW');
 define('DB_CHARSET', 'utf8mb4');
 
 // App Configuration
