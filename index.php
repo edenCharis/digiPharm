@@ -571,7 +571,7 @@ ini_set('display_errors', 1);
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Erreur de réseau');
+                    throw new Error('Erreur de réseau: ' + response.status);
                 }
                 
                 return await response.json();

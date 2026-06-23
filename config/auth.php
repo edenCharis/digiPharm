@@ -3,22 +3,14 @@
  * OTP Authentication System
  * File: config/auth.php
  */
- 
 
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0); // <-- cache les warnings/notices
 header('Content-Type: application/json'); // <- important
 
-
-
-
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-
-
 
 session_start();
 include 'database.php';
@@ -102,20 +94,17 @@ class OTPAuth {
 
         if ($this->storeOTP($user['id'], $otp)) {
             $this->sendOTPEmail($user['email'], $user['username'], $otp);
-
             $_SESSION['temp_user'] = [
                 'id' => $user['id'],
                 'username' => $user['username'],
                 'email' => $user['email'],
                 'role' => $user['role']
             ];
-
             return [
                 'success' => true,
                 'message' => 'Code OTP envoyé à votre email'
             ];
         }
-
         return ['success' => false, 'message' => 'Erreur lors de l\'envoi du code OTP'];
     }
 
@@ -123,9 +112,7 @@ class OTPAuth {
         if (!isset($_SESSION['temp_user'])) {
             return ['success' => false, 'message' => 'Session expirée. Reconnectez-vous.'];
         }
-
         $userId = $_SESSION['temp_user']['id'];
-
         $query = "SELECT otp_code, expires_at FROM user_otp 
                   WHERE user_id = :user_id AND expires_at > NOW() 
                   ORDER BY created_at DESC LIMIT 1";
