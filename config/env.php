@@ -10,12 +10,25 @@
 // $dotenv->load();
 
 // Database Configuration
+
+
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    define('DB_CONNECTION', 'mysql');
+    define('DB_HOST', 'localhost');
+    define('DB_PORT', 3306);
+    define('DB_NAME', 'pharmasys');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_CHARSET', 'utf8mb4');
+} else {
+
+
 define('DB_CONNECTION', 'mysql');
 define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
-define('DB_NAME', 'u680380822_sgpgaly');
-define('DB_USER', 'u680380822_sgpgaly');
-define('DB_PASS', '1kNLlP*6dO?');
+define('DB_NAME', 'u680380822_digi');
+define('DB_USER', 'u680380822_digi');
+define('DB_PASS', 'S5sZsinz?');
 define('DB_CHARSET', 'utf8mb4');
 
 // App Configuration
@@ -56,3 +69,4 @@ define('LOGIN_REDIRECT', '../logout.php');
 // Session Settings
 define('SESSION_LIFETIME', 3600);
 define('SESSION_SECURE', false);
+}

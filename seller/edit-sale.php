@@ -1,7 +1,9 @@
 <?php
+
+
+
 session_start();
 if($_SESSION["role"] === "SELLER" && $_SESSION["id"] == session_id()){
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -866,3 +868,6 @@ try {
                     </button>
                 </td>
             `;
+        }
+
+        </script>
