@@ -60,12 +60,12 @@ class OTPAuth {
             $mail->isSMTP();
             $mail->Host = 'smtp.hostinger.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'system@sgp-galy.com';
-            $mail->Password = 'F:6SEc>3';
+            $mail->Username = 'digipharma@digipharma.sgp-galy.com ';
+            $mail->Password = 'xrDPc3Z@B6z';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('system@sgp-galy.com', 'Pharmacie');
+            $mail->setFrom('digipharma@digipharma.sgp-galy.com ', 'Pharmacie');
             $mail->addAddress($email, $username);
 
             $mail->isHTML(true);
