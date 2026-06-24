@@ -1,4 +1,8 @@
 <?php
+
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_errors.log');
+error_reporting(E_ALL);
 if ($_SERVER['HTTP_HOST'] === 'localhost') {
     define('DB_HOST', 'localhost');
     define('DB_NAME', 'pharmasys');
@@ -6,9 +10,9 @@ if ($_SERVER['HTTP_HOST'] === 'localhost') {
     define('DB_PASS', '');
 } else {
     define('DB_HOST', 'localhost');
-    define('DB_NAME', 'u680380822_digiPharrm');
-    define('DB_USER', 'u680380822_digiPharm');
-    define('DB_PASS', '*x6yz6LW');
+    define('DB_NAME', 'u680380822_digiPharm');
+    define('DB_USER', 'u680380822_digiPharrm');
+    define('DB_PASS', 'K4Y:SY>Nt>');
 }
 
 // Commun aux deux environnements
