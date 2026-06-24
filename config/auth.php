@@ -52,8 +52,8 @@ class OTPAuth {
             $mail->isSMTP();
             $mail->Host = 'smtp.hostinger.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'digipharma@digipharma.sgp-galy.com ';
-            $mail->Password = 'xrDPc3Z@B6z';
+            $mail->Username = 'digipharma@digipharma.sgp-galy.com';
+            $mail->Password = 'M$D@MHlqSv5';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
