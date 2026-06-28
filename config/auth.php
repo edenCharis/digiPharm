@@ -50,25 +50,41 @@ class OTPAuth {
 
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.hostinger.com';
+            $mail->Host = SMTP_HOST;
             $mail->SMTPAuth = true;
-            $mail->Username = 'digipharma@digipharma.sgp-galy.com';
-            $mail->Password = 'M$D@MHlqSv5';
+            $mail->Username = SMTP_USER;
+            $mail->Password = SMTP_PASS;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port = SMTP_PORT;
 
-            $mail->setFrom('digipharma@digipharma.sgp-galy.com ', 'Pharmacie');
+            $mail->setFrom(SMTP_USER, 'DigiPharma');
             $mail->addAddress($email, $username);
 
             $mail->isHTML(true);
-            $mail->Subject = 'Code de vérification - Pharmacie';
+            $mail->Subject = 'Code de vérification - DigiPharma';
             $mail->Body = "
-                <h2>Bonjour $username,</h2>
-                <p>Votre code de vérification est: <strong>$otp</strong></p>
-                <p>Ce code expire dans 5 minutes.</p>
-                <p>Si vous n'avez pas demandé ce code, ignorez cet email.</p>
-                <br>
-                <p>Cordialement,<br>L'équipe Pharmacie</p>
+            <div style='font-family:Arial,sans-serif;max-width:500px;margin:auto;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;'>
+                <div style='background:#22C55E;padding:24px;text-align:center;'>
+                    <svg viewBox='0 0 200 200' width='60' height='60' xmlns='http://www.w3.org/2000/svg'>
+                        <path d='M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z' fill='white'/>
+                        <path d='M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z' fill='#22C55E'/>
+                        <rect x='97' y='50' width='6' height='100' fill='white'/>
+                    </svg>
+                    <h1 style='color:white;margin:8px 0 0;font-size:22px;'>DigiPharma</h1>
+                </div>
+                <div style='padding:32px;'>
+                    <h2 style='color:#111827;margin-top:0;'>Bonjour $username,</h2>
+                    <p style='color:#6b7280;'>Votre code de vérification est :</p>
+                    <div style='background:#f0fdf4;border:2px solid #22C55E;border-radius:8px;text-align:center;padding:16px;margin:24px 0;'>
+                        <span style='font-size:36px;font-weight:bold;letter-spacing:8px;color:#22C55E;'>$otp</span>
+                    </div>
+                    <p style='color:#6b7280;'>Ce code expire dans <strong>5 minutes</strong>.</p>
+                    <p style='color:#9ca3af;font-size:13px;'>Si vous n'avez pas demandé ce code, ignorez cet email.</p>
+                </div>
+                <div style='background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;'>
+                    <p style='color:#6b7280;margin:0;font-size:13px;'>Cordialement,<br><strong>L'équipe DigiPharma</strong></p>
+                </div>
+            </div>
             ";
 
             return $mail->send();
