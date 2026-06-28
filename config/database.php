@@ -16,7 +16,7 @@ class Database {
 
     public function __construct() {
         // Include environment configuration
-       require_once __DIR__ . '/env.php';
+       require_once __DIR__ . '/../env.php';
         // Set database connection parameters from env.php
         $this->host = DB_HOST;
         $this->db_name = DB_NAME;
