@@ -221,6 +221,7 @@ function timeAgo($datetime) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo getPageTitle('Administration'); ?></title>
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">
@@ -247,9 +248,6 @@ function timeAgo($datetime) {
         }
         .btn-secondary, .quick-action-btn.secondary {
             background-color: <?php echo AppSettings::getSecondaryColor(); ?>;
-        }
-        .card-header {
-            background: linear-gradient(135deg, <?php echo AppSettings::getPrimaryColor(); ?>, <?php echo AppSettings::getSecondaryColor(); ?>);
         }
     </style>
 </head>
@@ -342,11 +340,11 @@ function timeAgo($datetime) {
                         <!-- Recent Activity -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="activity"></i>
                                     Activité récente - <?php echo htmlspecialchars(pharmacyName()); ?>
                                 </div>
-                                <a href="reports.php" class="text-link text-white">
+                                <a href="reports.php" class="text-link">
                                     Voir les rapports
                                     <i data-lucide="arrow-right"></i>
                                 </a>
@@ -391,7 +389,7 @@ function timeAgo($datetime) {
                         <!-- Quick Actions -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="zap"></i>
                                     Actions rapides
                                 </div>
@@ -421,7 +419,7 @@ function timeAgo($datetime) {
                         <!-- Top Sellers -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="trophy"></i>
                                     Top vendeurs
                                 </div>
@@ -453,7 +451,7 @@ function timeAgo($datetime) {
                         <!-- Critical Alerts -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="alert-triangle"></i>
                                     Alertes critiques (≤<?php echo AppSettings::getLowStockThreshold(); ?>)
                                 </div>
@@ -486,7 +484,7 @@ function timeAgo($datetime) {
                         <!-- Pharmacy Info Card -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <?php echo getAppIcon(); ?>
                                     Informations Pharmacie
                                 </div>

@@ -159,6 +159,7 @@ function timeAgo($datetime) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmaSys - Gestion des Fournisseurs</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">

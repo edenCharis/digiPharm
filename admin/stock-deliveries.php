@@ -175,6 +175,7 @@ function getStatusBadge($status, $itemCount) {
      <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Alternative CDN if the above doesn't work -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script> -->
+  <link rel="stylesheet" href="../assets/css/design-system.css">
   <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">

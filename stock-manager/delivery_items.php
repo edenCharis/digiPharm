@@ -344,6 +344,7 @@ function getStatusBadge($status) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmaSys - Livraison #<?php echo htmlspecialchars($deliveryId); ?></title>
     
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">

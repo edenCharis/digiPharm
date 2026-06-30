@@ -14,6 +14,8 @@ ini_set('display_errors', 1);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pharmacie - Connexion Sécurisée</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNNjAgMjAgTDE0MCAyMCBMMTQwIDYwIEwxODAgNjAgTDE4MCAxNDAgTDE0MCAxNDAgTDE0MCAxODAgTDYwIDE4MCBMNTAG0xNDAgTDIwIDE0MCBMMJAG0NjAgTDYwIDYwIFoiIGZpbGw9IiMyMkM1NUUiLz4KICA8cGF0aCBkPSJNNzUgMzUgTDEyNSAzNSBMMTI1IDc1IEwxNjUgNzUgTDE2NSAxMjUgTDEyNSAxMjUgTDEyNSAxNjUgTDc1IDE2NSBMNTAW0xMjUgTDM1IDEyNSBMMzUgNzUgTDc1IDc1IFoiIGZpbGw9IndoaXRlIi8+CiAgPGcgZmlsbD0iIzIyQzU1RSI+CiAgICA8cmVjdCB4PSI5NyIgeT0iNTAiIHdpZHRoPSI2IiBoZWlnaHQ9IjEwMCIvPgogICAgPHBhdGggZD0iTTg1IDcwIFE3NSA3NSA4NSA4NSBRMTETY0NOM5NRCXM0QTEI4MCA3MCAXMW0ZhOVcQgQPNXUgODBZRAMTAwIDkwURA2pUMTAlMjUgMTA1IDFYGNQMRUSMTI1IDkwIDEyMCAxFDwgUTEx1IDExMCAxMDUgMTA1IFE5NSAxGMERJVUAygFJMA=ICQRA2pMA0VMA9NEQR23cWENIDUgcTRWOTU2MTA2M2IETARDUVMGA1UQVEgMG11MC3U0aME0FIFQ5NSAwMFM5IDEwM0UBMRJVDSgEgRAPNIgWRGQCAxTFcQg2mNSAwMWU05IDUCZUEgMa24gBG9SgBGMTaAy5BIUA2pUN0RBRTA1GW5G05IDz1jUQl5IDYgMTMwO0gUGMEJzNIAQNIIQ2NUzXUEgkBXM9TYgB3cSBGOTU2YH0gQVMUR0gERE2QYQcXQQ=="/+gCGAYYCQEIGYGEI8UWUCgDY3cgKYE4CAg0JnJ4IE4nIDUgcj0iOCIgcnk9IjUNICU+CiAgPC9nPgogIDxwYXRoIGQ9Ik05RCBMRMHRC0cXU0MSRE0T0SMRU4UTM5MCBMMHJcSAg2zSUgRiA0NDQ5IGdWlHAEYNIHYGYcSgBGQmNOAEg5MCAMI2NUMRKEgXJVMA0PNOYmNCcQo9IjQ1LEcXQYgQCKzAcNOgGAg5MCBSAwMQYQEIGYNUYgXAg9ACJOBEGJa9G2 JEcTOW3F5MRCAJMA40JQg6PSI5PCBRIQ4gZIVSIG9SGFNXFFgRUAUGRQhYFc6NEw0N0QmBASQ4XQVbKCGY0MSAxaAIMKCYYURgNNCQQUAOJaAgagVOEgcBSA9cRRAMAIBMQg02STgEAYFXNABNNMHA0AH1QgYFUMCAsH0wCCIOFZ0AGQC04NAG0MG5QNGHEQGENaGAIGhBSQU5CrETVQVNYGE9BgcRNBFOMAYBHQAwU5JQ0OOJVCAGXQ4o0YgVNQg9QYyAQEQUQOAHaGUGRaAA4CKGXRA4GHlWS6mNMYGCZRQAZ8VE2mQGAZB0AXNA50OQBFR0QAYG0GGCmQAWAmN2FCEYWRN0AMYQVNQERWFNQAYyPUOJQAFUEQVAGCAgFc6YVUKiGUBAgFEhRQIYAD1gCmgB0YQgU4N9GMgVRaF1Q9z1N0g0sGNAgA4GGQVdXvMgFWYAdYXBMVGAI&5A3QgYGKQVGW2FQhUGYgFMUYPmGIMQAUmYUxGGAJlQVUQd1A1GGNICrFBGYWOtmCA05AGxVNXVCF5Q32FVGwUZRQVCQBFhF1BAQRGAGMAgAsAnBCgOYzaAAKYg3q9EY&" fill="#22C55E"/>
     </g>
     <path d="M90 140 L110 140 Q115 140 115 145 L115 155 Q115 160 110 160 L90 160 Q85 160 85 155 L85 145 Q85 140 90 140 Z" fill="#22C55E"/>
@@ -26,7 +28,7 @@ ini_set('display_errors', 1);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: #f3f4f6;
             min-height: 100vh;
             display: flex;
@@ -102,7 +104,7 @@ ini_set('display_errors', 1);
 
         .input:focus {
             outline: none;
-            border-color: #22c55e;
+            border-color: #188038;
             box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
         }
 
@@ -142,7 +144,7 @@ ini_set('display_errors', 1);
 
         .toggle-password:focus {
             outline: none;
-            color: #22c55e;
+            color: #188038;
         }
 
         .toggle-icon {
@@ -169,7 +171,7 @@ ini_set('display_errors', 1);
         .success {
             background-color: #f0fdf4;
             border: 1px solid #bbf7d0;
-            color: #16a34a;
+            color: #0d652d;
         }
 
         .info {
@@ -186,7 +188,7 @@ ini_set('display_errors', 1);
 
         .button {
             width: 100%;
-            background-color: #22c55e;
+            background-color: #188038;
             color: white;
             border: none;
             border-radius: 0.375rem;
@@ -203,7 +205,7 @@ ini_set('display_errors', 1);
         }
 
         .button:hover:not(:disabled) {
-            background-color: #16a34a;
+            background-color: #0d652d;
         }
 
         .button:focus {
@@ -291,14 +293,14 @@ ini_set('display_errors', 1);
         <div class="card-header">
             <div class="logo-container">
                 <svg viewBox="0 0 200 200" class="pharmacy-logo" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#22C55E"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#188038"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#22C55E">
+                    <g fill="#188038">
                         <rect x="97" y="50" width="6" height="100"/>
                         <path d="M85 70 Q75 75 85 85 Q110 95 115 80 Q120 70 105 75 Q95 80 100 90 Q105 100 115 95 Q125 90 120 100 Q115 110 105 105 Q95 100 100 110 Q105 120 115 125 Q125 130 115 135 L105 140 Q95 135 105 130 Q115 125 110 120 Q105 115 95 120 Q85 125 90 115 Q95 105 105 110 Q115 115 110 105 Q105 95 95 100 Q85 105 90 95 Q95 85 105 90 Q115 95 110 85 Q105 75 95 80 Q85 85 90 75 Z"/>
                         <ellipse cx="85" cy="72" rx="8" ry="5"/>
                     </g>
-                    <path d="M90 140 L110 140 Q115 140 115 145 L115 155 Q115 160 110 160 L90 160 Q85 160 85 155 L85 145 Q85 140 90 140 Z" fill="#22C55E"/>
+                    <path d="M90 140 L110 140 Q115 140 115 145 L115 155 Q115 160 110 160 L90 160 Q85 160 85 155 L85 145 Q85 140 90 140 Z" fill="#188038"/>
                 </svg>
             </div>
             <h1 class="card-title" id="cardTitle">Connexion Sécurisée</h1>

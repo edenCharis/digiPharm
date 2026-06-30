@@ -1,0 +1,173 @@
+/* digiPharm design system — Google Workspace / Material inspired.
+   Load this BEFORE the other assets/css/*.css files: it defines the tokens
+   and shared primitives that the rest of the stylesheets consume. */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+    /* Brand */
+    --ds-green: #188038;
+    --ds-green-dark: #0d652d;
+    --ds-green-light: #34a853;
+    --ds-green-bg: #e6f4ea;
+
+    /* Neutrals */
+    --ds-border: #dadce0;
+    --ds-border-light: #e8eaed;
+    --ds-surface: #ffffff;
+    --ds-surface-alt: #f8f9fa;
+    --ds-text-900: #202124;
+    --ds-text-600: #5f6368;
+    --ds-text-400: #80868b;
+
+    /* Status */
+    --ds-amber-bg: #fef7e0;
+    --ds-amber-border: #fde293;
+    --ds-amber-text: #6b4f02;
+    --ds-red: #d93025;
+    --ds-red-bg: #fce8e6;
+    --ds-blue: #1a73e8;
+
+    /* Shape */
+    --ds-radius-sm: 8px;
+    --ds-radius-lg: 12px;
+    --ds-radius-pill: 999px;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+.ds-heading {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: var(--ds-text-900);
+}
+
+/* Buttons */
+.ds-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border-radius: var(--ds-radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s, border-color .15s;
+}
+.ds-btn i { width: 16px; height: 16px; }
+.ds-btn-primary {
+    background: var(--ds-green);
+    color: #fff;
+}
+.ds-btn-primary:hover { background: var(--ds-green-dark); box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 6px 1px rgba(0,0,0,.1); }
+.ds-btn-outline {
+    background: var(--ds-surface);
+    border: 1px solid var(--ds-border);
+    color: var(--ds-text-600);
+}
+.ds-btn-outline:hover { background: var(--ds-surface-alt); border-color: var(--ds-text-400); }
+.ds-btn-text {
+    background: transparent;
+    color: var(--ds-green-dark);
+    padding: 9px 12px;
+}
+.ds-btn-text:hover { background: var(--ds-green-bg); }
+.ds-btn-danger { background: var(--ds-red); color: #fff; }
+.ds-btn-danger:hover { background: #b3261e; }
+
+/* Panel / card */
+.ds-panel {
+    background: var(--ds-surface);
+    border: 1px solid var(--ds-border-light);
+    border-radius: var(--ds-radius-lg);
+}
+.ds-panel-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--ds-border-light);
+}
+.ds-panel-head h2 { font-family: 'Roboto'; font-size: 15px; font-weight: 500; color: var(--ds-text-900); }
+.ds-panel-head p { font-size: 12.5px; color: var(--ds-text-600); margin-top: 3px; }
+.ds-panel-body { padding: 24px; display: flex; flex-direction: column; gap: 22px; }
+
+/* Form fields */
+.ds-field { display: flex; flex-direction: column; gap: 6px; }
+.ds-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ds-field label { font-size: 12.5px; font-weight: 500; color: var(--ds-text-900); }
+.ds-field label .req { color: var(--ds-red); }
+.ds-field .help { font-size: 12px; color: var(--ds-text-600); display: flex; gap: 6px; align-items: flex-start; }
+.ds-field .help i { width: 14px; height: 14px; color: var(--ds-text-400); flex-shrink: 0; margin-top: 1px; }
+
+.ds-input, .ds-field input[type="text"], .ds-field input[type="password"],
+.ds-field input[type="email"], .ds-field input[type="number"], .ds-field select, .ds-field textarea {
+    width: 100%;
+    font-family: 'Roboto';
+    font-size: 14px;
+    padding: 11px 13px;
+    border-radius: var(--ds-radius-sm);
+    border: 1px solid var(--ds-border);
+    background: var(--ds-surface);
+    color: var(--ds-text-900);
+    transition: border-color .15s, padding .15s;
+}
+.ds-input:hover, .ds-field input:hover, .ds-field select:hover, .ds-field textarea:hover { border-color: var(--ds-text-400); }
+.ds-input:focus, .ds-field input:focus, .ds-field select:focus, .ds-field textarea:focus {
+    outline: none;
+    border: 2px solid var(--ds-green);
+    padding: 10px 12px;
+}
+
+/* Segmented control */
+.ds-seg { display: inline-flex; border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); overflow: hidden; width: fit-content; }
+.ds-seg-opt {
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ds-text-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-right: 1px solid var(--ds-border);
+}
+.ds-seg-opt:last-child { border-right: none; }
+.ds-seg-opt.selected { background: var(--ds-green-bg); color: var(--ds-green-dark); }
+
+/* Tabs (underline style) */
+.ds-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--ds-border-light); margin-bottom: 28px; }
+.ds-tab {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ds-text-600);
+    padding: 14px 18px 12px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color .15s;
+    text-decoration: none;
+}
+.ds-tab i { width: 16px; height: 16px; }
+.ds-tab:hover { color: var(--ds-text-900); }
+.ds-tab.active { color: var(--ds-green-dark); border-bottom-color: var(--ds-green); font-weight: 700; }
+
+/* Chips */
+.ds-chip { font-size: 11.5px; font-weight: 500; padding: 3px 10px; border-radius: var(--ds-radius-pill); display: inline-block; }
+.ds-chip-pending { background: var(--ds-amber-bg); color: var(--ds-amber-text); }
+.ds-chip-off { background: var(--ds-surface-alt); color: var(--ds-text-600); }
+.ds-chip-success { background: var(--ds-green-bg); color: var(--ds-green-dark); }
+.ds-chip-danger { background: var(--ds-red-bg); color: var(--ds-red); }
+
+/* Notice / banner */
+.ds-notice { display: flex; gap: 12px; background: var(--ds-amber-bg); border: 1px solid var(--ds-amber-border); border-radius: var(--ds-radius-sm); padding: 12px 14px; font-size: 13px; color: var(--ds-amber-text); }
+.ds-notice i { width: 18px; height: 18px; color: #b06000; flex-shrink: 0; }
+
+/* Tables */
+.ds-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.ds-table th { text-align: left; font-weight: 500; color: var(--ds-text-600); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; padding: 10px 14px; border-bottom: 1px solid var(--ds-border); }
+.ds-table td { padding: 12px 14px; border-bottom: 1px solid var(--ds-border-light); color: var(--ds-text-900); }
+.ds-table tbody tr:hover { background: var(--ds-surface-alt); }

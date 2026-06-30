@@ -205,6 +205,7 @@ function timeAgo($datetime) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmaSys - Tableau de bord</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+     <link rel="stylesheet" href="../assets/css/design-system.css">
      <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">
@@ -246,11 +247,11 @@ function timeAgo($datetime) {
                         <!-- Recent Transactions -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="clock"></i>
                                     Dernières transactions
                                 </div>
-                                <a href="historique.php" class="text-link text-white">
+                                <a href="historique.php" class="text-link">
                                     Voir tout
                                     <i data-lucide="arrow-right"></i>
                                 </a>
@@ -296,7 +297,7 @@ function timeAgo($datetime) {
                         <!-- Quick Actions -->
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title text-white">
+                                <div class="card-title">
                                     <i data-lucide="zap"></i>
                                     Actions rapides
                                 </div>

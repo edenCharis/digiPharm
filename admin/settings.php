@@ -186,6 +186,7 @@ $iconOptions = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo getSettingValue($settings, 'app_name'); ?> - Personnalisation</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">
@@ -195,127 +196,153 @@ $iconOptions = [
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         .customization-container {
-            max-width: 1400px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 2.5rem;
         }
 
         .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+            margin-bottom: 1.75rem;
         }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.625rem;
+        }
+        .page-title i { width: 22px; height: 22px; color: var(--ds-green); }
+
+        .page-subtitle {
+            color: var(--ds-text-600);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
 
         .settings-grid {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            align-items: start;
         }
 
-        .preview-panel {
-            position: sticky;
-            top: 2rem;
-        }
+        .preview-panel { position: sticky; top: 1.5rem; }
 
         .section-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--ds-surface);
+            border: 1px solid var(--ds-border-light);
+            border-radius: var(--ds-radius-lg);
             overflow: hidden;
-            margin-bottom: 1.5rem;
         }
 
         .section-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1f2937;
+            padding: 1rem 1.125rem;
+            border-bottom: 1px solid var(--ds-border-light);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+        .section-header i { width: 17px; height: 17px; color: var(--ds-text-600); }
+        .section-title { display: flex; align-items: center; gap: 0.5rem; }
 
-        .section-content {
-            padding: 1.5rem;
-        }
+        .section-content { padding: 1.125rem; }
 
-        .settings-form {
+        /* Tabs */
+        .settings-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            gap: 4px;
+            border-bottom: 1px solid var(--ds-border-light);
+            margin-bottom: 0;
+            overflow-x: auto;
         }
+        .settings-tab {
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--ds-text-600);
+            padding: 14px 18px 12px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-family: 'Roboto', sans-serif;
+        }
+        .settings-tab i { width: 16px; height: 16px; }
+        .settings-tab:hover { color: var(--ds-text-900); }
+        .settings-tab.active { color: var(--ds-green-dark); border-bottom-color: var(--ds-green); font-weight: 700; }
 
-        .settings-group {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+        .settings-form { display: flex; flex-direction: column; }
+
+        .settings-group { display: none; }
+        .settings-group.active { display: block; }
 
         .group-header {
-            background: #f9fafb;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .group-content {
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem 0.25rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--ds-text-900);
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 0.5rem;
         }
+        .group-header i { width: 17px; height: 17px; color: var(--ds-text-600); }
 
-        .form-group label {
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
+        .group-content {
+            padding: 1.25rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
-        .form-group input,
+        .form-group { display: flex; flex-direction: column; gap: 0.375rem; }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--ds-text-900);
+            font-size: 0.8125rem;
+        }
+
+        .form-group input:not([type="color"]),
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            font-family: 'Roboto', sans-serif;
+            padding: 0.6875rem 0.8125rem;
+            border: 1px solid var(--ds-border);
+            border-radius: var(--ds-radius-sm);
             font-size: 0.875rem;
-            transition: border-color 0.2s;
+            background: var(--ds-surface);
+            color: var(--ds-text-900);
+            transition: border-color 0.15s, padding 0.15s;
         }
+
+        .form-group input[type="color"] {
+            width: 44px;
+            height: 44px;
+            padding: 2px;
+            border: 1px solid var(--ds-border);
+            border-radius: var(--ds-radius-sm);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .form-group input:not([type="color"]):hover, .form-group textarea:hover, .form-group select:hover { border-color: var(--ds-text-400); }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+            border: 2px solid var(--ds-green);
+            padding: 0.625rem 0.75rem;
         }
 
         .form-group textarea {
@@ -325,8 +352,8 @@ $iconOptions = [
 
         .form-group .help-text {
             font-size: 0.75rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
+            color: var(--ds-text-600);
+            margin-top: 0.125rem;
         }
 
         .color-input-group {
@@ -338,8 +365,8 @@ $iconOptions = [
         .color-preview {
             width: 40px;
             height: 40px;
-            border-radius: 6px;
-            border: 2px solid #e5e7eb;
+            border-radius: var(--ds-radius-sm);
+            border: 1px solid var(--ds-border);
             cursor: pointer;
         }
 
@@ -355,185 +382,125 @@ $iconOptions = [
             flex-direction: column;
             align-items: center;
             padding: 0.75rem 0.5rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border: 1px solid var(--ds-border);
+            border-radius: var(--ds-radius-sm);
             cursor: pointer;
-            transition: all 0.2s;
-            background: white;
+            transition: all 0.15s;
+            background: var(--ds-surface);
         }
 
-        .icon-option:hover {
-            border-color: #3b82f6;
-            background: #f8fafc;
-        }
+        .icon-option:hover { border-color: var(--ds-text-400); background: var(--ds-surface-alt); }
 
         .icon-option.selected {
-            border-color: #3b82f6;
-            background: #eff6ff;
+            border: 1.5px solid var(--ds-green);
+            background: var(--ds-green-bg);
         }
 
-        .icon-option i {
-            margin-bottom: 0.25rem;
-        }
+        .icon-option i { margin-bottom: 0.25rem; color: var(--ds-text-600); }
+        .icon-option.selected i { color: var(--ds-green-dark); }
 
         .icon-option span {
-            font-size: 0.75rem;
+            font-size: 0.6875rem;
             text-align: center;
-            color: #6b7280;
+            color: var(--ds-text-600);
         }
 
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
+        .btn-primary, .btn-secondary, .btn-danger {
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--ds-radius-sm);
+            font-weight: 500;
+            font-size: 0.84375rem;
+            font-family: 'Roboto', sans-serif;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.2s;
+            transition: all 0.15s;
             justify-content: center;
         }
+        .btn-primary i, .btn-secondary i, .btn-danger i { width: 16px; height: 16px; }
 
-        .btn-primary:hover {
-            background: #2563eb;
-        }
+        .btn-primary { background: var(--ds-green); color: white; }
+        .btn-primary:hover { background: var(--ds-green-dark); }
 
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            justify-content: center;
-        }
+        .btn-secondary { background: var(--ds-surface); color: var(--ds-text-600); border: 1px solid var(--ds-border); }
+        .btn-secondary:hover { background: var(--ds-surface-alt); border-color: var(--ds-text-400); }
 
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            justify-content: center;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
+        .btn-danger { background: var(--ds-surface); color: var(--ds-red); border: 1px solid var(--ds-border); }
+        .btn-danger:hover { background: var(--ds-red-bg); border-color: var(--ds-red); }
 
         .action-buttons {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 0.625rem;
+            padding: 0.5rem 1.5rem 1.5rem;
         }
 
         .preview-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--ds-surface);
             overflow: hidden;
         }
 
         .preview-header {
-            background: var(--primary-color, #3b82f6);
+            background: var(--primary-color, var(--ds-green));
             color: white;
-            padding: 1.5rem;
+            padding: 1.25rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
         .preview-icon {
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 2.25rem;
+            height: 2.25rem;
             background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border-radius: var(--ds-radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .preview-content {
-            padding: 1.5rem;
-        }
+        .preview-content { padding: 1.125rem; }
 
         .preview-field {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-border-light);
+            font-size: 0.8125rem;
         }
 
-        .preview-field:last-child {
-            border-bottom: none;
-        }
+        .preview-field:last-child { border-bottom: none; }
 
-        .preview-label {
-            font-weight: 600;
-            color: #374151;
-        }
+        .preview-label { font-weight: 500; color: var(--ds-text-900); }
 
         .preview-value {
-            color: #6b7280;
+            color: var(--ds-text-600);
             text-align: right;
-            max-width: 200px;
+            max-width: 180px;
             word-wrap: break-word;
         }
 
         .alert {
-            padding: 1rem 1.5rem;
-            margin-bottom: 2rem;
-            border: none;
-            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            border-radius: var(--ds-radius-sm);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.875rem;
         }
+        .alert i { width: 18px; height: 18px; flex-shrink: 0; }
 
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
+        .alert-success { background: var(--ds-green-bg); color: var(--ds-green-dark); border: 1px solid #b7e1c2; }
+        .alert-danger { background: var(--ds-red-bg); color: var(--ds-red); border: 1px solid #f6c6c2; }
 
-        .alert-danger {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        @media (max-width: 768px) {
-            .customization-container {
-                padding: 1rem;
-            }
-            
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .icon-selector {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
+        @media (max-width: 900px) {
+            .customization-container { padding: 1.25rem; }
+            .settings-grid { grid-template-columns: 1fr; }
+            .preview-panel { position: static; order: -1; }
+            .icon-selector { grid-template-columns: repeat(3, 1fr); }
+            .action-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -555,8 +522,9 @@ $iconOptions = [
                     <div class="page-header">
                         <h1 class="page-title">
                             <i data-lucide="settings"></i>
-                            Personnalisation de l'Application
+                            Paramètres
                         </h1>
+                        <p class="page-subtitle">Personnalisez l'application et configurez la facturation électronique.</p>
                     </div>
 
                     <!-- Alerts -->
@@ -574,65 +542,38 @@ $iconOptions = [
                         </div>
                     <?php endif; ?>
 
-                    <!-- Settings Grid -->
-                    <div class="settings-grid">
-                        <!-- Preview Panel -->
-                        <div class="preview-panel">
-                            <div class="section-card">
-                                <div class="section-header">
-                                    <h3 class="section-title">
-                                        <i data-lucide="eye"></i>
-                                        Aperçu
-                                    </h3>
-                                </div>
-                                <div class="section-content">
-                                    <div class="preview-card">
-                                        <div class="preview-header" id="previewHeader">
-                                            <div class="preview-icon" id="previewIcon">
-                                                <i data-lucide="<?php echo getSettingValue($settings, 'app_icon') ?: 'pill'; ?>"></i>
-                                            </div>
-                                            <div>
-                                                <h3 id="previewAppName"><?php echo htmlspecialchars(getSettingValue($settings, 'app_name')); ?></h3>
-                                                <p id="previewPharmacyName"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_name')); ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="preview-content">
-                                            <div class="preview-field">
-                                                <span class="preview-label">Adresse:</span>
-                                                <span class="preview-value" id="previewAddress"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_address')); ?></span>
-                                            </div>
-                                            <div class="preview-field">
-                                                <span class="preview-label">Téléphone:</span>
-                                                <span class="preview-value" id="previewPhone"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_phone')); ?></span>
-                                            </div>
-                                            <div class="preview-field">
-                                                <span class="preview-label">Email:</span>
-                                                <span class="preview-value" id="previewEmail"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_email')); ?></span>
-                                            </div>
-                                            <div class="preview-field">
-                                                <span class="preview-label">Licence:</span>
-                                                <span class="preview-value" id="previewLicense"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_license')); ?></span>
-                                            </div>
-                                            <div class="preview-field">
-                                                <span class="preview-label">Devise:</span>
-                                                <span class="preview-value" id="previewCurrency"><?php echo htmlspecialchars(getSettingValue($settings, 'currency')); ?></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <?php
+                    $groupIcons = [
+                        'Application' => 'smartphone',
+                        'Pharmacie' => 'building-2',
+                        'Système' => 'sliders-horizontal',
+                        'Facturation Électronique (SFEC)' => 'file-check-2',
+                    ];
+                    $groupSlugs = array_map(fn($g) => 'tab-' . preg_replace('/[^a-z0-9]+/', '-', strtolower($g)), array_keys($settingsGroups));
+                    $groupNames = array_keys($settingsGroups);
+                    ?>
 
-                        <!-- Settings Form -->
-                        <div class="settings-form-panel">
-                            <form method="POST" class="settings-form" id="settingsForm">
-                                <input type="hidden" name="action" value="update_settings">
-                                
-                                <?php foreach ($settingsGroups as $groupName => $groupKeys): ?>
-                                    <div class="settings-group">
+                    <!-- Settings Form -->
+                    <form method="POST" class="settings-form" id="settingsForm">
+                        <input type="hidden" name="action" value="update_settings">
+
+                        <!-- Settings Grid -->
+                        <div class="settings-grid">
+                            <div class="section-card">
+                                <nav class="settings-tabs" id="settingsTabs">
+                                    <?php foreach ($groupNames as $i => $groupName): ?>
+                                        <button type="button" class="settings-tab<?php echo $i === 0 ? ' active' : ''; ?>" data-target="<?php echo $groupSlugs[$i]; ?>">
+                                            <i data-lucide="<?php echo $groupIcons[$groupName] ?? 'cog'; ?>"></i>
+                                            <?php echo htmlspecialchars($groupName); ?>
+                                        </button>
+                                    <?php endforeach; ?>
+                                </nav>
+
+                                <?php $i = 0; foreach ($settingsGroups as $groupName => $groupKeys): ?>
+                                    <div class="settings-group<?php echo $i === 0 ? ' active' : ''; ?>" id="<?php echo $groupSlugs[$i]; ?>">
                                         <div class="group-header">
-                                            <i data-lucide="<?php echo $groupName === 'Application' ? 'smartphone' : ($groupName === 'Pharmacie' ? 'building' : 'cog'); ?>"></i>
-                                            <?php echo $groupName; ?>
+                                            <i data-lucide="<?php echo $groupIcons[$groupName] ?? 'cog'; ?>"></i>
+                                            <?php echo htmlspecialchars($groupName); ?>
                                         </div>
                                         <div class="group-content">
                                             <?php foreach ($groupKeys as $key): ?>
@@ -710,7 +651,7 @@ $iconOptions = [
                                             <?php endforeach; ?>
                                         </div>
                                     </div>
-                                <?php endforeach; ?>
+                                <?php $i++; endforeach; ?>
 
                                 <div class="action-buttons">
                                     <button type="submit" class="btn-primary">
@@ -726,9 +667,58 @@ $iconOptions = [
                                         Réinitialiser
                                     </button>
                                 </div>
-                            </form>
+                            </div>
+
+                            <!-- Preview Panel -->
+                            <div class="preview-panel">
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <i data-lucide="eye"></i>
+                                        Aperçu
+                                    </div>
+                                    <div class="section-content">
+                                        <div class="preview-card">
+                                            <div class="preview-header" id="previewHeader">
+                                                <div class="preview-icon" id="previewIcon">
+                                                    <i data-lucide="<?php echo getSettingValue($settings, 'app_icon') ?: 'pill'; ?>"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 id="previewAppName"><?php echo htmlspecialchars(getSettingValue($settings, 'app_name')); ?></h3>
+                                                    <p id="previewPharmacyName"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_name')); ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="preview-content">
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Adresse:</span>
+                                                    <span class="preview-value" id="previewAddress"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_address')); ?></span>
+                                                </div>
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Téléphone:</span>
+                                                    <span class="preview-value" id="previewPhone"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_phone')); ?></span>
+                                                </div>
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Email:</span>
+                                                    <span class="preview-value" id="previewEmail"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_email')); ?></span>
+                                                </div>
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Licence:</span>
+                                                    <span class="preview-value" id="previewLicense"><?php echo htmlspecialchars(getSettingValue($settings, 'pharmacy_license')); ?></span>
+                                                </div>
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Devise:</span>
+                                                    <span class="preview-value" id="previewCurrency"><?php echo htmlspecialchars(getSettingValue($settings, 'currency')); ?></span>
+                                                </div>
+                                                <div class="preview-field">
+                                                    <span class="preview-label">Statut SFEC:</span>
+                                                    <span class="preview-value"><?php echo getSettingValue($settings, 'sfec_api_key') ? 'Configuré' : 'Non configuré'; ?></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </main>
         </div>
@@ -793,6 +783,17 @@ $iconOptions = [
                     }
                 });
             }
+
+            // Settings tabs
+            const tabs = document.querySelectorAll('.settings-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.settings-group').forEach(g => g.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.target)?.classList.add('active');
+                });
+            });
         });
 
         // Icon selection functionality

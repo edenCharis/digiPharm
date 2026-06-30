@@ -6,8 +6,9 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #ecfeff 100%);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--ds-surface-alt, #f8f9fa);
+    color: var(--ds-text-900, #202124);
     min-height: 100vh;
 }
 
@@ -43,18 +44,17 @@ body {
 
 /* Card Styles */
 .card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(8px);
-    border-radius: 0.5rem;
-    border: 1px solid #a7f3d0;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background: var(--ds-surface, #fff);
+    border-radius: var(--ds-radius-lg, 12px);
+    border: 1px solid var(--ds-border-light, #e8eaed);
+    box-shadow: none;
 }
 
 .card-header {
-    background: linear-gradient(90deg, #059669 0%, #0d9488 100%);
-    color: white;
-    padding: 1rem 1.5rem;
-    border-radius: 0.5rem 0.5rem 0 0;
+    background: var(--ds-surface, #fff);
+    color: var(--ds-text-900, #202124);
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--ds-border-light, #e8eaed);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -325,22 +325,23 @@ body {
 }
 
 .quick-action-btn.primary {
-    background: #059669;
+    background: var(--ds-green, #188038);
     color: white;
 }
 
 .quick-action-btn.primary:hover {
-    background: #047857;
+    background: var(--ds-green-dark, #0d652d);
 }
 
 .quick-action-btn.secondary {
-    background: #f9fafb;
-    color: #374151;
-    border: 1px solid #e5e7eb;
+    background: var(--ds-surface, #fff);
+    color: var(--ds-text-600, #5f6368);
+    border: 1px solid var(--ds-border, #dadce0);
 }
 
 .quick-action-btn.secondary:hover {
-    background: #f3f4f6;
+    background: var(--ds-surface-alt, #f8f9fa);
+    border-color: var(--ds-text-400, #80868b);
 }
 
 /* Stock Alerts */
@@ -432,15 +433,16 @@ body {
 
 /* Card Styles */
 .card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: var(--ds-surface, #fff);
+    border: 1px solid var(--ds-border-light, #e8eaed);
+    border-radius: var(--ds-radius-lg, 12px);
+    box-shadow: none;
     overflow: hidden;
 }
 
 .card-header {
     padding: 1.25rem 1.5rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--ds-border-light, #e8eaed);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -450,13 +452,14 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 600;
-    color: #111827;
-    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ds-text-900, #202124);
+    font-size: 0.9375rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 .card-title.warning {
-    color: #d97706;
+    color: #b06000;
 }
 
 .card-actions {
@@ -473,7 +476,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    color: #059669;
+    color: var(--ds-green-dark, #0d652d);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
@@ -481,16 +484,18 @@ body {
 }
 
 .text-link:hover {
-    color: #047857;
+    color: var(--ds-green, #188038);
 }
 
 .btn-secondary {
-    background: #f9fafb;
-    color: #374151;
-    border: 1px solid #e5e7eb;
+    background: var(--ds-surface, #fff);
+    color: var(--ds-text-600, #5f6368);
+    border: 1px solid var(--ds-border, #dadce0);
     padding: 0.5rem 1rem;
-    border-radius: 6px;
+    border-radius: var(--ds-radius-sm, 8px);
     font-size: 0.875rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -499,7 +504,8 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #f3f4f6;
+    background: var(--ds-surface-alt, #f8f9fa);
+    border-color: var(--ds-text-400, #80868b);
 }
 
 .btn-sm {

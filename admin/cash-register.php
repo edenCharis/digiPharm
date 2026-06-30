@@ -190,6 +190,7 @@ function calculateDifference($expected, $actual) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PharmaSys - Gestion des Caisses</title>
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="stylesheet" href="../assets/css/sidebar.css">
@@ -680,7 +681,7 @@ function calculateDifference($expected, $actual) {
                 <!-- Open Registers -->
                 <div class="card mb-4">
                     <div class="card-header">
-                        <div class="card-title text-white">
+                        <div class="card-title">
                             <i class="bi bi-activity"></i>
                             Caisses ouvertes (<?php echo count($openRegisters); ?>)
                         </div>
