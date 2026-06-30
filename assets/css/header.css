@@ -1,211 +1,22 @@
-/* Header Styles */
+/* header.css — base structural rules only.
+   Component styles (bell, user panel, etc.) live in assets/header-shared.php */
+
 .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    width: 100%;
-    border-bottom: 1px solid var(--ds-border-light, #e8eaed);
-    background: var(--ds-surface, #fff);
+    position: sticky; top: 0; z-index: 100;
+    background: var(--ds-surface);
+    border-bottom: 1px solid var(--ds-border-light);
 }
 
 .header-content {
-    display: flex;
-    height: 64px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.75rem 0 1.25rem;
-    gap: 1rem;
+    display: flex; align-items: center;
+    height: 60px;
+    padding: 0 20px;
+    gap: 12px;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+.header-left  { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.header-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 
-/* Always visible — used to collapse/expand sidebar on all screen sizes */
-.menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    padding: 0;
-    background: transparent;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.15s;
-    flex-shrink: 0;
-    color: var(--ds-text-600, #5f6368);
-}
-
-.menu-toggle:hover {
-    background: var(--ds-surface-alt, #f8f9fa);
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-left: 0.5rem;
-    border-left: 1px solid var(--ds-border-light, #e8eaed);
-    margin-left: 0.25rem;
-}
-
-.logo {
-    width: 2rem;
-    height: 2rem;
-    background: var(--ds-green, #188038);
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-}
-
-.page-info h1 {
-    font-size: 1.0625rem;
-    font-weight: 500;
-    font-family: 'Roboto', sans-serif;
-    color: var(--ds-text-900, #202124);
-}
-
-.page-info p {
-    font-size: 0.8125rem;
-    color: var(--ds-text-600, #5f6368);
-}
-
-.search-container {
-    display: none;
-    flex: 1;
-    max-width: 28rem;
-    margin: 0 2rem;
-    position: relative;
-}
-
-@media (min-width: 768px) {
-    .search-container {
-        display: block;
-    }
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-    background: var(--ds-surface-alt, #f8f9fa);
-    border: 1px solid transparent;
-    border-radius: 1.5rem;
-    font-size: 0.875rem;
-    font-family: 'Roboto', sans-serif;
-    transition: all 0.2s;
-}
-
-.search-input:focus {
-    outline: none;
-    background: white;
-    border-color: var(--ds-border, #dadce0);
-    box-shadow: 0 1px 2px rgba(0,0,0,.08);
-}
-
-.search-icon {
-    position: absolute;
-    left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ds-text-400, #80868b);
-    width: 1rem;
-    height: 1rem;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    margin-left: auto;
-}
-
-.header-btn {
-    padding: 0.5rem;
-    background: transparent;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-btn:hover {
-    background: var(--ds-surface-alt, #f8f9fa);
-}
-
-.notification-badge {
-    position: absolute;
-    top: -0.25rem;
-    right: -0.25rem;
-    background: var(--ds-red, #d93025);
-    color: white;
-    font-size: 0.6875rem;
-    width: 1.125rem;
-    height: 1.125rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.375rem 0.75rem 0.375rem 0.375rem;
-    background: transparent;
-    border: none;
-    border-radius: 1.5rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.user-menu:hover {
-    background: var(--ds-surface-alt, #f8f9fa);
-}
-
-.avatar {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--ds-green, #188038);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 500;
-    font-size: 0.875rem;
-}
-
-.user-info {
-    display: none;
-}
-
-@media (min-width: 1024px) {
-    .user-info {
-        display: block;
-        text-align: left;
-    }
-
-    .user-info .name {
-        font-size: 0.8125rem;
-        font-weight: 500;
-        color: var(--ds-text-900, #202124);
-    }
-
-    .user-info .role {
-        font-size: 0.6875rem;
-        color: var(--ds-text-600, #5f6368);
-        text-transform: capitalize;
-    }
-}
+/* Search (unused for now, kept for future) */
+.search-container { display: none; }
+@media (min-width: 768px) { .search-container { display: block; } }
