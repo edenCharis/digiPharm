@@ -589,7 +589,13 @@ function setupSidebar() {
         if (overlay) overlay.classList.remove('show');
     }
 
-    if (menuToggle) menuToggle.addEventListener('click', showSidebar);
+    if (menuToggle) menuToggle.addEventListener('click', () => {
+        if (window.innerWidth >= 768) {
+            if (sidebar) sidebar.classList.toggle('collapsed');
+        } else {
+            showSidebar();
+        }
+    });
     if (sidebarClose) sidebarClose.addEventListener('click', hideSidebar);
     if (overlay) overlay.addEventListener('click', hideSidebar);
 }

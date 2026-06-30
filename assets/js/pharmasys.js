@@ -86,6 +86,8 @@ class PharmaSys {
             return;
         }
 
+        const isDesktop = () => window.innerWidth >= 768;
+
         const showSidebar = () => {
             sidebar.classList.add('show');
             overlay.classList.add('show');
@@ -96,7 +98,18 @@ class PharmaSys {
             overlay.classList.remove('show');
         };
 
-        menuToggle.addEventListener('click', showSidebar);
+        const toggleDesktop = () => {
+            sidebar.classList.toggle('collapsed');
+        };
+
+        menuToggle.addEventListener('click', () => {
+            if (isDesktop()) {
+                toggleDesktop();
+            } else {
+                showSidebar();
+            }
+        });
+
         sidebarClose.addEventListener('click', hideSidebar);
         overlay.addEventListener('click', hideSidebar);
 
