@@ -47,7 +47,11 @@ try {
         ['setting_key' => 'language', 'setting_value' => 'fr', 'setting_type' => 'text', 'description' => 'Langue par défaut'],
         ['setting_key' => 'low_stock_threshold', 'setting_value' => '10', 'setting_type' => 'number', 'description' => 'Seuil de stock faible'],
         ['setting_key' => 'company_description', 'setting_value' => 'Votre pharmacie de confiance depuis 1995. Nous nous engageons à fournir des soins de santé de qualité à notre communauté.', 'setting_type' => 'textarea', 'description' => 'Description de l\'entreprise'],
-        ['setting_key' => 'working_hours', 'setting_value' => 'Lun-Ven: 8h-18h, Sam: 8h-14h', 'setting_type' => 'text', 'description' => 'Heures d\'ouverture']
+        ['setting_key' => 'working_hours', 'setting_value' => 'Lun-Ven: 8h-18h, Sam: 8h-14h', 'setting_type' => 'text', 'description' => 'Heures d\'ouverture'],
+        ['setting_key' => 'sfec_environment', 'setting_value' => 'sandbox', 'setting_type' => 'text', 'description' => 'Environnement SFEC (sandbox ou production)'],
+        ['setting_key' => 'sfec_taxpayer_niu', 'setting_value' => '', 'setting_type' => 'text', 'description' => 'NIU (Numéro d\'Identification Unique) du contribuable'],
+        ['setting_key' => 'sfec_sciet', 'setting_value' => '', 'setting_type' => 'text', 'description' => 'Identifiant SCIET fourni par SFEC'],
+        ['setting_key' => 'sfec_api_key', 'setting_value' => '', 'setting_type' => 'password', 'description' => 'Clé API SFEC obtenue via le portail e-Facture']
     ];
 
     // Insert default settings if they don't exist
@@ -132,7 +136,8 @@ try {
     $settingsGroups = [
         'Application' => ['app_name', 'app_icon', 'primary_color', 'secondary_color', 'language', 'timezone'],
         'Pharmacie' => ['pharmacy_name', 'pharmacy_address', 'pharmacy_phone', 'pharmacy_email', 'pharmacy_license', 'working_hours', 'company_description'],
-        'Système' => ['currency', 'low_stock_threshold']
+        'Système' => ['currency', 'low_stock_threshold'],
+        'Facturation Électronique (SFEC)' => ['sfec_environment', 'sfec_taxpayer_niu', 'sfec_sciet', 'sfec_api_key']
     ];
 
 } catch (Exception $e) {
@@ -668,12 +673,19 @@ $iconOptions = [
                                                                       onchange="updatePreview('<?php echo $key; ?>', this.value)"><?php echo htmlspecialchars($setting['setting_value']); ?></textarea>
                                                                       
                                                         <?php elseif ($setting['setting_type'] === 'number'): ?>
-                                                            <input type="number" 
-                                                                   name="<?php echo $key; ?>" 
+                                                            <input type="number"
+                                                                   name="<?php echo $key; ?>"
                                                                    id="<?php echo $key; ?>"
                                                                    value="<?php echo htmlspecialchars($setting['setting_value']); ?>"
                                                                    onchange="updatePreview('<?php echo $key; ?>', this.value)">
-                                                                   
+
+                                                        <?php elseif ($setting['setting_type'] === 'password'): ?>
+                                                            <input type="password"
+                                                                   name="<?php echo $key; ?>"
+                                                                   id="<?php echo $key; ?>"
+                                                                   value="<?php echo htmlspecialchars($setting['setting_value']); ?>"
+                                                                   autocomplete="off">
+
                                                         <?php else: ?>
                                                             <input type="text" 
                                                                    name="<?php echo $key; ?>" 
@@ -688,6 +700,10 @@ $iconOptions = [
                                                             <div class="help-text">Seuil en dessous duquel un produit est considéré en stock faible</div>
                                                         <?php elseif ($key === 'primary_color'): ?>
                                                             <div class="help-text">Couleur principale utilisée dans l'interface</div>
+                                                        <?php elseif ($key === 'sfec_environment'): ?>
+                                                            <div class="help-text">Valeurs acceptées : "sandbox" (test) ou "production" (factures réelles, nécessite NIU + clé API validés par le portail e-Facture)</div>
+                                                        <?php elseif ($key === 'sfec_taxpayer_niu' || $key === 'sfec_sciet' || $key === 'sfec_api_key'): ?>
+                                                            <div class="help-text">Tant que ce champ est vide, les ventes ne sont pas envoyées à SFEC (aucun impact sur l'encaissement)</div>
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php endif; ?>

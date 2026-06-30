@@ -31,7 +31,7 @@ CREATE TABLE `app_settings` (
   `id` int(11) NOT NULL,
   `setting_key` varchar(100) NOT NULL,
   `setting_value` text DEFAULT NULL,
-  `setting_type` enum('text','textarea','image','color','number') DEFAULT 'text',
+  `setting_type` enum('text','textarea','image','color','number','password') DEFAULT 'text',
   `description` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -294,7 +294,15 @@ CREATE TABLE `sale` (
   `cash_register_id` char(36) DEFAULT NULL,
   `cashReceived` double DEFAULT NULL,
   `changeAmount` double DEFAULT NULL,
-  `cart` int(11) DEFAULT NULL
+  `cart` int(11) DEFAULT NULL,
+  `sfec_status` enum('not_configured','pending','certified','failed') DEFAULT 'not_configured',
+  `sfec_certification_number` varchar(255) DEFAULT NULL,
+  `sfec_invoice_number` varchar(255) DEFAULT NULL,
+  `sfec_certification_date` datetime DEFAULT NULL,
+  `sfec_signature` text DEFAULT NULL,
+  `sfec_short_signature` varchar(255) DEFAULT NULL,
+  `sfec_qr_code` mediumtext DEFAULT NULL,
+  `sfec_error` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

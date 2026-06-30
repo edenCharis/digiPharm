@@ -18,7 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
     include '../config/database.php';
-    
+    include '../config/sfec.php';
+    include '../includes/SfecClient.php';
+    include '../includes/SfecInvoiceMapper.php';
+
     if (!isset($db)) {
         throw new Exception('Database connection not found');
     }
@@ -135,6 +138,7 @@ try {
     $db->execute($saleQuery, $saleParams);
    
     // Create sale items and update product stock
+    $sfecLineItems = [];
     foreach ($cartItems as $item) {
         // Find final quantity for this item
         $finalQuantity = $item['quantity'];
@@ -152,6 +156,18 @@ try {
         $itemSubtotal = $finalQuantity * $unitPrice;
         $itemVAT = $itemSubtotal * ($item['vatRate'] / 100);
         $itemDiscount = 0; // You can implement item-level discounts later
+
+        $sfecLineItems[] = [
+            'designation' => $item['name'],
+            'unit_price' => $unitPrice,
+            'quantity' => $finalQuantity,
+            'subtotal' => $itemSubtotal,
+            'discount_amount' => $itemDiscount,
+            'net_amount' => $itemSubtotal - $itemDiscount,
+            'tax_rate' => $item['vatRate'],
+            'tax_amount' => $itemVAT,
+            'total_amount' => $itemSubtotal - $itemDiscount + $itemVAT,
+        ];
 
         // Insert sale item
         $saleItemId = uniqid('SALEITEM_', true);
@@ -201,6 +217,81 @@ try {
 
     // Commit transaction
     $db->commit();
+
+    // Certify the invoice with SFEC, if configured. Runs after commit so a
+    // certification failure (or SFEC being unreachable) never blocks a paid sale.
+    try {
+        $sfecSettingsRows = $db->fetchAll(
+            "SELECT setting_key, setting_value FROM app_settings WHERE setting_key IN ('sfec_environment', 'sfec_taxpayer_niu', 'sfec_api_key', 'sfec_sciet')"
+        );
+        $sfecSettings = [];
+        foreach ($sfecSettingsRows as $row) {
+            $sfecSettings[$row['setting_key']] = $row['setting_value'];
+        }
+
+        $sfecApiKey = $sfecSettings['sfec_api_key'] ?? '';
+        $sfecNiu = $sfecSettings['sfec_taxpayer_niu'] ?? '';
+
+        if ($sfecApiKey === '' || $sfecNiu === '') {
+            $db->execute("UPDATE sale SET sfec_status = 'not_configured' WHERE id = ?", [$saleId]);
+        } else {
+            $baseUrl = ($sfecSettings['sfec_environment'] ?? 'sandbox') === 'production'
+                ? SFEC_PRODUCTION_BASE_URL
+                : SFEC_SANDBOX_BASE_URL;
+
+            $client = $cart['client_id'] ? $db->fetch("SELECT name, contact FROM client WHERE id = ?", [$cart['client_id']]) : null;
+
+            $payload = buildSfecInvoicePayload(
+                [
+                    'id' => $saleId,
+                    'invoiceNumber' => $invoiceNumber,
+                    'totalAmount' => $totalAmount,
+                    'totalVAT' => $totalVAT,
+                    'discountAmount' => $discountAmount,
+                    'saleDate' => $currentDateTime,
+                    'createdAt' => $currentDateTime,
+                ],
+                $sfecLineItems,
+                [
+                    'taxpayer_niu' => $sfecNiu,
+                    'sciet' => $sfecSettings['sfec_sciet'] ?? '',
+                ],
+                $client
+            );
+
+            $sfecClient = new SfecClient($sfecApiKey, $baseUrl);
+            $result = $sfecClient->certifyInvoice($payload);
+
+            if ($result['success']) {
+                $data = $result['data'] ?? [];
+                $db->execute(
+                    "UPDATE sale SET sfec_status = 'certified', sfec_certification_number = ?, sfec_invoice_number = ?, sfec_certification_date = ?, sfec_signature = ?, sfec_short_signature = ?, sfec_qr_code = ? WHERE id = ?",
+                    [
+                        $data['certification_number'] ?? null,
+                        $data['invoice_number'] ?? null,
+                        isset($data['certification_date']) ? date('Y-m-d H:i:s', strtotime($data['certification_date'])) : null,
+                        $data['signature'] ?? null,
+                        $data['short_signature'] ?? null,
+                        $data['qr_code'] ?? null,
+                        $saleId,
+                    ]
+                );
+            } else {
+                $db->execute(
+                    "UPDATE sale SET sfec_status = 'failed', sfec_error = ? WHERE id = ?",
+                    [$result['error'], $saleId]
+                );
+                error_log('SFEC certification failed for sale ' . $saleId . ': ' . $result['error']);
+            }
+        }
+    } catch (Exception $sfecException) {
+        error_log('SFEC certification error for sale ' . $saleId . ': ' . $sfecException->getMessage());
+        try {
+            $db->execute("UPDATE sale SET sfec_status = 'failed', sfec_error = ? WHERE id = ?", [$sfecException->getMessage(), $saleId]);
+        } catch (Exception $ignored) {
+            // Best-effort status update only - never let SFEC issues affect the payment response.
+        }
+    }
 
     // Return success response
     echo json_encode([

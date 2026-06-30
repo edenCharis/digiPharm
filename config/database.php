@@ -3,7 +3,6 @@
  * Database Connection Class using PDO
  * Supports MySQL, PostgreSQL, and SQLite
  */
-
 class Database {
     private $host;
     private $db_name;

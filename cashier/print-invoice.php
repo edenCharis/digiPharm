@@ -314,6 +314,19 @@ try {
         </div>
         <?php endif; ?>
 
+        <?php if (($sale['sfec_status'] ?? null) === 'certified'): ?>
+        <div style="margin: 10px 0; font-size: 10px; border-top: 1px solid #000; padding-top: 8px; text-align: center;">
+            <div style="font-weight: bold;">FACTURE CERTIFIÉE SFEC</div>
+            <div>N° certification: <?php echo htmlspecialchars($sale['sfec_certification_number']); ?></div>
+            <?php if ($sale['sfec_short_signature']): ?>
+            <div>Signature: <?php echo htmlspecialchars($sale['sfec_short_signature']); ?></div>
+            <?php endif; ?>
+            <?php if ($sale['sfec_qr_code']): ?>
+            <img src="data:image/png;base64,<?php echo htmlspecialchars($sale['sfec_qr_code']); ?>" alt="QR Code SFEC" style="width: 100px; height: 100px; margin-top: 5px;">
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
         <div class="footer">
             <div style="margin-bottom: 5px; font-weight: bold;">Merci de votre visite !</div>
             <div><?php echo date('d/m/Y', strtotime($sale['saleDate'])); ?>    <?php echo date('H:i', strtotime($sale['createdAt'])); ?>    © PharmaSys</div>
