@@ -70,16 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
                 [$userId, $username, password_hash($tempPass, PASSWORD_DEFAULT), $reg['email']]
             );
 
+            // Ensure approved_at column exists before using it
+            try {
+                $db->execute("ALTER TABLE pharmacy_registrations ADD COLUMN approved_at DATETIME NULL AFTER status");
+            } catch (Exception $e) { /* column already exists — fine */ }
+
             $db->execute(
                 "UPDATE pharmacy_registrations SET status = 'approved', approved_at = NOW() WHERE id = ?",
                 [$regId]
             );
-
-            // Try to add approved_at column if it doesn't exist (safe)
-            try {
-                $db->execute("ALTER TABLE pharmacy_registrations ADD COLUMN approved_at DATETIME NULL AFTER status");
-                $db->execute("UPDATE pharmacy_registrations SET approved_at = NOW() WHERE id = ?", [$regId]);
-            } catch (Exception $e) { /* column already exists */ }
 
             $loginUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php';
             Mailer::accountActivation(
