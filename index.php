@@ -403,6 +403,10 @@ ini_set('display_errors', 1);
                 <div id="countdown" class="countdown hidden"></div>
             </form>
         </div>
+        <p style="text-align:center;margin-top:20px;font-size:13px;color:#9ca3af">
+            Pas encore client ?
+            <a href="landing.php" style="color:#188038;font-weight:500;text-decoration:none">Découvrir digiPharm</a>
+        </p>
     </div>
 
     <script>
