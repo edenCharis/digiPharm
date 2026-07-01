@@ -29,19 +29,20 @@ $totalValue = 0;
 try {
     // Get seller's daily cart statistics
     $dailyStatsQuery = "
-        SELECT 
+        SELECT
             COUNT(c.id) as cart_count,
             COALESCE(SUM(
                 (SELECT SUM(ci.quantity * ci.unit_price) FROM cart_items ci WHERE ci.cart_id = c.id)
             ), 0) as total_value
-        FROM carts c 
-        WHERE c.seller_id = ? 
+        FROM carts c
+        WHERE c.seller_id = ?
         AND DATE(c.created_at) = ?
+        AND c.pharmacy_id = ?
     ";
-    
+
     // Check if $db object exists and has fetch method
     if (isset($db) && method_exists($db, 'fetch')) {
-        $dailyStats = $db->fetch($dailyStatsQuery, [$sellerId, $today]);
+        $dailyStats = $db->fetch($dailyStatsQuery, [$sellerId, $today, $pharmacyId]);
         
         if ($dailyStats) {
             $cartCount = $dailyStats['cart_count'] ?? 0;
@@ -744,8 +745,8 @@ try {
                                     try {
                                         // Fetch clients from database with error handling
                                         if (isset($db) && method_exists($db, 'fetch')) {
-                                            $clientQuery = "SELECT id, name, contact as tel FROM client ORDER BY name ASC";
-                                            $clients = $db->fetchAll($clientQuery);
+                                            $clientQuery = "SELECT id, name, contact as tel FROM client WHERE pharmacy_id = ? ORDER BY name ASC";
+                                            $clients = $db->fetchAll($clientQuery, [$pharmacyId]);
                                             
                                             if ($clients && is_array($clients) && count($clients) > 0) {
                                                 // Handle both single row and multiple rows
@@ -792,20 +793,20 @@ try {
                                 try {
                                     // Fetch available cashiers (those with open cash registers)
                                     $cashierQuery = "
-                                        SELECT 
+                                        SELECT
                                             cr.id as register_id,
                                            u.username as cashier_name,
                                             cr.opening_time,
                                             cr.status,
                                             cr.initial_amount,
-                                            (SELECT COUNT(*) FROM carts c WHERE c.cash_register_id = cr.id AND c.status = 'PENDING') as pending_carts
+                                            (SELECT COUNT(*) FROM carts c WHERE c.cash_register_id = cr.id AND c.status = 'PENDING' AND c.pharmacy_id = ?) as pending_carts
                                         FROM cash_register cr
                                         JOIN user u ON u.id = cr.cashier_id
-                                        WHERE cr.status = 'OPEN' AND u.role = 'CASHIER'
+                                        WHERE cr.status = 'OPEN' AND u.role = 'CASHIER' AND cr.pharmacy_id = ?
                                         ORDER BY pending_carts ASC, u.username ASC
                                     ";
-                                    
-                                    $cashiers = $db->fetchAll($cashierQuery);
+
+                                    $cashiers = $db->fetchAll($cashierQuery, [$pharmacyId, $pharmacyId]);
                                     
                                     if ($cashiers && is_array($cashiers) && count($cashiers) > 0) {
                                         $cashiersArray = isset($cashiers[0]) ? $cashiers : [$cashiers];
@@ -903,8 +904,8 @@ try {
                                     <?php
                                     try {
                                         // Fetch products from database with error handling
-                                            $query = "SELECT code, name, sellingPrice, stock FROM product WHERE stock > 0 ORDER BY name ASC";
-                                            $products = $db->fetchAll($query);
+                                            $query = "SELECT code, name, sellingPrice, stock FROM product WHERE stock > 0 AND pharmacy_id = ? ORDER BY name ASC";
+                                            $products = $db->fetchAll($query, [$pharmacyId]);
                                             
                                             if ($products && is_array($products) && count($products) > 0) {
                                                 // Handle both single row and multiple rows

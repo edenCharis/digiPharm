@@ -34,9 +34,9 @@ try {
                         $lastId = $stmt->fetch(PDO::FETCH_COLUMN);
                         $deliveryId = $lastId ? (string)((int)$lastId + 1) : "1";
                         
-                        $insertSQL = "INSERT INTO delivery (id, supplierId, deliveryDate,ASD, createdAt, updatedAt) VALUES (?, ?, ?,?, NOW(), NOW())";
+                        $insertSQL = "INSERT INTO delivery (id, supplierId, deliveryDate, ASD, createdAt, updatedAt, pharmacy_id) VALUES (?, ?, ?, ?, NOW(), NOW(), ?)";
                         $stmt = $pdo->prepare($insertSQL);
-                        $result = $stmt->execute([$deliveryId, $supplierId, $deliveryDate, $ASD]);
+                        $result = $stmt->execute([$deliveryId, $supplierId, $deliveryDate, $ASD, $pharmacyId]);
                         
                         if ($result) {
                             $success_message = "Livraison créée avec succès (ID: $deliveryId).";
@@ -81,9 +81,9 @@ try {
                             }
                             
                             // Delete delivery
-                            $deleteSQL = "DELETE FROM delivery WHERE id = ?";
+                            $deleteSQL = "DELETE FROM delivery WHERE id = ? AND pharmacy_id = ?";
                             $stmt = $pdo->prepare($deleteSQL);
-                            $stmt->execute([$deliveryId]);
+                            $stmt->execute([$deliveryId, $pharmacyId]);
                             
                             $pdo->commit();
                             $success_message = "Livraison supprimée avec succès.";
@@ -99,38 +99,39 @@ try {
     }
 
     // Get suppliers for dropdown
-    $suppliersSQL = "SELECT id, name FROM supplier ORDER BY name";
+    $suppliersSQL = "SELECT id, name FROM supplier WHERE pharmacy_id = ? ORDER BY name";
     $stmt = $pdo->prepare($suppliersSQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get all deliveries with details
-    $deliveriesSQL = "SELECT d.*, s.name as supplierName, 
+    $deliveriesSQL = "SELECT d.*, s.name as supplierName,
                       (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id) as itemCount,
                       (SELECT SUM(di.quantity * di.priceCession) FROM delivery_items di WHERE di.deliveryId = d.id) as totalValue,
                       (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id AND di.validated = 1) as validatedItems,
-                      CASE 
+                      CASE
                         WHEN (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id) = 0 THEN 'empty'
-                        WHEN (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id AND di.validated = 1) = 
+                        WHEN (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id AND di.validated = 1) =
                              (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id) THEN 'validated'
                         WHEN (SELECT COUNT(*) FROM delivery_items di WHERE di.deliveryId = d.id AND di.validated = 0 ) > 0 THEN 'partial'
                         ELSE 'pending'
                       END as status
-                      FROM delivery d 
-                      LEFT JOIN supplier s ON d.supplierId = s.id 
+                      FROM delivery d
+                      LEFT JOIN supplier s ON d.supplierId = s.id
+                      WHERE d.pharmacy_id = ?
                       ORDER BY d.createdAt DESC";
     $stmt = $pdo->prepare($deliveriesSQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get stock summary
-    $stockSummarySQL = "SELECT COUNT(*) as totalProducts, 
+    $stockSummarySQL = "SELECT COUNT(*) as totalProducts,
                         SUM(CASE WHEN stock <= 10 THEN 1 ELSE 0 END) as lowStockCount,
                         SUM(CASE WHEN stock <= 0 THEN 1 ELSE 0 END) as outOfStockCount,
                         SUM(stock * sellingPrice) as totalStockValue
-                        FROM product";
+                        FROM product WHERE pharmacy_id = ?";
     $stmt = $pdo->prepare($stockSummarySQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $stockSummary = $stmt->fetch(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {

@@ -25,41 +25,42 @@ $cashier_filter = $_GET['cashier'] ?? '';
 $product_filter = $_GET['product'] ?? '';
 
 // Function to get sales report data
-function getSalesReport($pdo, $date_from, $date_to, $cashier_filter = '', $product_filter = '') {
-    $sql = "SELECT 
+function getSalesReport($pdo, $date_from, $date_to, $pharmacyId, $cashier_filter = '', $product_filter = '') {
+    $sql = "SELECT
                 DATE(s.saleDate) as sale_date,
                 COUNT(DISTINCT s.id) as total_transactions,
                 SUM(si.quantity) as total_items,
                 SUM(si.quantity * si.unitPrice) as total_amount,
                 AVG(s.totalAmount) as avg_transaction_value
-            FROM sale s 
-            JOIN saleitem si ON s.id = si.saleId 
+            FROM sale s
+            JOIN saleitem si ON s.id = si.saleId
             JOIN product p ON si.productId = p.id
-            JOIN cash_register cr ON s.cash_register_id = cr.id 
-            WHERE DATE(s.saleDate) BETWEEN ? AND ?";
-    
-    $params = [$date_from, $date_to];
-    
+            JOIN cash_register cr ON s.cash_register_id = cr.id
+            WHERE DATE(s.saleDate) BETWEEN ? AND ?
+              AND s.pharmacy_id = ?";
+
+    $params = [$date_from, $date_to, $pharmacyId];
+
     if ($cashier_filter) {
         $sql .= " AND cr.cashier_id = ?";
         $params[] = $cashier_filter;
     }
-    
+
     if ($product_filter) {
         $sql .= " AND p.name LIKE ?";
         $params[] = "%$product_filter%";
     }
-    
+
     $sql .= " GROUP BY DATE(s.saleDate) ORDER BY saleDate DESC";
-    
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Function to get top selling products
-function getTopProducts($pdo, $date_from, $date_to, $limit = 10) {
-    $sql = "SELECT 
+function getTopProducts($pdo, $date_from, $date_to, $pharmacyId, $limit = 10) {
+    $sql = "SELECT
                 p.name,
                 c.name as category,
                 SUM(si.quantity) as total_sold,
@@ -70,42 +71,42 @@ function getTopProducts($pdo, $date_from, $date_to, $limit = 10) {
             JOIN product p ON si.productId = p.id
             JOIN category c ON p.categoryId = c.id
             WHERE DATE(s.saleDate) BETWEEN ? AND ?
+              AND s.pharmacy_id = ?
             GROUP BY p.id, p.name, c.name
             ORDER BY total_sold DESC
             LIMIT ?";
-    
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$date_from, $date_to, $limit]);
+    $stmt->execute([$date_from, $date_to, $pharmacyId, $limit]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Function to get low stock report
-function getLowStockReport($pdo, $threshold = 10) {
-    $sql = "SELECT 
+function getLowStockReport($pdo, $pharmacyId, $threshold = 10) {
+    $sql = "SELECT
                 p.name,
                 c.name as category,
                 p.stock,
-
                 s.name as supplier_name,
-                CASE 
+                CASE
                     WHEN p.stock = 0 THEN 'Out of Stock'
                     WHEN p.stock <= 10 THEN 'Low Stock'
                     ELSE 'Normal'
                 END as status
-            FROM supplier s join  product p on s.id = p.supplierId join category c on p.categoryId = c.id
+            FROM supplier s JOIN product p ON s.id = p.supplierId JOIN category c ON p.categoryId = c.id
             WHERE p.stock <= ?
+              AND p.pharmacy_id = ?
             ORDER BY p.stock ASC, p.name";
-    
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$threshold]);
+    $stmt->execute([$threshold, $pharmacyId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Function to get cashier performance
-function getCashierPerformance($pdo, $date_from, $date_to) {
-    $sql = "SELECT 
+function getCashierPerformance($pdo, $date_from, $date_to, $pharmacyId) {
+    $sql = "SELECT
                 u.username,
-
                 COUNT(DISTINCT s.id) as total_transactions,
                 SUM(s.totalAmount) as total_sales,
                 AVG(s.totalAmount) as avg_transaction,
@@ -115,17 +116,18 @@ function getCashierPerformance($pdo, $date_from, $date_to) {
             JOIN user u ON cr.cashier_id = u.id
             JOIN saleitem si ON s.id = si.saleId
             WHERE DATE(s.saleDate) BETWEEN ? AND ?
+              AND s.pharmacy_id = ?
             GROUP BY u.id, u.username
             ORDER BY total_sales DESC";
-    
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$date_from, $date_to]);
+    $stmt->execute([$date_from, $date_to, $pharmacyId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Function to get financial summary
-function getFinancialSummary($pdo, $date_from, $date_to) {
-    $sql = "SELECT 
+function getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId) {
+    $sql = "SELECT
                 SUM(s.totalAmount) as total_revenue,
                 COUNT(DISTINCT s.id) as total_transactions,
                 SUM(si.quantity) as total_items_sold,
@@ -134,35 +136,38 @@ function getFinancialSummary($pdo, $date_from, $date_to) {
                 MIN(s.totalAmount) as lowest_sale
             FROM sale s
             JOIN saleitem si ON s.id = si.saleId
-            WHERE DATE(s.saleDate) BETWEEN ? AND ?";
-    
+            WHERE DATE(s.saleDate) BETWEEN ? AND ?
+              AND s.pharmacy_id = ?";
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$date_from, $date_to]);
+    $stmt->execute([$date_from, $date_to, $pharmacyId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Get all cashiers for filter
-$cashiers_sql = "SELECT id, username FROM user WHERE role  IN ('cashier', 'admin', 'seller') ORDER BY username";
-$cashiers = $pdo->query($cashiers_sql)->fetchAll(PDO::FETCH_ASSOC);
+$cashiers_sql = "SELECT id, username FROM user WHERE role IN ('CASHIER', 'ADMIN', 'SELLER') AND pharmacy_id = ? ORDER BY username";
+$cashiersStmt = $pdo->prepare($cashiers_sql);
+$cashiersStmt->execute([$pharmacyId]);
+$cashiers = $cashiersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Get data based on report type
 $report_data = [];
 switch ($report_type) {
     case 'sales':
-        $report_data = getSalesReport($pdo, $date_from, $date_to, $cashier_filter, $product_filter);
+        $report_data = getSalesReport($pdo, $date_from, $date_to, $pharmacyId, $cashier_filter, $product_filter);
         break;
     case 'products':
-        $report_data = getTopProducts($pdo, $date_from, $date_to);
+        $report_data = getTopProducts($pdo, $date_from, $date_to, $pharmacyId);
         break;
     case 'inventory':
-        $report_data = getLowStockReport($pdo);
+        $report_data = getLowStockReport($pdo, $pharmacyId);
         break;
     case 'cashiers':
-        $report_data = getCashierPerformance($pdo, $date_from, $date_to);
+        $report_data = getCashierPerformance($pdo, $date_from, $date_to, $pharmacyId);
         break;
 }
 
-$financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
+$financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId);
 ?>
 
 <!DOCTYPE html>

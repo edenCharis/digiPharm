@@ -22,13 +22,14 @@ try {
 
     // Search functionality
     $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
-    $searchCondition = '';
-    $params = [];
+    $searchCondition = "WHERE p.pharmacy_id = ?";
+    $params = [$pharmacyId];
 
     if (!empty($searchTerm)) {
-        $searchCondition = "WHERE p.name LIKE ? OR p.code LIKE ?";
+        $searchCondition .= " AND (p.name LIKE ? OR p.code LIKE ?)";
         $searchLike = '%' . $searchTerm . '%';
-        $params = [$searchLike, $searchLike];
+        $params[] = $searchLike;
+        $params[] = $searchLike;
     }
 
     // Get total count for pagination

@@ -27,9 +27,9 @@ try {
     $success_message = '';
     $error_message = '';
 
-   $sql = "SELECT * FROM delivery WHERE id = ?";
+   $sql = "SELECT * FROM delivery WHERE id = ? AND pharmacy_id = ?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$deliveryId]);
+$stmt->execute([$deliveryId, $pharmacyId]);
 
 $delivery = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -46,13 +46,13 @@ if (empty($delivery)) {
         
         if (strlen($searchTerm) >= 2) {
             $searchSQL = "SELECT id, name, code, description, stock, purchasePrice, sellingPrice, statut_TVA,expiryDate
-                         FROM product 
-                         WHERE (name LIKE ? OR code LIKE ? OR description LIKE ?) 
-                         ORDER BY name ASC 
+                         FROM product
+                         WHERE (name LIKE ? OR code LIKE ? OR description LIKE ?) AND pharmacy_id = ?
+                         ORDER BY name ASC
                          LIMIT 20";
             $searchTerm = "%{$searchTerm}%";
             $stmt = $pdo->prepare($searchSQL);
-            $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
+            $stmt->execute([$searchTerm, $searchTerm, $searchTerm, $pharmacyId]);
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
            
@@ -102,9 +102,9 @@ if (empty($date) || !strtotime($date)) {
                     $pdo->beginTransaction();
                     try {
                         // Get product info
-                        $productSQL = "SELECT * FROM product WHERE id = ?";
+                        $productSQL = "SELECT * FROM product WHERE id = ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($productSQL);
-                        $stmt->execute([$productId]);
+                        $stmt->execute([$productId, $pharmacyId]);
                         $product = $stmt->fetch(PDO::FETCH_ASSOC);
                         
                         if (!$product) {
@@ -133,10 +133,10 @@ if (empty($date) || !strtotime($date)) {
                             
                         } else {
                             // Add new item
-                            $insertSQL = "INSERT INTO delivery_items (deliveryId, productId, quantity,publicPrice, priceCession, ASD, statutTVA, validated, createdAt, updatedAt) 
-                                         VALUES (?, ?, ?, ?,?, ?, ?, 0, NOW(), NOW())";
+                            $insertSQL = "INSERT INTO delivery_items (deliveryId, productId, quantity, publicPrice, priceCession, ASD, statutTVA, validated, createdAt, updatedAt, pharmacy_id)
+                                         VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), ?)";
                             $stmt = $pdo->prepare($insertSQL);
-                            $stmt->execute([$deliveryId, $productId, $quantity,$publicPrice, $priceCession, $ASD, $product['statut_TVA']]);
+                            $stmt->execute([$deliveryId, $productId, $quantity, $publicPrice, $priceCession, $ASD, $product['statut_TVA'], $pharmacyId]);
                         }
 
                         // Update product stock and prices
@@ -175,9 +175,9 @@ if (empty($date) || !strtotime($date)) {
                     $pdo->beginTransaction();
                     try {
                         // Check if product code already exists
-                        $checkSQL = "SELECT id, stock FROM product WHERE code = ?";
+                        $checkSQL = "SELECT id, stock FROM product WHERE code = ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($checkSQL);
-                        $stmt->execute([$productCode]);
+                        $stmt->execute([$productCode, $pharmacyId]);
                         $existingProduct = $stmt->fetch(PDO::FETCH_ASSOC);
                         
                         if ($existingProduct) {
@@ -199,17 +199,17 @@ if (empty($date) || !strtotime($date)) {
                            // $sellingPrice = $priceCession * ($statutTVA === 'Oui' ? 1.75 : 1.41);
                           // $publicPrice = $publicPrice;
                             
-                            $insertProductSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, categoryId, code, statut_TVA,expiryDate) 
-                                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?,?)";
+                            $insertProductSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, categoryId, code, statut_TVA, expiryDate, pharmacy_id)
+                                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?)";
                             $stmt = $pdo->prepare($insertProductSQL);
-                            $stmt->execute([$productId, $productName, $description, $priceCession, $quantity, $priceCession, $publicPrice, $vatRate, $categoryId, $productCode, $statutTVA,$date]);
+                            $stmt->execute([$productId, $productName, $description, $priceCession, $quantity, $priceCession, $publicPrice, $vatRate, $categoryId, $productCode, $statutTVA, $date, $pharmacyId]);
                         }
                         
                         // Add to delivery
-                        $insertDeliveryItemSQL = "INSERT INTO delivery_items (deliveryId, productId, quantity, priceCession,publicPrice, ASD, statutTVA, validated, createdAt, updatedAt) 
-                                                VALUES (?, ?, ?, ?, ?, ?,?, 0, NOW(), NOW())";
+                        $insertDeliveryItemSQL = "INSERT INTO delivery_items (deliveryId, productId, quantity, priceCession, publicPrice, ASD, statutTVA, validated, createdAt, updatedAt, pharmacy_id)
+                                                VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW(), ?)";
                         $stmt = $pdo->prepare($insertDeliveryItemSQL);
-                        $stmt->execute([$deliveryId, $productId, $quantity, $priceCession,$publicPrice, $ASD, $statutTVA]);
+                        $stmt->execute([$deliveryId, $productId, $quantity, $priceCession, $publicPrice, $ASD, $statutTVA, $pharmacyId]);
                         $pdo->commit();
                         $success_message = "Nouveau produit créé et ajouté à la livraison.";
                         
@@ -359,9 +359,9 @@ case 'edit_item':
     }
 
     // Get delivery information
-    $deliverySQL = "SELECT d.*, s.name as supplierName FROM delivery d LEFT JOIN supplier s ON d.supplierId = s.id WHERE d.id = ?";
+    $deliverySQL = "SELECT d.*, s.name as supplierName FROM delivery d LEFT JOIN supplier s ON d.supplierId = s.id WHERE d.id = ? AND d.pharmacy_id = ?";
     $stmt = $pdo->prepare($deliverySQL);
-    $stmt->execute([$deliveryId]);
+    $stmt->execute([$deliveryId, $pharmacyId]);
     $delivery = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$delivery) {
@@ -382,9 +382,9 @@ case 'edit_item':
     $deliveryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get categories for dropdown
-    $categoriesSQL = "SELECT id, name FROM category ORDER BY name";
+    $categoriesSQL = "SELECT id, name FROM category WHERE pharmacy_id = ? ORDER BY name";
     $stmt = $pdo->prepare($categoriesSQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Calculate totals

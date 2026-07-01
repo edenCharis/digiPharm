@@ -32,27 +32,28 @@ try {
     $todayStart = $today . ' 00:00:00';
     $todayEnd = $today . ' 23:59:59';
 
-    $totalRevenueSQL = "SELECT 
+    $totalRevenueSQL = "SELECT
                             COALESCE(SUM(ci.quantity * ci.unit_price), 0) as total_revenue,
                             COUNT(DISTINCT c.id) as total_orders,
                             COUNT(DISTINCT c.seller_id) as active_sellers
                          FROM carts c
                          LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                         WHERE c.status = 'completed'";
+                         WHERE c.status = 'completed'
+                           AND c.pharmacy_id = ?";
 
-    $revenueResult = $db->fetch($totalRevenueSQL);
+    $revenueResult = $db->fetch($totalRevenueSQL, [$pharmacyId]);
     $totalRevenue = $revenueResult ? $revenueResult['total_revenue'] : 0;
     $totalOrders = $revenueResult ? $revenueResult['total_orders'] : 0;
     $activeSellers = $revenueResult ? $revenueResult['active_sellers'] : 0;
 
     // KPI 2: Total Users (Sellers + Clients)
-    $sellersSQL = "SELECT COUNT(*) as total_sellers FROM user WHERE role = 'SELLER'";
-    $clientsSQL = "SELECT COUNT(*) as total_clients FROM client";
-    $cashierSQL = "SELECT COUNT(*) as total_cashiers FROM user WHERE role = 'CASHIER'";
+    $sellersSQL = "SELECT COUNT(*) as total_sellers FROM user WHERE role = 'SELLER' AND pharmacy_id = ?";
+    $clientsSQL = "SELECT COUNT(*) as total_clients FROM client WHERE pharmacy_id = ?";
+    $cashierSQL = "SELECT COUNT(*) as total_cashiers FROM user WHERE role = 'CASHIER' AND pharmacy_id = ?";
     
-    $sellersResult = $db->fetch($sellersSQL);
-    $clientsResult = $db->fetch($clientsSQL);
-    $cashierResult = $db->fetch($cashierSQL);
+    $sellersResult = $db->fetch($sellersSQL, [$pharmacyId]);
+    $clientsResult = $db->fetch($clientsSQL, [$pharmacyId]);
+    $cashierResult = $db->fetch($cashierSQL, [$pharmacyId]);
     
     $totalSellers = $sellersResult ? $sellersResult['total_sellers'] : 0;
     $totalClients = $clientsResult ? $clientsResult['total_clients'] : 0;
@@ -60,14 +61,15 @@ try {
 
     // KPI 3: Inventory Overview - Use low stock threshold from settings
     $lowStockThreshold = AppSettings::getLowStockThreshold();
-    $inventorySQL = "SELECT 
+    $inventorySQL = "SELECT
                         COUNT(*) as total_products,
                         SUM(CASE WHEN stock > ? THEN 1 ELSE 0 END) as in_stock,
                         SUM(CASE WHEN stock > 0 AND stock <= ? THEN 1 ELSE 0 END) as low_stock,
                         SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) as out_of_stock
-                     FROM product";
-                     
-    $inventoryResult = $db->fetch($inventorySQL, [$lowStockThreshold, $lowStockThreshold]);
+                     FROM product
+                     WHERE pharmacy_id = ?";
+
+    $inventoryResult = $db->fetch($inventorySQL, [$lowStockThreshold, $lowStockThreshold, $pharmacyId]);
     $inventoryData = $inventoryResult ? $inventoryResult : [
         'total_products' => 0,
         'in_stock' => 0,
@@ -76,15 +78,16 @@ try {
     ];
 
     // KPI 4: Monthly Performance
-    $monthlyRevenueSQL = "SELECT 
+    $monthlyRevenueSQL = "SELECT
                              COALESCE(SUM(ci.quantity * ci.unit_price), 0) as monthly_revenue,
                              COUNT(DISTINCT c.id) as monthly_orders
                           FROM carts c
                           LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                          WHERE c.created_at >= ? 
-                            AND c.status = 'completed'";
-    
-    $monthlyResult = $db->fetch($monthlyRevenueSQL, [$thisMonth]);
+                          WHERE c.created_at >= ?
+                            AND c.status = 'completed'
+                            AND c.pharmacy_id = ?";
+
+    $monthlyResult = $db->fetch($monthlyRevenueSQL, [$thisMonth, $pharmacyId]);
     $monthlyRevenue = $monthlyResult ? $monthlyResult['monthly_revenue'] : 0;
     $monthlyOrders = $monthlyResult ? $monthlyResult['monthly_orders'] : 0;
 
@@ -97,8 +100,9 @@ try {
                            FROM carts c
                            LEFT JOIN cart_items ci ON c.id = ci.cart_id
                            WHERE c.created_at >= ? AND c.created_at <= ?
-                             AND c.status = 'completed'";
-    $yesterdayResult = $db->fetch($yesterdayRevenueSQL, [$yesterdayStart, $yesterdayEnd]);
+                             AND c.status = 'completed'
+                             AND c.pharmacy_id = ?";
+    $yesterdayResult = $db->fetch($yesterdayRevenueSQL, [$yesterdayStart, $yesterdayEnd, $pharmacyId]);
     $yesterdayRevenue = $yesterdayResult ? $yesterdayResult['yesterday_revenue'] : 0;
     
     $revenueGrowth = 0;
@@ -109,7 +113,7 @@ try {
     }
 
     // Top Performing Sellers
-    $topSellersSQL = "SELECT 
+    $topSellersSQL = "SELECT
                          u.username,
                          u.id as seller_id,
                          COALESCE(SUM(ci.quantity * ci.unit_price), 0) as revenue,
@@ -118,17 +122,18 @@ try {
                       LEFT JOIN carts c ON u.id = c.seller_id AND DATE(c.created_at) = ?
                       LEFT JOIN cart_items ci ON c.id = ci.cart_id
                       WHERE u.role = 'SELLER' AND c.status = 'completed'
+                        AND u.pharmacy_id = ?
                       GROUP BY u.id, u.username
                       ORDER BY revenue DESC
                       LIMIT 5";
-    
-    $topSellers = $db->fetchAll($topSellersSQL, [$today]);
+
+    $topSellers = $db->fetchAll($topSellersSQL, [$today, $pharmacyId]);
     if ($topSellers === false) {
         $topSellers = [];
     }
 
     // Recent System Activity
-    $recentActivitySQL = "SELECT 
+    $recentActivitySQL = "SELECT
                              c.id,
                              c.created_at,
                              u.username as seller_name,
@@ -140,11 +145,12 @@ try {
                           LEFT JOIN client cl ON c.client_id = cl.id
                           LEFT JOIN cart_items ci ON c.id = ci.cart_id
                           WHERE c.status = 'completed'
+                            AND c.pharmacy_id = ?
                           GROUP BY c.id, c.created_at, u.username, cl.name, c.status
                           ORDER BY c.created_at DESC
                           LIMIT 10";
-    
-    $recentActivity = $db->fetchAll($recentActivitySQL);
+
+    $recentActivity = $db->fetchAll($recentActivitySQL, [$pharmacyId]);
     if ($recentActivity === false) {
         $recentActivity = [];
     }
@@ -153,26 +159,28 @@ try {
     $criticalAlertsSQL = "SELECT p.name, stock, c.name as category
                          FROM product p join category c on p.categoryId = c.id
                          WHERE stock <= ?
+                           AND p.pharmacy_id = ?
                          ORDER BY stock ASC
                          LIMIT 5";
-    
-    $criticalAlerts = $db->fetchAll($criticalAlertsSQL, [max(1, $lowStockThreshold / 2)]);
+
+    $criticalAlerts = $db->fetchAll($criticalAlertsSQL, [max(1, $lowStockThreshold / 2), $pharmacyId]);
     if ($criticalAlerts === false) {
         $criticalAlerts = [];
     }
 
     // Weekly Revenue Chart Data
-    $weeklyRevenueSQL = "SELECT 
+    $weeklyRevenueSQL = "SELECT
                             DATE(c.created_at) as sale_date,
                             COALESCE(SUM(ci.quantity * ci.unit_price), 0) as daily_revenue
                          FROM carts c
                          LEFT JOIN cart_items ci ON c.id = ci.cart_id
                          WHERE DATE(c.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
                            AND c.status = 'completed'
+                           AND c.pharmacy_id = ?
                          GROUP BY DATE(c.created_at)
                          ORDER BY DATE(c.created_at) ASC";
-    
-    $weeklyRevenue = $db->fetchAll($weeklyRevenueSQL);
+
+    $weeklyRevenue = $db->fetchAll($weeklyRevenueSQL, [$pharmacyId]);
     if ($weeklyRevenue === false) {
         $weeklyRevenue = [];
     }

@@ -24,8 +24,8 @@ try {
     $dateFilter = isset($_GET['date']) ? trim($_GET['date']) : '';
     
     // Build the WHERE clause
-    $whereConditions = ["c.status = 'pending'", "cr.cashier_id = ?"];
-    $queryParams = [$cashierId];
+    $whereConditions = ["c.status = 'pending'", "cr.cashier_id = ?", "c.pharmacy_id = ?"];
+    $queryParams = [$cashierId, $pharmacyId];
     
     if (!empty($searchTerm)) {
         $whereConditions[] = "(cl.name LIKE ? OR sel.username LIKE ? OR c.id LIKE ?)";
@@ -67,13 +67,13 @@ try {
     if (!$pendingCarts) $pendingCarts = [];
 
     // Get sellers for filter dropdown
-    $sellersQuery = "SELECT DISTINCT u.username 
+    $sellersQuery = "SELECT DISTINCT u.username
                      FROM carts c
                      JOIN cash_register cr ON c.cash_register_id = cr.id
                      LEFT JOIN user u ON c.seller_id = u.id
-                     WHERE c.status = 'pending' AND cr.cashier_id = ?
+                     WHERE c.status = 'pending' AND cr.cashier_id = ? AND c.pharmacy_id = ?
                      ORDER BY u.username";
-    $sellers = $db->fetchAll($sellersQuery, [$cashierId]);
+    $sellers = $db->fetchAll($sellersQuery, [$cashierId, $pharmacyId]);
     if (!$sellers) $sellers = [];
 
     // Statistics

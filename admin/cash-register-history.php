@@ -19,8 +19,8 @@ try {
     $offset          = ($currentPage - 1) * $perPage;
 
     // ── Build WHERE clause ─────────────────────────────────────────
-    $whereParts = ["DATE(cr.opening_time) BETWEEN ? AND ?"];
-    $params     = [$filterDateFrom, $filterDateTo];
+    $whereParts = ["DATE(cr.opening_time) BETWEEN ? AND ?", "cr.pharmacy_id = ?"];
+    $params     = [$filterDateFrom, $filterDateTo, $pharmacyId];
 
     if ($filterStatus !== 'all') {
         $whereParts[] = "cr.status = ?";
@@ -89,8 +89,8 @@ try {
     $summary = $db->fetch($summarySQL, $params);
 
     // ── Cashier list for filter dropdown ──────────────────────────
-    $cashiersSQL = "SELECT id, username, role FROM user WHERE role IN ('CASHIER','SELLER') AND statut=1 ORDER BY username";
-    $cashiers = $db->fetchAll($cashiersSQL) ?: [];
+    $cashiersSQL = "SELECT id, username, role FROM user WHERE role IN ('CASHIER','SELLER') AND statut=1 AND pharmacy_id = ? ORDER BY username";
+    $cashiers = $db->fetchAll($cashiersSQL, [$pharmacyId]) ?: [];
 
 } catch (Exception $e) {
     die('Erreur: ' . $e->getMessage());

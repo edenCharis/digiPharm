@@ -26,15 +26,15 @@ try {
                 case 'add':
                     $name = trim($_POST['name']);
                     $contact = trim($_POST['contact']);
-                    
+
                     if (!empty($name) && !empty($contact)) {
                         // Get the last ID from the database and increment
                         $stmt = $pdo->query("SELECT id FROM supplier ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                         $lastId = $stmt->fetch(PDO::FETCH_COLUMN);
                         $id = $lastId ? (string)((int)$lastId + 1) : "1";
-                        $insertSQL = "INSERT INTO supplier (id,name, contact, createdAt, updatedAt) VALUES (?,?, ?, NOW(), NOW())";
+                        $insertSQL = "INSERT INTO supplier (id, name, contact, createdAt, updatedAt, pharmacy_id) VALUES (?, ?, ?, NOW(), NOW(), ?)";
                         $stmt = $pdo->prepare($insertSQL);
-                        $result = $stmt->execute([$id,$name, $contact]);
+                        $result = $stmt->execute([$id, $name, $contact, $pharmacyId]);
                         
                         if ($result) {
                             $success_message = "Fournisseur ajouté avec succès.";
@@ -50,11 +50,11 @@ try {
                     $id = (string)($_POST['id']);
                     $name = trim($_POST['name']);
                     $contact = trim($_POST['contact']);
-                    
+
                     if (!empty($name) && !empty($contact) && $id > 0) {
-                        $updateSQL = "UPDATE supplier SET name = ?, contact = ?, updatedAt = NOW() WHERE id = ?";
+                        $updateSQL = "UPDATE supplier SET name = ?, contact = ?, updatedAt = NOW() WHERE id = ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($updateSQL);
-                        $result = $stmt->execute([$name, $contact, $id]);
+                        $result = $stmt->execute([$name, $contact, $id, $pharmacyId]);
                         
                         if ($result) {
                             $success_message = "Fournisseur modifié avec succès.";
@@ -68,21 +68,21 @@ try {
 
                 case 'delete':
                     $id = (string)($_POST['id']);
-                    
+
                     if ($id > 0) {
                         // Check if supplier is used in products
-                        $checkSQL = "SELECT COUNT(*) as count FROM product p join delivery_items d on p.id = d.productId join delivery dt on d.deliveryId= dt.id  WHERE dt.supplierId  = ?";
+                        $checkSQL = "SELECT COUNT(*) as count FROM product p join delivery_items d on p.id = d.productId join delivery dt on d.deliveryId= dt.id WHERE dt.supplierId = ? AND dt.pharmacy_id = ?";
                         $stmt = $pdo->prepare($checkSQL);
-                        $stmt->execute([$id]);
+                        $stmt->execute([$id, $pharmacyId]);
                         $checkResult = $stmt->fetch(PDO::FETCH_ASSOC);
-                        
+
                         if ($checkResult && $checkResult['count'] > 0) {
                             $error_message = "Impossible de supprimer ce fournisseur car il est utilisé par des produits.";
                         } else {
 
-                            $deleteSQL = "DELETE FROM supplier WHERE id = ?";
+                            $deleteSQL = "DELETE FROM supplier WHERE id = ? AND pharmacy_id = ?";
                             $stmt = $pdo->prepare($deleteSQL);
-                            $result = $stmt->execute([$id]);
+                            $result = $stmt->execute([$id, $pharmacyId]);
                             
                             if ($result) {
                                 $success_message = "Fournisseur supprimé avec succès.";
@@ -102,13 +102,14 @@ try {
     $offset = ($page - 1) * $limit;
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-    $whereClause = '';
-    $params = [];
-    
+    $params = [$pharmacyId];
+    $whereClause = "WHERE pharmacy_id = ?";
+
     if (!empty($search)) {
-        $whereClause = "WHERE name LIKE ? OR contact LIKE ?";
+        $whereClause .= " AND (name LIKE ? OR contact LIKE ?)";
         $searchTerm = "%$search%";
-        $params = [$searchTerm, $searchTerm];
+        $params[] = $searchTerm;
+        $params[] = $searchTerm;
     }
 
     // Get total count
@@ -132,9 +133,9 @@ try {
     $editingSupplier = null;
     if (isset($_GET['edit_id'])) {
         $editId = intval($_GET['edit_id']);
-        $editSQL = "SELECT * FROM supplier WHERE id = ?";
+        $editSQL = "SELECT * FROM supplier WHERE id = ? AND pharmacy_id = ?";
         $stmt = $pdo->prepare($editSQL);
-        $stmt->execute([$editId]);
+        $stmt->execute([$editId, $pharmacyId]);
         $editingSupplier = $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

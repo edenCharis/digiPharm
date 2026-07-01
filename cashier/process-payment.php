@@ -22,40 +22,40 @@ try {
     // If cartId is provided, load cart details
     if ($cartId) {
         // Get cart details
-        $cartQuery = "SELECT c.*, cl.name as clientName, cl.contact as clientPhone, 
+        $cartQuery = "SELECT c.*, cl.name as clientName, cl.contact as clientPhone,
                              sel.username as sellerName
                       FROM carts c
                       LEFT JOIN client cl ON c.client_id = cl.id
                       LEFT JOIN user sel ON c.seller_id = sel.id
-                      WHERE c.id = ? AND c.status = 'pending'";
-        $cart = $db->fetch($cartQuery, [$cartId]);
+                      WHERE c.id = ? AND c.status = 'pending' AND c.pharmacy_id = ?";
+        $cart = $db->fetch($cartQuery, [$cartId, $pharmacyId]);
 
         if ($cart) {
             // Get cart items with product details
             $itemsQuery = "SELECT ci.*, p.name as productName, p.code, p.sellingPrice,
                                   c.name as category_name, p.stock
                            FROM cart_items ci
-                           JOIN product p ON ci.product_id = p.id
+                           JOIN product p ON ci.product_id = p.id AND p.pharmacy_id = ?
                            JOIN category c ON p.categoryId = c.id
                            WHERE ci.cart_id = ?
                            ORDER BY p.name";
-            $cartItems = $db->fetchAll($itemsQuery, [$cartId]);
+            $cartItems = $db->fetchAll($itemsQuery, [$pharmacyId, $cartId]);
             
             if (!$cartItems) $cartItems = [];
         }
     }
 
     // Get all pending carts for dropdown
-    $pendingCartsQuery = "SELECT c.id, c.created_at, sel.username as sellerName, 
+    $pendingCartsQuery = "SELECT c.id, c.created_at, sel.username as sellerName,
                                  cl.name as clientName, COUNT(ci.id) as itemCount
                           FROM carts c
                           LEFT JOIN user sel ON c.seller_id = sel.id
                           LEFT JOIN client cl ON c.client_id = cl.id
                           LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                          WHERE c.status = 'pending'
+                          WHERE c.status = 'pending' AND c.pharmacy_id = ?
                           GROUP BY c.id
                           ORDER BY c.created_at ASC";
-    $pendingCarts = $db->fetchAll($pendingCartsQuery);
+    $pendingCarts = $db->fetchAll($pendingCartsQuery, [$pharmacyId]);
     if (!$pendingCarts) $pendingCarts = [];
 
     // Calculate totals (prices already include VAT)

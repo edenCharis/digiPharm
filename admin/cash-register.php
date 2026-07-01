@@ -30,18 +30,18 @@ try {
             case 'open_register':
                 $cashier_id = $_POST['cashier_id'];
                 $initial_amount = floatval($_POST['initial_amount']);
-                
+
                 // Check if cashier already has an open register
-                $checkSQL = "SELECT id FROM cash_register WHERE cashier_id = ? AND status = 'open'";
-                $existingRegister = $db->fetch($checkSQL, [$cashier_id]);
-                
+                $checkSQL = "SELECT id FROM cash_register WHERE cashier_id = ? AND status = 'open' AND pharmacy_id = ?";
+                $existingRegister = $db->fetch($checkSQL, [$cashier_id, $pharmacyId]);
+
                 if ($existingRegister) {
                     $_SESSION['flash_message'] = "Ce caissier a déjà une caisse ouverte.";
                     $_SESSION['flash_message_type'] = 'error';
                 } else {
-                    $openSQL = "INSERT INTO cash_register (cashier_id, opening_time, status, initial_amount, final_amount) 
-                               VALUES (?, NOW(), 'open', ?, 0)";
-                    $result = $db->execute($openSQL, [$cashier_id, $initial_amount]);
+                    $openSQL = "INSERT INTO cash_register (cashier_id, opening_time, status, initial_amount, final_amount, pharmacy_id)
+                               VALUES (?, NOW(), 'open', ?, 0, ?)";
+                    $result = $db->execute($openSQL, [$cashier_id, $initial_amount, $pharmacyId]);
                     
                     if ($result) {
                         $_SESSION['flash_message'] = "Caisse ouverte avec succès.";
@@ -60,11 +60,11 @@ try {
             case 'close_register':
                 $register_id = $_POST['register_id'];
                 $final_amount = floatval($_POST['final_amount']);
-                
-                $closeSQL = "UPDATE cash_register 
-                            SET closing_time = NOW(), status = 'closed', final_amount = ? 
-                            WHERE id = ? AND status = 'open'";
-                $result = $db->execute($closeSQL, [$final_amount, $register_id]);
+
+                $closeSQL = "UPDATE cash_register
+                            SET closing_time = NOW(), status = 'closed', final_amount = ?
+                            WHERE id = ? AND status = 'open' AND pharmacy_id = ?";
+                $result = $db->execute($closeSQL, [$final_amount, $register_id, $pharmacyId]);
                 
                 if ($result) {
                     $_SESSION['flash_message'] = "Caisse fermée avec succès.";
@@ -82,12 +82,12 @@ try {
     }
 
     // Get all cashiers and sellers
-    $cashiersSQL = "SELECT id, username, role FROM user WHERE role IN ('CASHIER', 'SELLER') AND statut = 1 ORDER BY username";
-    $cashiers = $db->fetchAll($cashiersSQL);
+    $cashiersSQL = "SELECT id, username, role FROM user WHERE role IN ('CASHIER', 'SELLER') AND statut = 1 AND pharmacy_id = ? ORDER BY username";
+    $cashiers = $db->fetchAll($cashiersSQL, [$pharmacyId]);
     if (!$cashiers) $cashiers = [];
 
     // Get open registers with cashier info and sales data
-    $openRegistersSQL = "SELECT 
+    $openRegistersSQL = "SELECT
                             cr.id,
                             cr.cashier_id,
                             cr.opening_time,
@@ -100,15 +100,15 @@ try {
                          FROM cash_register cr
                          LEFT JOIN user u ON cr.cashier_id = u.id
                          LEFT JOIN sale s ON cr.id = s.cash_register_id
-                         WHERE cr.status = 'open'
+                         WHERE cr.status = 'open' AND cr.pharmacy_id = ?
                          GROUP BY cr.id, cr.cashier_id, cr.opening_time, cr.initial_amount, u.username, u.role
                          ORDER BY cr.opening_time DESC";
-    
-    $openRegisters = $db->fetchAll($openRegistersSQL);
+
+    $openRegisters = $db->fetchAll($openRegistersSQL, [$pharmacyId]);
     if (!$openRegisters) $openRegisters = [];
 
     // Get recent closed registers
-    $recentClosedSQL = "SELECT 
+    $recentClosedSQL = "SELECT
                            cr.id,
                            cr.cashier_id,
                            cr.opening_time,
@@ -123,25 +123,26 @@ try {
                         FROM cash_register cr
                         LEFT JOIN user u ON cr.cashier_id = u.id
                         LEFT JOIN sale s ON cr.id = s.cash_register_id
-                        WHERE cr.status = 'closed'
-                        GROUP BY cr.id, cr.cashier_id, cr.opening_time, cr.closing_time, 
+                        WHERE cr.status = 'closed' AND cr.pharmacy_id = ?
+                        GROUP BY cr.id, cr.cashier_id, cr.opening_time, cr.closing_time,
                                 cr.initial_amount, cr.final_amount, u.username, u.role
                         ORDER BY cr.closing_time DESC
                         LIMIT 10";
-    
-    $recentClosed = $db->fetchAll($recentClosedSQL);
+
+    $recentClosed = $db->fetchAll($recentClosedSQL, [$pharmacyId]);
     if (!$recentClosed) $recentClosed = [];
 
     // Get daily statistics
-    $todayStatsSQL = "SELECT 
+    $todayStatsSQL = "SELECT
                          COUNT(CASE WHEN cr.status = 'open' THEN 1 END) as open_registers,
                          COUNT(CASE WHEN cr.status = 'closed' AND DATE(cr.closing_time) = CURDATE() THEN 1 END) as closed_today,
                          COALESCE(SUM(CASE WHEN DATE(s.saleDate) = CURDATE() THEN s.totalAmount END), 0) as today_revenue,
                          COUNT(CASE WHEN DATE(s.saleDate) = CURDATE() THEN s.id END) as today_transactions
                       FROM cash_register cr
-                      LEFT JOIN sale s ON cr.id = s.cash_register_id";
-    
-    $dailyStats = $db->fetch($todayStatsSQL);
+                      LEFT JOIN sale s ON cr.id = s.cash_register_id
+                      WHERE cr.pharmacy_id = ?";
+
+    $dailyStats = $db->fetch($todayStatsSQL, [$pharmacyId]);
     if (!$dailyStats) {
         $dailyStats = [
             'open_registers' => 0,

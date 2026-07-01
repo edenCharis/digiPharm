@@ -31,9 +31,9 @@ try {
                         $stmt = $pdo->query("SELECT id FROM category ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                         $lastId = $stmt->fetch(PDO::FETCH_COLUMN);
                         $id = $lastId ? (string)((int)$lastId + 1) : "1";
-                        $insertSQL = "INSERT INTO category (id, name, createdAt, updatedAt) VALUES (?, ?, NOW(), NOW())";
+                        $insertSQL = "INSERT INTO category (id, name, createdAt, updatedAt, pharmacy_id) VALUES (?, ?, NOW(), NOW(), ?)";
                         $stmt = $pdo->prepare($insertSQL);
-                        $result = $stmt->execute([$id, $name]);
+                        $result = $stmt->execute([$id, $name, $pharmacyId]);
                         
                         if ($result) {
                             $success_message = "Catégorie ajoutée avec succès.";
@@ -50,9 +50,9 @@ try {
                     $name = trim($_POST['name']);
                     
                     if (!empty($name) && $id > 0) {
-                        $updateSQL = "UPDATE category SET name = ?, updatedAt = NOW() WHERE id = ?";
+                        $updateSQL = "UPDATE category SET name = ?, updatedAt = NOW() WHERE id = ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($updateSQL);
-                        $result = $stmt->execute([$name, $id]);
+                        $result = $stmt->execute([$name, $id, $pharmacyId]);
                         
                         if ($result) {
                             $success_message = "Catégorie modifiée avec succès.";
@@ -77,9 +77,9 @@ try {
                         if ($checkResult && $checkResult['count'] > 0) {
                             $error_message = "Impossible de supprimer cette catégorie car elle est utilisée par des produits.";
                         } else {
-                            $deleteSQL = "DELETE FROM category WHERE id = ?";
+                            $deleteSQL = "DELETE FROM category WHERE id = ? AND pharmacy_id = ?";
                             $stmt = $pdo->prepare($deleteSQL);
-                            $result = $stmt->execute([$id]);
+                            $result = $stmt->execute([$id, $pharmacyId]);
                             
                             if ($result) {
                                 $success_message = "Catégorie supprimée avec succès.";
@@ -99,14 +99,16 @@ try {
     $offset = ($page - 1) * $limit;
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-    $whereClause = '';
-    $params = [];
-    
+    $conditions = ["pharmacy_id = ?"];
+    $params = [$pharmacyId];
+
     if (!empty($search)) {
-        $whereClause = "WHERE name LIKE ?";
+        $conditions[] = "name LIKE ?";
         $searchTerm = "%$search%";
-        $params = [$searchTerm];
+        $params[] = $searchTerm;
     }
+
+    $whereClause = "WHERE " . implode(" AND ", $conditions);
 
     // Get total count
     $countSQL = "SELECT COUNT(*) as total FROM category $whereClause";
@@ -129,9 +131,9 @@ try {
     $editingCategory = null;
     if (isset($_GET['edit_id'])) {
         $editId = intval($_GET['edit_id']);
-        $editSQL = "SELECT * FROM category WHERE id = ?";
+        $editSQL = "SELECT * FROM category WHERE id = ? AND pharmacy_id = ?";
         $stmt = $pdo->prepare($editSQL);
-        $stmt->execute([$editId]);
+        $stmt->execute([$editId, $pharmacyId]);
         $editingCategory = $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

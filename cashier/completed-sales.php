@@ -31,8 +31,8 @@ try {
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     
     // Build query conditions
-    $conditions = ["cr.cashier_id = ?"];
-    $params = [$cashierId];
+    $conditions = ["cr.cashier_id = ?", "s.pharmacy_id = ?"];
+    $params = [$cashierId, $pharmacyId];
     
     // Date range filtering
     switch ($dateRange) {

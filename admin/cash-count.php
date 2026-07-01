@@ -32,7 +32,7 @@ try {
     }
 
     // Get register details
-    $registerSQL = "SELECT 
+    $registerSQL = "SELECT
                         cr.id,
                         cr.cashier_id,
                         cr.opening_time,
@@ -46,11 +46,11 @@ try {
                     FROM cash_register cr
                     LEFT JOIN user u ON cr.cashier_id = u.id
                     LEFT JOIN sale s ON cr.id = s.cash_register_id
-                    WHERE cr.id = ? AND cr.status = 'open'
-                    GROUP BY cr.id, cr.cashier_id, cr.opening_time, cr.initial_amount, 
+                    WHERE cr.id = ? AND cr.status = 'open' AND cr.pharmacy_id = ?
+                    GROUP BY cr.id, cr.cashier_id, cr.opening_time, cr.initial_amount,
                              cr.status, u.username, u.role";
-    
-    $register = $db->fetch($registerSQL, [$register_id]);
+
+    $register = $db->fetch($registerSQL, [$register_id, $pharmacyId]);
     
     if (!$register) {
         $_SESSION['flash_message'] = "Caisse introuvable ou déjà fermée.";
@@ -142,20 +142,20 @@ try {
                 } else {
                     $insertSQL = "INSERT INTO cash_counting (
                                     register_id, count_10000, count_5000, count_2000, count_1000,
-                                    count_500, count_250,count_200, count_100, count_50, count_25, count_10, count_5, count_1,
+                                    count_500, count_250, count_200, count_100, count_50, count_25, count_10, count_5, count_1,
                                     cards_amount, checks_amount, vouchers_amount,
                                     cash_total, physical_total, expected_total, difference,
-                                    justification, category, created_at, created_by
-                                  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
-                    
+                                    justification, category, created_at, created_by, pharmacy_id
+                                  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
+
                     $db->execute($insertSQL, [
                         $register_id,
                         $denominations['10000'], $denominations['5000'], $denominations['2000'], $denominations['1000'],
-                        $denominations['500'], $denominations['250'], $denominations['200'],$denominations['100'], $denominations['50'],
+                        $denominations['500'], $denominations['250'], $denominations['200'], $denominations['100'], $denominations['50'],
                         $denominations['25'], $denominations['10'], $denominations['5'], $denominations['1'],
                         $cards_amount, $checks_amount, $vouchers_amount,
                         $cash_total, $physical_total, $expected_total, $difference,
-                        $justification, $category, $admin_id
+                        $justification, $category, $admin_id, $pharmacyId
                     ]);
                 }
 

@@ -28,29 +28,31 @@ try {
     $todayEnd = $today . ' 23:59:59';
 
     // Fixed: Use correct table name 'carts' (not 'cart') and proper date comparison
-    $todaySalesSQL = "SELECT 
+    $todaySalesSQL = "SELECT
                           COALESCE(SUM(ci.quantity * ci.unit_price), 0) as today_revenue,
                           COUNT(DISTINCT c.id) as today_orders
                        FROM carts c
                        LEFT JOIN cart_items ci ON c.id = ci.cart_id
                        WHERE c.created_at >= ? AND c.created_at <= ?
-                         AND c.status = 'completed' 
-                         AND c.seller_id = ?";
+                         AND c.status = 'completed'
+                         AND c.seller_id = ?
+                         AND c.pharmacy_id = ?";
 
-    $todaySalesResult = $db->fetch($todaySalesSQL, [$todayStart, $todayEnd, $seller_id]);
+    $todaySalesResult = $db->fetch($todaySalesSQL, [$todayStart, $todayEnd, $seller_id, $pharmacyId]);
 
     $todayRevenue = $todaySalesResult ? $todaySalesResult['today_revenue'] : 0;
     $todayOrders = $todaySalesResult ? $todaySalesResult['today_orders'] : 0;
 
     // KPI 2: Products in stock - FIXED to filter by seller_id
-    $stockSQL = "SELECT 
+    $stockSQL = "SELECT
                     COUNT(*) as total_products,
                     SUM(CASE WHEN stock > 10 THEN 1 ELSE 0 END) as in_stock,
                     SUM(CASE WHEN stock > 0 AND stock <= 10 THEN 1 ELSE 0 END) as low_stock,
                     SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) as out_of_stock
-                 FROM product";
-                 
-    $stockResult = $db->fetch($stockSQL); // Fixed: use fetch instead of fetchAll
+                 FROM product
+                 WHERE pharmacy_id = ?";
+
+    $stockResult = $db->fetch($stockSQL, [$pharmacyId]); // Fixed: use fetch instead of fetchAll
     $stockData = $stockResult ? $stockResult : [
         'total_products' => 0,
         'in_stock' => 0,
@@ -60,9 +62,9 @@ try {
 
     // KPI 3: Unique customers served today - FIXED table name
     $customersSQL = "SELECT COUNT(DISTINCT client_id) as customers_served
-                     FROM carts 
-                     WHERE DATE(created_at) = ? AND status = 'completed' AND seller_id = ?";
-    $customersResult = $db->fetch($customersSQL, [$today, $seller_id]); // Fixed: use fetch
+                     FROM carts
+                     WHERE DATE(created_at) = ? AND status = 'completed' AND seller_id = ? AND pharmacy_id = ?";
+    $customersResult = $db->fetch($customersSQL, [$today, $seller_id, $pharmacyId]); // Fixed: use fetch
     $customersServed = $customersResult ? $customersResult['customers_served'] : 0;
 
     // Calculate growth percentages (comparing with yesterday)
@@ -76,9 +78,10 @@ try {
                             FROM carts c
                             LEFT JOIN cart_items ci ON c.id = ci.cart_id
                             WHERE c.created_at >= ? AND c.created_at <= ?
-                              AND c.status = 'completed' 
-                              AND c.seller_id = ?";
-    $yesterdayResult = $db->fetch($yesterdayRevenueSQL, [$yesterdayStart, $yesterdayEnd, $seller_id]);
+                              AND c.status = 'completed'
+                              AND c.seller_id = ?
+                              AND c.pharmacy_id = ?";
+    $yesterdayResult = $db->fetch($yesterdayRevenueSQL, [$yesterdayStart, $yesterdayEnd, $seller_id, $pharmacyId]);
     $yesterdayRevenue = $yesterdayResult ? $yesterdayResult['yesterday_revenue'] : 0;
     
     $revenueGrowth = 0;
@@ -92,9 +95,10 @@ try {
     $yesterdayOrdersSQL = "SELECT COUNT(*) as yesterday_orders
                            FROM carts  c
                            WHERE c.created_at >= ? AND c.created_at <= ?
-                             AND status = 'completed' 
-                             AND seller_id = ?";
-    $yesterdayOrdersResult = $db->fetch($yesterdayOrdersSQL, [$yesterdayStart, $yesterdayEnd, $seller_id]);
+                             AND status = 'completed'
+                             AND seller_id = ?
+                             AND pharmacy_id = ?";
+    $yesterdayOrdersResult = $db->fetch($yesterdayOrdersSQL, [$yesterdayStart, $yesterdayEnd, $seller_id, $pharmacyId]);
     $yesterdayOrders = $yesterdayOrdersResult ? $yesterdayOrdersResult['yesterday_orders'] : 0;
     
     $ordersGrowth = 0;
@@ -113,11 +117,11 @@ try {
                               FROM carts c
                               LEFT JOIN client cl ON c.client_id = cl.id
                               LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                              WHERE c.status = 'completed' AND c.seller_id = ?
+                              WHERE c.status = 'completed' AND c.seller_id = ? AND c.pharmacy_id = ?
                               GROUP BY c.id, c.name, c.created_at, cl.name, c.status
                               ORDER BY c.created_at DESC
                               LIMIT 5";
-    $recentTransactions = $db->fetchAll($recentTransactionsSQL, [$seller_id]);
+    $recentTransactions = $db->fetchAll($recentTransactionsSQL, [$seller_id, $pharmacyId]);
     if ($recentTransactions === false) {
         $recentTransactions = [];
     }
@@ -125,10 +129,10 @@ try {
     // Get low stock products for alerts - FIXED to filter by seller
     $lowStockProductsSQL = "SELECT name, stock
                             FROM product
-                            WHERE stock > 0 AND stock <= 10
+                            WHERE stock > 0 AND stock <= 10 AND pharmacy_id = ?
                             ORDER BY stock ASC
                             LIMIT 5";
-    $lowStockProducts = $db->fetchAll($lowStockProductsSQL,);
+    $lowStockProducts = $db->fetchAll($lowStockProductsSQL, [$pharmacyId]);
     if ($lowStockProducts === false) {
         $lowStockProducts = [];
     }
@@ -138,12 +142,13 @@ try {
                               COALESCE(SUM(ci.quantity * ci.unit_price), 0) as daily_revenue
                        FROM carts c
                        LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                       WHERE DATE(c.created_at) >= ? 
-                         AND c.status = 'completed' 
+                       WHERE DATE(c.created_at) >= ?
+                         AND c.status = 'completed'
                          AND c.seller_id = ?
+                         AND c.pharmacy_id = ?
                        GROUP BY DATE(c.created_at)
                        ORDER BY DATE(c.created_at) ASC";
-    $weeklySales = $db->fetchAll($weeklySalesSQL, [$thisWeek, $seller_id]);
+    $weeklySales = $db->fetchAll($weeklySalesSQL, [$thisWeek, $seller_id, $pharmacyId]);
     if ($weeklySales === false) {
         $weeklySales = [];
     }

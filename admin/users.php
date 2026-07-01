@@ -37,8 +37,8 @@ try {
                         $messageType = 'error';
                     } else {
                         // Check if username or email already exists
-                        $checkUserSQL = "SELECT id FROM user WHERE username = ? OR email = ?";
-                        $existingUser = $db->fetch($checkUserSQL, [$username, $email]);
+                        $checkUserSQL = "SELECT id FROM user WHERE (username = ? OR email = ?) AND pharmacy_id = ?";
+                        $existingUser = $db->fetch($checkUserSQL, [$username, $email, $pharmacyId]);
                         
                         if ($existingUser) {
                             $message = 'Nom d\'utilisateur ou email déjà utilisé';
@@ -50,8 +50,8 @@ try {
                             // Insert new user
 
                             $id = uniqid();
-                            $insertUserSQL = "INSERT INTO user (id,username, email, password, role, createdAt) VALUES (?,?, ?, ?, ?, NOW())";
-                            $result = $db->query($insertUserSQL, [$id,$username, $email, $hashedPassword, $role]);
+                            $insertUserSQL = "INSERT INTO user (id, username, email, password, role, createdAt, pharmacy_id) VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+                            $result = $db->query($insertUserSQL, [$id, $username, $email, $hashedPassword, $role, $pharmacyId]);
                             
                             if ($result) {
                                 $message = 'Utilisateur ajouté avec succès';
@@ -78,8 +78,8 @@ try {
                         $messageType = 'error';
                     } else {
                         // Check if username or email already exists for other users
-                        $checkUserSQL = "SELECT id FROM user WHERE (username = ? OR email = ?) AND id != ?";
-                        $existingUser = $db->fetch($checkUserSQL, [$username, $email, $userId]);
+                        $checkUserSQL = "SELECT id FROM user WHERE (username = ? OR email = ?) AND id != ? AND pharmacy_id = ?";
+                        $existingUser = $db->fetch($checkUserSQL, [$username, $email, $userId, $pharmacyId]);
                         
                         if ($existingUser) {
                             $message = 'Nom d\'utilisateur ou email déjà utilisé par un autre utilisateur';
@@ -115,16 +115,16 @@ try {
                         $messageType = 'error';
                     } else {
                         // Check if user has any cart history before deleting
-                        $checkCartsSQL = "SELECT COUNT(*) as cart_count FROM carts WHERE seller_id = ?";
-                        $cartCount = $db->fetch($checkCartsSQL, [$userId]);
-                        
+                        $checkCartsSQL = "SELECT COUNT(*) as cart_count FROM carts WHERE seller_id = ? AND pharmacy_id = ?";
+                        $cartCount = $db->fetch($checkCartsSQL, [$userId, $pharmacyId]);
+
                         if ($cartCount && $cartCount['cart_count'] > 0) {
                             // Soft delete or transfer ownership might be better
                             $message = 'Impossible de supprimer cet utilisateur car il a un historique de ventes';
                             $messageType = 'error';
                         } else {
-                            $deleteUserSQL = "DELETE FROM user WHERE id = ?";
-                            $result = $db->query($deleteUserSQL, [$userId]);
+                            $deleteUserSQL = "DELETE FROM user WHERE id = ? AND pharmacy_id = ?";
+                            $result = $db->query($deleteUserSQL, [$userId, $pharmacyId]);
                             
                             if ($result) {
                                 $message = 'Utilisateur supprimé avec succès';
@@ -150,8 +150,8 @@ try {
     $roleFilter = isset($_GET['role']) ? $_GET['role'] : '';
 
     // Build WHERE clause
-    $whereConditions = [];
-    $params = [];
+    $whereConditions = ["pharmacy_id = ?"];
+    $params = [$pharmacyId];
 
     if (!empty($search)) {
         $whereConditions[] = "(username LIKE ? OR email LIKE ?)";
@@ -164,7 +164,7 @@ try {
         $params[] = $roleFilter;
     }
 
-    $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
+    $whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
 
     // Get total count for pagination
     $countSQL = "SELECT COUNT(*) as total FROM user $whereClause";
@@ -173,30 +173,31 @@ try {
     $totalPages = ceil($totalUsers / $perPage);
 
     // Get users with pagination
-    $usersSQL = "SELECT id, username, email, role, createdAt, 
-                        (SELECT COUNT(*) FROM carts WHERE seller_id = user.id) as total_sales
-                 FROM user 
+    $usersSQL = "SELECT id, username, email, role, createdAt,
+                        (SELECT COUNT(*) FROM carts WHERE seller_id = user.id AND pharmacy_id = ?) as total_sales
+                 FROM user
                  $whereClause
-                 ORDER BY createdAt DESC 
+                 ORDER BY createdAt DESC
                  LIMIT ? OFFSET ?";
-    
+
+    $params[] = $pharmacyId;
     $params[] = $perPage;
     $params[] = $offset;
-    
+
     $users = $db->fetchAll($usersSQL, $params);
     if ($users === false) {
         $users = [];
     };
 
     // Get user statistics
-    $statsSQL = "SELECT 
+    $statsSQL = "SELECT
                     COUNT(*) as total_users,
                     SUM(CASE WHEN role = 'ADMIN' THEN 1 ELSE 0 END) as admin_count,
                     SUM(CASE WHEN role = 'SELLER' THEN 1 ELSE 0 END) as seller_count,
                     SUM(CASE WHEN role = 'CASHIER' THEN 1 ELSE 0 END) as cashier_count,
                     SUM(CASE WHEN role = 'STOCK-MANAGER' THEN 1 ELSE 0 END) as stock_manager_count
-                 FROM user";
-    $stats = $db->fetch($statsSQL);
+                 FROM user WHERE pharmacy_id = ?";
+    $stats = $db->fetch($statsSQL, [$pharmacyId]);
 
 } catch (Exception $e) {
     $message = $e->getMessage();

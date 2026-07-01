@@ -20,28 +20,28 @@ try {
     $today = date('Y-m-d ');
 
     // Pending carts count
-    $pendingCartsQuery = "SELECT COUNT(*) as count 
+    $pendingCartsQuery = "SELECT COUNT(*) as count
                       FROM carts c
                       JOIN cash_register cr ON c.cash_register_id = cr.id
-                      WHERE c.status = 'pending' AND cr.cashier_id = ?";
+                      WHERE c.status = 'pending' AND cr.cashier_id = ? AND c.pharmacy_id = ?";
 
-$pendingCartsResult = $db->fetch($pendingCartsQuery, [$cashierId]);
+$pendingCartsResult = $db->fetch($pendingCartsQuery, [$cashierId, $pharmacyId]);
 $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 
     // Today's completed sales
-    $completedSalesQuery = "SELECT COUNT(*) as count, COALESCE(SUM(totalAmount), 0) as total 
+    $completedSalesQuery = "SELECT COUNT(*) as count, COALESCE(SUM(totalAmount), 0) as total
                            FROM sale join cash_register cr ON sale.cash_register_id = cr.id
-                           WHERE DATE(createdAt) = ? AND cashier_id = ?";
-    $completedSalesResult = $db->fetch($completedSalesQuery, [$today, $cashierId]);
+                           WHERE DATE(createdAt) = ? AND cashier_id = ? AND sale.pharmacy_id = ?";
+    $completedSalesResult = $db->fetch($completedSalesQuery, [$today, $cashierId, $pharmacyId]);
     $completedSales = $completedSalesResult ? $completedSalesResult['count'] : 0;
     $todayTotal = $completedSalesResult ? $completedSalesResult['total'] : 0;
 
     // This week's sales
     $weekStart = date('Y-m-d', strtotime('monday this week'));
-    $weekSalesQuery = "SELECT COUNT(*) as count, COALESCE(SUM(totalAmount), 0) as total 
+    $weekSalesQuery = "SELECT COUNT(*) as count, COALESCE(SUM(totalAmount), 0) as total
                       FROM sale Join cash_register cr ON sale.cash_register_id = cr.id
-                      WHERE DATE(createdAt) >= ? AND cashier_id = ?";
-    $weekSalesResult = $db->fetch($weekSalesQuery, [$weekStart, $cashierId]);
+                      WHERE DATE(createdAt) >= ? AND cashier_id = ? AND sale.pharmacy_id = ?";
+    $weekSalesResult = $db->fetch($weekSalesQuery, [$weekStart, $cashierId, $pharmacyId]);
     $weekSales = $weekSalesResult ? $weekSalesResult['count'] : 0;
     $weekTotal = $weekSalesResult ? $weekSalesResult['total'] : 0;
 
@@ -54,10 +54,10 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
                         LEFT JOIN client c ON s.clientId = c.id
                         LEFT JOIN user sel ON s.sellerId = sel.id
                         JOIN cash_register cr ON s.cash_register_id = cr.id
-                        WHERE cr.cashier_id = ?
+                        WHERE cr.cashier_id = ? AND s.pharmacy_id = ?
                         ORDER BY s.createdAt DESC
                         LIMIT 10";
-    $recentSales = $db->fetchAll($recentSalesQuery, [$cashierId]);
+    $recentSales = $db->fetchAll($recentSalesQuery, [$cashierId, $pharmacyId]);
     if (!$recentSales) $recentSales = [];
 
     // Current pending carts with details
@@ -67,16 +67,16 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
                                LEFT JOIN user sel ON c.seller_id = sel.id
                                LEFT JOIN client cl ON c.client_id = cl.id
                                LEFT JOIN cart_items ci ON c.id = ci.cart_id
-                               WHERE c.status = 'pending'
+                               WHERE c.status = 'pending' AND c.pharmacy_id = ?
                                GROUP BY c.id
                                ORDER BY c.created_at ASC
                                LIMIT 8";
-    $pendingCartsDetail = $db->fetchAll($pendingCartsDetailQuery);
+    $pendingCartsDetail = $db->fetchAll($pendingCartsDetailQuery, [$pharmacyId]);
     if (!$pendingCartsDetail) $pendingCartsDetail = [];
 
     // Low stock alerts
-    $lowStockQuery = "SELECT code, name, stock FROM product WHERE stock <= 5 AND stock > 0 ORDER BY stock ASC LIMIT 5";
-    $lowStockProducts = $db->fetchAll($lowStockQuery);
+    $lowStockQuery = "SELECT code, name, stock FROM product WHERE stock <= 5 AND stock > 0 AND pharmacy_id = ? ORDER BY stock ASC LIMIT 5";
+    $lowStockProducts = $db->fetchAll($lowStockQuery, [$pharmacyId]);
     if (!$lowStockProducts) $lowStockProducts = [];
 
 } catch (Exception $e) {

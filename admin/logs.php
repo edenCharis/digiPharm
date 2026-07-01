@@ -23,8 +23,8 @@ $actionFilter = isset($_GET['action_filter']) ? trim($_GET['action_filter']) : '
 $dateFilter = isset($_GET['date_filter']) ? trim($_GET['date_filter']) : '';
 
 // Build the WHERE clause for filtering
-$whereClause = "WHERE 1=1";
-$params = [];
+$whereClause = "WHERE l.pharmacy_id = ?";
+$params = [$pharmacyId];
 
 if (!empty($searchTerm)) {
     $whereClause .= " AND (l.description LIKE ? OR l.tableName LIKE ?)";
@@ -49,9 +49,9 @@ if (!empty($dateFilter)) {
 
 // Get total count for pagination
 $countQuery = "
-    SELECT COUNT(*) as total 
-    FROM log l 
-    LEFT JOIN user u ON l.userId = u.id 
+    SELECT COUNT(*) as total
+    FROM log l
+    LEFT JOIN user u ON l.userId = u.id
     $whereClause
 ";
 $countStmt = $pdo->prepare($countQuery);
@@ -61,7 +61,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
 
 // Get logs with user information
 $query = "
-    SELECT 
+    SELECT
         l.id,
         l.userId,
         u.username,
@@ -86,15 +86,15 @@ $stmt->execute($params);
 $logs = $stmt->fetchAll();
 
 // Get unique users for filter dropdown
-$usersQuery = "SELECT DISTINCT u.id, u.username FROM log l JOIN user u ON l.userId = u.id ORDER BY u.username";
+$usersQuery = "SELECT DISTINCT u.id, u.username FROM log l JOIN user u ON l.userId = u.id WHERE l.pharmacy_id = ? ORDER BY u.username";
 $usersStmt = $pdo->prepare($usersQuery);
-$usersStmt->execute();
+$usersStmt->execute([$pharmacyId]);
 $users = $usersStmt->fetchAll();
 
 // Get unique actions for filter dropdown
-$actionsQuery = "SELECT DISTINCT action FROM log ORDER BY action";
+$actionsQuery = "SELECT DISTINCT action FROM log WHERE pharmacy_id = ? ORDER BY action";
 $actionsStmt = $pdo->prepare($actionsQuery);
-$actionsStmt->execute();
+$actionsStmt->execute([$pharmacyId]);
 $actions = $actionsStmt->fetchAll();
 
 // Function to translate actions to French

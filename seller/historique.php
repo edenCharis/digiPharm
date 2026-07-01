@@ -33,8 +33,8 @@ try {
     $statusFilter = isset($_GET['status']) ? trim($_GET['status']) : '';
     $dateFilter = isset($_GET['date']) ? trim($_GET['date']) : '';
     
-    $searchCondition = 'WHERE 1=1';
-    $params = [];
+    $searchCondition = 'WHERE carts.pharmacy_id = ?';
+    $params = [$pharmacyId];
 
     if (!empty($searchTerm)) {
         $searchCondition .= " AND (c.name LIKE ? OR cl.name LIKE ?)";
@@ -94,15 +94,26 @@ try {
     }
 
     // Get statistics
-    $statsParams = [];
-    $statsCondition = '';
-    
-    if (!empty($statusFilter) || !empty($dateFilter) || !empty($searchTerm)) {
-        $statsCondition = $searchCondition;
-        $statsParams = array_slice($params, 0, -2); // Remove LIMIT and OFFSET params
+    // Always filter by pharmacy_id; add active search/filter conditions on top
+    $statsCondition = 'WHERE carts.pharmacy_id = ?';
+    $statsParams = [$pharmacyId];
+
+    if (!empty($searchTerm)) {
+        $statsCondition .= " AND (c.name LIKE ? OR cl.name LIKE ?)";
+        $statsSearchLike = '%' . $searchTerm . '%';
+        $statsParams[] = $statsSearchLike;
+        $statsParams[] = $statsSearchLike;
+    }
+    if (!empty($statusFilter)) {
+        $statsCondition .= " AND carts.status = ?";
+        $statsParams[] = $statusFilter;
+    }
+    if (!empty($dateFilter)) {
+        $statsCondition .= " AND DATE(carts.created_at) = ?";
+        $statsParams[] = $dateFilter;
     }
 
-    $statsSQL = "SELECT 
+    $statsSQL = "SELECT
                     COUNT(*) as total_orders,
                     SUM(CASE WHEN carts.status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
                     SUM(CASE WHEN carts.status = 'pending' THEN 1 ELSE 0 END) as pending_orders,

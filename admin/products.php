@@ -39,11 +39,11 @@ try {
                     
                     if (!empty($name) && !empty($code) && $price > 0 && $sellingPrice > 0) {
                         // Check if code already exists
-                        $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ?";
+                        $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($checkSQL);
-                        $stmt->execute([$code]);
+                        $stmt->execute([$code, $pharmacyId]);
                         $codeExists = $stmt->fetch(PDO::FETCH_ASSOC);
-                        
+
                         if ($codeExists && $codeExists['count'] > 0) {
                             $error_message = "Ce code produit existe déjà.";
                         } else {
@@ -51,10 +51,10 @@ try {
                             $stmt = $pdo->query("SELECT id FROM product ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                             $lastId = $stmt->fetch(PDO::FETCH_COLUMN);
                             $id = $lastId ? (string)((int)$lastId + 1) : "1";
-                            
-                            $insertSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, expiryDate, categoryId, supplierId, code, statut_TVA) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?)";
+
+                            $insertSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, expiryDate, categoryId, supplierId, code, statut_TVA, pharmacy_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?)";
                             $stmt = $pdo->prepare($insertSQL);
-                            $result = $stmt->execute([$id, $name, $description, $price, $stock, $purchasePrice, $sellingPrice, $vatRate, $expiryDate, $categoryId, $supplierId, $code, $statut_TVA]);
+                            $result = $stmt->execute([$id, $name, $description, $price, $stock, $purchasePrice, $sellingPrice, $vatRate, $expiryDate, $categoryId, $supplierId, $code, $statut_TVA, $pharmacyId]);
                             
                             if ($result) {
                                 $success_message = "Produit ajouté avec succès.";
@@ -84,17 +84,17 @@ try {
                     
                     if (!empty($name) && !empty($code) && $price > 0 && $sellingPrice > 0 && !empty($id)) {
                         // Check if code already exists for other products
-                        $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND id != ?";
+                        $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND id != ? AND pharmacy_id = ?";
                         $stmt = $pdo->prepare($checkSQL);
-                        $stmt->execute([$code, $id]);
+                        $stmt->execute([$code, $id, $pharmacyId]);
                         $codeExists = $stmt->fetch(PDO::FETCH_ASSOC);
-                        
+
                         if ($codeExists && $codeExists['count'] > 0) {
                             $error_message = "Ce code produit existe déjà pour un autre produit.";
                         } else {
-                            $updateSQL = "UPDATE product SET name = ?, description = ?, price = ?, stock = ?, purchasePrice = ?, sellingPrice = ?, vatRate = ?, updatedAt = NOW(), expiryDate = ?, categoryId = ?, supplierId = ?, code = ?, statut_TVA = ? WHERE id = ?";
+                            $updateSQL = "UPDATE product SET name = ?, description = ?, price = ?, stock = ?, purchasePrice = ?, sellingPrice = ?, vatRate = ?, updatedAt = NOW(), expiryDate = ?, categoryId = ?, supplierId = ?, code = ?, statut_TVA = ? WHERE id = ? AND pharmacy_id = ?";
                             $stmt = $pdo->prepare($updateSQL);
-                            $result = $stmt->execute([$name, $description, $price, $stock, $purchasePrice, $sellingPrice, $vatRate, $expiryDate, $categoryId, $supplierId, $code, $statut_TVA, $id]);
+                            $result = $stmt->execute([$name, $description, $price, $stock, $purchasePrice, $sellingPrice, $vatRate, $expiryDate, $categoryId, $supplierId, $code, $statut_TVA, $id, $pharmacyId]);
                             
                             if ($result) {
                                 $success_message = "Produit modifié avec succès.";
@@ -120,9 +120,9 @@ try {
                         if ($checkResult && $checkResult['count'] > 0) {
                             $error_message = "Impossible de supprimer ce produit car il est utilisé dans des livraisons.";
                         } else {
-                            $deleteSQL = "DELETE FROM product WHERE id = ?";
+                            $deleteSQL = "DELETE FROM product WHERE id = ? AND pharmacy_id = ?";
                             $stmt = $pdo->prepare($deleteSQL);
-                            $result = $stmt->execute([$id]);
+                            $result = $stmt->execute([$id, $pharmacyId]);
                             
                             if ($result) {
                                 $success_message = "Produit supprimé avec succès.";
@@ -242,9 +242,9 @@ try {
                     }
                     
                     // Check if product code already exists
-                    $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ?";
+                    $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND pharmacy_id = ?";
                     $stmt = $pdo->prepare($checkSQL);
-                    $stmt->execute([$code]);
+                    $stmt->execute([$code, $pharmacyId]);
                     $codeExists = $stmt->fetch(PDO::FETCH_ASSOC);
                     
                     if ($codeExists && $codeExists['count'] > 0) {
@@ -275,11 +275,11 @@ try {
                     $categoryId = 0;
                     if (!empty($row_data['category'] ?? '')) {
                         $categoryName = trim($row_data['category']);
-                        $catSQL = "SELECT id FROM category WHERE name = ? LIMIT 1";
+                        $catSQL = "SELECT id FROM category WHERE name = ? AND pharmacy_id = ? LIMIT 1";
                         $catStmt = $pdo->prepare($catSQL);
-                        $catStmt->execute([$categoryName]);
+                        $catStmt->execute([$categoryName, $pharmacyId]);
                         $catResult = $catStmt->fetch(PDO::FETCH_ASSOC);
-                        
+
                         if ($catResult) {
                             $categoryId = $catResult['id'];
                         } else {
@@ -287,27 +287,28 @@ try {
                             $lastCatStmt = $pdo->query("SELECT id FROM category ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                             $lastCategoryId = $lastCatStmt->fetch(PDO::FETCH_COLUMN);
                             $newCategoryId = $lastCategoryId ? (string)((int)$lastCategoryId + 1) : "1";
-                            
-                            $insertCatSQL = "INSERT INTO category (id, name, createdAt, updatedAt) 
-                                           VALUES (?, ?, NOW(), NOW())";
+
+                            $insertCatSQL = "INSERT INTO category (id, name, createdAt, updatedAt, pharmacy_id)
+                                           VALUES (?, ?, NOW(), NOW(), ?)";
                             $insertCatStmt = $pdo->prepare($insertCatSQL);
                             $insertCatStmt->execute([
                                 $newCategoryId,
                                 $categoryName,
+                                $pharmacyId,
                             ]);
                             $categoryId = $newCategoryId;
                         }
                     }
-                    
+
                     // Handle supplier - create if not exists
                     $supplierId = 0;
                     if (!empty($row_data['supplier'] ?? '')) {
                         $supplierName = trim($row_data['supplier']);
-                        $supSQL = "SELECT id FROM supplier WHERE name = ? LIMIT 1";
+                        $supSQL = "SELECT id FROM supplier WHERE name = ? AND pharmacy_id = ? LIMIT 1";
                         $supStmt = $pdo->prepare($supSQL);
-                        $supStmt->execute([$supplierName]);
+                        $supStmt->execute([$supplierName, $pharmacyId]);
                         $supResult = $supStmt->fetch(PDO::FETCH_ASSOC);
-                        
+
                         if ($supResult) {
                             $supplierId = $supResult['id'];
                         } else {
@@ -315,33 +316,33 @@ try {
                             $lastSupStmt = $pdo->query("SELECT id FROM supplier ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                             $lastSupplierId = $lastSupStmt->fetch(PDO::FETCH_COLUMN);
                             $newSupplierId = $lastSupplierId ? (string)((int)$lastSupplierId + 1) : "1";
-                            
-                            $insertSupSQL = "INSERT INTO supplier (id, name, contact, createdAt, updatedAt) 
-                                           VALUES (?, ?, ?, NOW(), NOW())";
+
+                            $insertSupSQL = "INSERT INTO supplier (id, name, contact, createdAt, updatedAt, pharmacy_id)
+                                           VALUES (?, ?, ?, NOW(), NOW(), ?)";
                             $insertSupStmt = $pdo->prepare($insertSupSQL);
                             $insertSupStmt->execute([
                                 $newSupplierId,
                                 $supplierName,
                                 'Contact à mettre à jour',
-                                
+                                $pharmacyId,
                             ]);
                             $supplierId = $newSupplierId;
                         }
                     }
-                    
+
                     // Get next product ID
                     $stmt = $pdo->query("SELECT id FROM product ORDER BY CAST(id AS UNSIGNED) DESC LIMIT 1");
                     $lastId = $stmt->fetch(PDO::FETCH_COLUMN);
                     $id = $lastId ? (string)((int)$lastId + 1) : "1";
-                    
+
                     // Insert product
-                    $insertSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, expiryDate, categoryId, supplierId, code, statut_TVA) 
-                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?)";
+                    $insertSQL = "INSERT INTO product (id, name, description, price, stock, purchasePrice, sellingPrice, vatRate, createdAt, updatedAt, expiryDate, categoryId, supplierId, code, statut_TVA, pharmacy_id)
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?)";
                     $stmt = $pdo->prepare($insertSQL);
                     $result = $stmt->execute([
-                        $id, $name, $description, $price, $stock, 
-                        $purchasePrice, $sellingPrice, $vatRate, 
-                        $expiryDate, $categoryId, $supplierId, $code, $statut_TVA
+                        $id, $name, $description, $price, $stock,
+                        $purchasePrice, $sellingPrice, $vatRate,
+                        $expiryDate, $categoryId, $supplierId, $code, $statut_TVA, $pharmacyId
                     ]);
                     
                     if ($result) {
@@ -412,27 +413,26 @@ try {
 
     $whereClause = '';
     $params = [];
-    $conditions = [];
-    
+    $conditions = ["p.pharmacy_id = ?"];
+    $params[] = $pharmacyId;
+
     if (!empty($search)) {
         $conditions[] = "(p.name LIKE ? OR p.description LIKE ? OR p.code LIKE ?)";
         $searchTerm = "%$search%";
         $params = array_merge($params, [$searchTerm, $searchTerm, $searchTerm]);
     }
-    
+
     if ($categoryFilter > 0) {
         $conditions[] = "p.categoryId = ?";
         $params[] = $categoryFilter;
     }
-    
+
     if ($supplierFilter > 0) {
         $conditions[] = "p.supplierId = ?";
         $params[] = $supplierFilter;
     }
-    
-    if (!empty($conditions)) {
-        $whereClause = "WHERE " . implode(" AND ", $conditions);
-    }
+
+    $whereClause = "WHERE " . implode(" AND ", $conditions);
 
     // Get total count
     $countSQL = "SELECT COUNT(*) as total FROM product p $whereClause";
@@ -443,12 +443,12 @@ try {
     $totalPages = ceil($totalProducts / $limit);
 
     // Get products with category and supplier names
-    $productsSQL = "SELECT p.*, c.name as categoryName, s.name as supplierName 
-                   FROM product p 
-                   LEFT JOIN category c ON p.categoryId = c.id 
-                   LEFT JOIN supplier s ON p.supplierId = s.id 
-                   $whereClause 
-                   ORDER BY p.createdAt DESC 
+    $productsSQL = "SELECT p.*, c.name as categoryName, s.name as supplierName
+                   FROM product p
+                   LEFT JOIN category c ON p.categoryId = c.id
+                   LEFT JOIN supplier s ON p.supplierId = s.id
+                   $whereClause
+                   ORDER BY p.createdAt DESC
                    LIMIT $limit OFFSET $offset";
     $stmt = $pdo->prepare($productsSQL);
     $stmt->execute($params);
@@ -458,15 +458,15 @@ try {
     }
 
     // Get categories for dropdown
-    $categoriesSQL = "SELECT id, name FROM category ORDER BY name";
+    $categoriesSQL = "SELECT id, name FROM category WHERE pharmacy_id = ? ORDER BY name";
     $stmt = $pdo->prepare($categoriesSQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get suppliers for dropdown
-    $suppliersSQL = "SELECT id, name FROM supplier ORDER BY name";
+    $suppliersSQL = "SELECT id, name FROM supplier WHERE pharmacy_id = ? ORDER BY name";
     $stmt = $pdo->prepare($suppliersSQL);
-    $stmt->execute();
+    $stmt->execute([$pharmacyId]);
     $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Calculate summary statistics
