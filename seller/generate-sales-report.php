@@ -73,7 +73,7 @@ try {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 20px;
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .print-container {
@@ -89,18 +89,18 @@ try {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #059669;
+            border-bottom: 3px solid var(--ds-green);
         }
 
         .logo {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
         }
 
         .report-title {
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 20px;
@@ -112,7 +112,7 @@ try {
             gap: 20px;
             margin-bottom: 30px;
             padding: 20px;
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             border-radius: 8px;
         }
 
@@ -122,7 +122,7 @@ try {
 
         .info-label {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -131,7 +131,7 @@ try {
 
         .info-value {
             font-size: 1rem;
-            color: #111827;
+            color: var(--ds-text-900);
             font-weight: 600;
         }
 
@@ -143,7 +143,7 @@ try {
         }
 
         .summary-box {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            background: var(--ds-green);
             color: white;
             padding: 25px;
             border-radius: 8px;
@@ -169,7 +169,7 @@ try {
         }
 
         .data-table thead {
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
         }
 
         .data-table th {
@@ -177,30 +177,30 @@ try {
             text-align: left;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--ds-border);
         }
 
         .data-table td {
             padding: 12px;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .data-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .data-table tbody tr:last-child td {
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--ds-border);
         }
 
         .product-code {
             font-family: 'Courier New', monospace;
-            background: #e5e7eb;
+            background: var(--ds-border);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -216,7 +216,7 @@ try {
         }
 
         .status-in-stock {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -245,8 +245,8 @@ try {
             text-align: center;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 2px solid #e5e7eb;
-            color: #6b7280;
+            border-top: 2px solid var(--ds-border);
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -256,7 +256,7 @@ try {
         }
 
         .btn-print {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -277,7 +277,7 @@ try {
         }
 
         .btn-close {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -290,13 +290,13 @@ try {
         }
 
         .btn-close:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .empty-state h3 {

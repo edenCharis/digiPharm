@@ -97,14 +97,14 @@ try {
     <meta charset="UTF-8">
     <style>
         body { font-family: Arial, sans-serif; }
-        .header { background-color: #10b981; color: white; font-weight: bold; text-align: center; padding: 15px; font-size: 18pt; }
+        .header { background-color: var(--ds-green); color: white; font-weight: bold; text-align: center; padding: 15px; font-size: 18pt; }
         .category-badge { background-color: #3b82f6; color: white; padding: 5px 15px; border-radius: 5px; display: inline-block; margin: 10px 0; font-size: 14pt; }
         .info-section { margin: 20px 0; }
         .info-table { border-collapse: collapse; margin-bottom: 20px; }
         .info-table td { padding: 8px; border: 1px solid #ddd; }
         .info-label { background-color: #E7E6E6; font-weight: bold; width: 250px; }
         .data-table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        .data-table th { background-color: #10b981; color: white; font-weight: bold; padding: 10px; border: 1px solid #000; text-align: left; }
+        .data-table th { background-color: var(--ds-green); color: white; font-weight: bold; padding: 10px; border: 1px solid #000; text-align: left; }
         .data-table td { padding: 8px; border: 1px solid #ddd; }
         .data-table tr:nth-child(even) { background-color: #F2F2F2; }
         .stock-low { background-color: #FFF2CC; }

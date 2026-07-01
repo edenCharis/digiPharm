@@ -145,27 +145,27 @@ AppSettings::init($db);
 }
 
 .cash-status.open {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
-    border-color: #10b981;
+    background: rgba(24, 128, 56, 0.08);
+    border-color: var(--ds-green);
     color: #065f46;
 }
 
 .cash-status.closed {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+    background: rgba(217, 48, 37, 0.08);
     border-color: #ef4444;
     color: #7f1d1d;
 }
 
 .cash-status.not-opened {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+    background: rgba(245, 158, 11, 0.10);
     border-color: #f59e0b;
     color: #78350f;
 }
 
 .cash-status.error {
-    background: linear-gradient(135deg, rgba(107, 114, 128, 0.1), rgba(107, 114, 128, 0.05));
-    border-color: #6b7280;
-    color: #374151;
+    background: rgba(107, 114, 128, 0.08);
+    border-color: var(--ds-text-400);
+    color: var(--ds-text-900);
 }
 
 .cash-status-header {
@@ -237,12 +237,12 @@ AppSettings::init($db);
 }
 
 .btn-open-cash {
-    background: #10b981;
+    background: var(--ds-green);
     color: white;
 }
 
 .btn-open-cash:hover {
-    background: #059669;
+    background: var(--ds-green);
     transform: translateY(-1px);
 }
 
@@ -269,7 +269,7 @@ AppSettings::init($db);
 }
 
 .menu-badge.success {
-    background: #10b981;
+    background: var(--ds-green);
     color: white;
 }
 
@@ -306,11 +306,11 @@ function openCashRegister() {
                     </div>
                     <div style="display:flex; justify-content:space-between; gap:10px;">
                         <button type="button" onclick="this.closest('.modal').remove()" 
-                                style="flex:1; padding:10px; background:#6b7280; color:white; border:none; border-radius:4px; cursor:pointer;">
+                                style="flex:1; padding:10px; background:var(--ds-text-400); color:white; border:none; border-radius:4px; cursor:pointer;">
                             Annuler
                         </button>
                         <button type="submit" 
-                                style="flex:1; padding:10px; background:#10b981; color:white; border:none; border-radius:4px; cursor:pointer;">
+                                style="flex:1; padding:10px; background:var(--ds-green); color:white; border:none; border-radius:4px; cursor:pointer;">
                             Ouvrir
                         </button>
                     </div>

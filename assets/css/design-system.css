@@ -171,3 +171,178 @@ body {
 .ds-table th { text-align: left; font-weight: 500; color: var(--ds-text-600); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; padding: 10px 14px; border-bottom: 1px solid var(--ds-border); }
 .ds-table td { padding: 12px 14px; border-bottom: 1px solid var(--ds-border-light); color: var(--ds-text-900); }
 .ds-table tbody tr:hover { background: var(--ds-surface-alt); }
+
+/* ═══════════════════════════════════════════════════════
+   Bootstrap 5 token overrides — retarget to digiPharm palette
+   ═══════════════════════════════════════════════════════ */
+
+/* Override Bootstrap 5 root CSS variables */
+:root {
+    --bs-primary:           #188038;
+    --bs-primary-rgb:       24, 128, 56;
+    --bs-success:           #188038;
+    --bs-success-rgb:       24, 128, 56;
+    --bs-link-color:        #188038;
+    --bs-link-color-rgb:    24, 128, 56;
+    --bs-link-hover-color:  #0d652d;
+    --bs-link-hover-color-rgb: 13, 101, 45;
+}
+
+/* Button — Primary */
+.btn-primary {
+    --bs-btn-color:            #fff;
+    --bs-btn-bg:               #188038;
+    --bs-btn-border-color:     #188038;
+    --bs-btn-hover-color:      #fff;
+    --bs-btn-hover-bg:         #0d652d;
+    --bs-btn-hover-border-color: #0d652d;
+    --bs-btn-active-bg:        #0d652d;
+    --bs-btn-active-border-color: #0d652d;
+    --bs-btn-focus-shadow-rgb: 24, 128, 56;
+}
+
+/* Button — Success */
+.btn-success {
+    --bs-btn-color:            #fff;
+    --bs-btn-bg:               #188038;
+    --bs-btn-border-color:     #188038;
+    --bs-btn-hover-color:      #fff;
+    --bs-btn-hover-bg:         #0d652d;
+    --bs-btn-hover-border-color: #0d652d;
+    --bs-btn-active-bg:        #0d652d;
+    --bs-btn-active-border-color: #0d652d;
+    --bs-btn-focus-shadow-rgb: 24, 128, 56;
+}
+
+/* Outline variants */
+.btn-outline-success,
+.btn-outline-primary {
+    --bs-btn-color:            #188038;
+    --bs-btn-border-color:     #188038;
+    --bs-btn-hover-bg:         #188038;
+    --bs-btn-hover-border-color: #188038;
+    --bs-btn-active-bg:        #0d652d;
+    --bs-btn-active-border-color: #0d652d;
+    --bs-btn-focus-shadow-rgb: 24, 128, 56;
+}
+
+/* Shared button shape */
+.btn {
+    border-radius: var(--ds-radius-sm);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    letter-spacing: .01em;
+}
+
+/* Badges */
+.badge.bg-success  { background-color: var(--ds-green)      !important; }
+.badge.bg-primary  { background-color: var(--ds-green)      !important; }
+
+/* Alerts */
+.alert-success {
+    --bs-alert-color:        #0d652d;
+    --bs-alert-bg:           #e6f4ea;
+    --bs-alert-border-color: #b7dfc5;
+}
+.alert-primary {
+    --bs-alert-color:        #0d652d;
+    --bs-alert-bg:           #e6f4ea;
+    --bs-alert-border-color: #b7dfc5;
+}
+
+/* Form controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--ds-green);
+    box-shadow: 0 0 0 3px rgba(24, 128, 56, .12);
+}
+.form-check-input:checked {
+    background-color: var(--ds-green);
+    border-color:     var(--ds-green);
+}
+.form-check-input:focus {
+    box-shadow: 0 0 0 3px rgba(24, 128, 56, .12);
+}
+
+/* Pagination */
+.page-link { color: var(--ds-green); }
+.page-link:hover { color: var(--ds-green-dark); }
+.page-item.active .page-link {
+    background-color: var(--ds-green);
+    border-color:     var(--ds-green);
+}
+
+/* Nav pills */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link { background-color: var(--ds-green); }
+.nav-link:not(.active) { color: var(--ds-text-600); }
+.nav-tabs .nav-link.active {
+    color: var(--ds-green-dark);
+    border-bottom-color: var(--ds-green);
+}
+
+/* Progress */
+.progress-bar { background-color: var(--ds-green); }
+
+/* Card headers — flat white, no gradients */
+.card-header {
+    background: var(--ds-surface) !important;
+    background-image: none !important;
+    border-bottom: 1px solid var(--ds-border-light) !important;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: var(--ds-text-900) !important;
+}
+.card { border-color: var(--ds-border-light) !important; border-radius: var(--ds-radius-lg) !important; }
+.card-body { color: var(--ds-text-900); }
+
+/* Bootstrap tables → Material style */
+.table > :not(caption) > * > th {
+    background-color: var(--ds-surface-alt);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ds-text-400);
+    font-weight: 600;
+    border-bottom-width: 1px;
+    white-space: nowrap;
+    padding: 10px 14px;
+}
+.table > :not(caption) > * > td {
+    vertical-align: middle;
+    border-bottom: 1px solid var(--ds-border-light);
+    padding: 11px 14px;
+    color: var(--ds-text-900);
+    font-size: 13.5px;
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(248, 249, 250, .5);
+}
+.table-hover > tbody > tr:hover > * {
+    background-color: var(--ds-green-bg);
+}
+
+/* Modals */
+.modal-header {
+    border-bottom: 1px solid var(--ds-border-light);
+    background: var(--ds-surface);
+}
+.modal-footer { border-top: 1px solid var(--ds-border-light); }
+.modal-content { border-radius: var(--ds-radius-lg); border-color: var(--ds-border); }
+
+/* Dropdowns */
+.dropdown-item:active,
+.dropdown-item.active { background-color: var(--ds-green); }
+.dropdown-item:focus { background-color: var(--ds-green-bg); color: var(--ds-green-dark); }
+.dropdown-menu { border-color: var(--ds-border); border-radius: var(--ds-radius-sm); box-shadow: 0 4px 16px rgba(0,0,0,.10); }
+
+/* Spinner */
+.text-success { color: var(--ds-green) !important; }
+.text-primary { color: var(--ds-green) !important; }
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ds-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ds-text-400); }

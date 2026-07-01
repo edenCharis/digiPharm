@@ -41,7 +41,7 @@ try {
         ['setting_key' => 'pharmacy_email', 'setting_value' => 'contact@pharmacie-centrale.cg', 'setting_type' => 'text', 'description' => 'Email de la pharmacie'],
         ['setting_key' => 'pharmacy_license', 'setting_value' => 'PH-2024-001', 'setting_type' => 'text', 'description' => 'Numéro de licence'],
         ['setting_key' => 'primary_color', 'setting_value' => '#3b82f6', 'setting_type' => 'color', 'description' => 'Couleur principale'],
-        ['setting_key' => 'secondary_color', 'setting_value' => '#10b981', 'setting_type' => 'color', 'description' => 'Couleur secondaire'],
+        ['setting_key' => 'secondary_color', 'setting_value' => 'var(--ds-green)', 'setting_type' => 'color', 'description' => 'Couleur secondaire'],
         ['setting_key' => 'currency', 'setting_value' => 'FCFA', 'setting_type' => 'text', 'description' => 'Devise utilisée'],
         ['setting_key' => 'timezone', 'setting_value' => 'Africa/Brazzaville', 'setting_type' => 'text', 'description' => 'Fuseau horaire'],
         ['setting_key' => 'language', 'setting_value' => 'fr', 'setting_type' => 'text', 'description' => 'Langue par défaut'],
@@ -729,7 +729,7 @@ $iconOptions = [
         <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 400px; text-align: center;">
             <i data-lucide="alert-triangle" style="color: #ef4444; width: 3rem; height: 3rem; margin-bottom: 1rem;"></i>
             <h3 style="margin-bottom: 1rem;">Confirmer la Réinitialisation</h3>
-            <p style="margin-bottom: 2rem; color: #6b7280;">Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ? Cette action est irréversible.</p>
+            <p style="margin-bottom: 2rem; color: var(--ds-text-400);">Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ? Cette action est irréversible.</p>
             <div style="display: flex; gap: 1rem; justify-content: center;">
                 <form method="POST" style="display: inline;">
                     <input type="hidden" name="action" value="reset_to_defaults">

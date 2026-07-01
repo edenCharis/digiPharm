@@ -446,7 +446,7 @@ function getStatusBadge($status) {
     
     <style>
         .delivery-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ds-green);
             color: white;
             padding: 2rem;
             border-radius: 12px;
@@ -492,7 +492,7 @@ function getStatusBadge($status) {
         }
         
         .card-header {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             padding: 1.5rem;
             border-bottom: 1px solid #e9ecef;
             display: flex;
@@ -634,13 +634,13 @@ function getStatusBadge($status) {
         
         .search-result {
             padding: 0.75rem;
-            border-bottom: 1px solid #f8f9fa;
+            border-bottom: 1px solid var(--ds-surface-alt);
             cursor: pointer;
             transition: background-color 0.15s ease;
         }
         
         .search-result:hover {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
         }
         
         .search-result:last-child {
@@ -690,13 +690,13 @@ function getStatusBadge($status) {
         }
         
         .items-table th {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             font-weight: 600;
             color: #495057;
         }
         
         .items-table tr:hover {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
         }
         
         .badge {
@@ -764,7 +764,7 @@ function getStatusBadge($status) {
         .summary-item {
             text-align: center;
             padding: 1rem;
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             border-radius: 8px;
         }
         
@@ -1195,7 +1195,7 @@ function getStatusBadge($status) {
 <div id="editModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow: auto;">
     <div class="modal-content" style="background-color: white; margin: 5% auto; padding: 0; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
         <!-- Modal Header -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background: var(--ds-green); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 <i data-lucide="edit" style="width: 24px; height: 24px;"></i>
                 Modifier l'article
@@ -1211,7 +1211,7 @@ function getStatusBadge($status) {
             <input type="hidden" name="productId" id="editProductId">
             
             <!-- Product Info Display -->
-            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #667eea;">
+            <div style="background: var(--ds-surface-alt); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #667eea;">
                 <div style="display: flex; align-items: start; gap: 0.5rem;">
                     <i data-lucide="info" style="width: 20px; height: 20px; color: #667eea; flex-shrink: 0; margin-top: 2px;"></i>
                     <div style="flex: 1;">

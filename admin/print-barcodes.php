@@ -119,7 +119,7 @@ function formatPrice($price) {
 
         body {
             font-family: Arial, sans-serif;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 20px;
         }
 
@@ -132,7 +132,7 @@ function formatPrice($price) {
         }
 
         .delivery-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ds-green);
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -201,12 +201,12 @@ function formatPrice($price) {
         }
 
         .btn-back {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
         }
 
         .btn-back:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .btn-secondary {
@@ -252,7 +252,7 @@ function formatPrice($price) {
         }
 
         .barcode-label {
-            border: 0.5px solid #d1d5db;
+            border: 0.5px solid var(--ds-border);
             border-radius: 0;
             padding: 1mm 1mm 0.5mm 1mm;
             display: flex;
@@ -284,7 +284,7 @@ function formatPrice($price) {
         .product-name {
             font-size: 6.5px;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             text-align: center;
             margin: 0;
             padding: 0 0.5mm;
@@ -312,7 +312,7 @@ function formatPrice($price) {
 
         .product-code-text {
             font-size: 5px;
-            color: #374151;
+            color: var(--ds-text-900);
             font-family: monospace;
             font-weight: 600;
             writing-mode: vertical-lr;
@@ -350,7 +350,7 @@ function formatPrice($price) {
         .product-price {
             font-size: 7px;
             font-weight: 700;
-            color: #059669;
+            color: var(--ds-green);
             text-align: center;
             white-space: nowrap;
             margin: 0;
@@ -359,7 +359,7 @@ function formatPrice($price) {
 
         .product-expiry {
             font-size: 5px;
-            color: #6b7280;
+            color: var(--ds-text-400);
             text-align: center;
             white-space: nowrap;
             margin: 0;

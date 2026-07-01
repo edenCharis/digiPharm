@@ -336,9 +336,9 @@ function timeAgo($datetime) {
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>
@@ -421,7 +421,7 @@ function timeAgo($datetime) {
                                 callback: function(value) {
                                     return value.toLocaleString() + ' XAF';
                                 },
-                                color: '#6b7280'
+                                color: 'var(--ds-text-400)'
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.1)'
@@ -429,7 +429,7 @@ function timeAgo($datetime) {
                         },
                         x: {
                             ticks: {
-                                color: '#6b7280'
+                                color: 'var(--ds-text-400)'
                             },
                             grid: {
                                 display: false
@@ -488,7 +488,7 @@ function timeAgo($datetime) {
         }
 
         .quick-stat-item .label {
-            color: #d1d5db;
+            color: var(--ds-border);
             font-size: 0.875rem;
         }
 
@@ -537,7 +537,7 @@ function timeAgo($datetime) {
         }
 
         .text-muted {
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
     </style>
 </body>

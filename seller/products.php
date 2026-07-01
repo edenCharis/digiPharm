@@ -95,7 +95,7 @@ try {
         }
 
         .products-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.875rem;
             font-weight: 700;
             margin: 0;
@@ -117,7 +117,7 @@ try {
         .search-input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 1rem;
             transition: all 0.2s;
@@ -126,7 +126,7 @@ try {
 
         .search-input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
@@ -135,7 +135,7 @@ try {
             left: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6b7280;
+            color: var(--ds-text-400);
             width: 1.25rem;
             height: 1.25rem;
         }
@@ -151,12 +151,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 500;
         }
 
         .stat-item i {
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .products-table-container {
@@ -173,11 +173,11 @@ try {
 
         .products-table th {
             background: #f8fafc;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.025em;
@@ -185,12 +185,12 @@ try {
 
         .products-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
         }
 
         .products-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .products-table tbody tr:last-child td {
@@ -199,7 +199,7 @@ try {
 
         .product-code {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.875rem;
@@ -208,7 +208,7 @@ try {
 
         .product-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
         }
 
         .product-category {
@@ -224,7 +224,7 @@ try {
 
         .product-price {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.125rem;
         }
 
@@ -239,8 +239,8 @@ try {
         }
 
         .stock-badge.in-stock {
-            background: #dcfce7;
-            color: #166534;
+            background: var(--ds-green-bg);
+            color: var(--ds-green-dark);
         }
 
         .stock-badge.low-stock {
@@ -264,7 +264,7 @@ try {
         }
 
         .pagination-info {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -275,8 +275,8 @@ try {
 
         .pagination a, .pagination span {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 1px solid var(--ds-border);
+            color: var(--ds-text-900);
             text-decoration: none;
             border-radius: 0.375rem;
             font-size: 0.875rem;
@@ -284,31 +284,31 @@ try {
         }
 
         .pagination a:hover {
-            background: #f9fafb;
-            border-color: #059669;
+            background: var(--ds-surface-alt);
+            border-color: var(--ds-green);
         }
 
         .pagination .current {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
 
         .pagination .disabled {
-            color: #9ca3af;
+            color: var(--ds-text-400);
             cursor: not-allowed;
         }
 
         .no-products {
             text-align: center;
             padding: 4rem 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .no-products i {
             width: 4rem;
             height: 4rem;
-            color: #d1d5db;
+            color: var(--ds-border);
             margin-bottom: 1rem;
         }
 
@@ -546,9 +546,9 @@ try {
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>

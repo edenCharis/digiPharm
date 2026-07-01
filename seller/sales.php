@@ -113,7 +113,7 @@ try {
             left: 280px;
             z-index: 999;
             background: white;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
         }
         
         .content-area {
@@ -124,7 +124,7 @@ try {
         
         /* Daily Stats Card */
         .daily-stats {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);;
+            background: var(--ds-green);;
             color: white;
             border-radius: 12px;
             padding: 20px;
@@ -172,7 +172,7 @@ try {
         }
         
         .sale-header {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            background: var(--ds-green);
             padding: 20px;
             border-radius: 12px;
             color: white;
@@ -211,7 +211,7 @@ try {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .search-input {
@@ -221,7 +221,7 @@ try {
         .search-input input {
             width: 100%;
             padding: 12px 45px 12px 15px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
@@ -229,7 +229,7 @@ try {
         
         .search-input input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
         
         .search-btn {
@@ -237,7 +237,7 @@ try {
             right: 10px;
             top: 50%;
             transform: translateY(-50%);
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 8px 12px;
@@ -255,7 +255,7 @@ try {
         .product-results {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             margin-top: 10px;
         }
@@ -265,12 +265,12 @@ try {
             justify-content: space-between;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             transition: background-color 0.2s;
         }
         
         .product-item:hover {
-            background-color: #f9fafb;
+            background-color: var(--ds-surface-alt);
         }
         
         .product-info {
@@ -279,23 +279,23 @@ try {
         
         .product-name {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 5px;
         }
         
         .product-details {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .product-price {
             font-weight: 700;
-            color: #059669;
+            color: var(--ds-green);
             margin-right: 15px;
         }
         
         .add-btn {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 8px 15px;
@@ -325,13 +325,13 @@ try {
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f3f4f6;
+            border-bottom: 2px solid var(--ds-surface-alt);
         }
         
         .cart-title {
             font-size: 18px;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -348,7 +348,7 @@ try {
             align-items: center;
             justify-content: space-between;
             padding: 15px 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
         
         .cart-item-info {
@@ -357,13 +357,13 @@ try {
         
         .cart-item-name {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 5px;
         }
         
         .cart-item-price {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .quantity-controls {
@@ -376,7 +376,7 @@ try {
         .quantity-btn {
             width: 30px;
             height: 30px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             background: white;
             border-radius: 6px;
             display: flex;
@@ -387,7 +387,7 @@ try {
         }
         
         .quantity-btn:hover {
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
         }
         
         .quantity {
@@ -398,7 +398,7 @@ try {
         
         .item-total {
             font-weight: 700;
-            color: #059669;
+            color: var(--ds-green);
             min-width: 80px;
             text-align: right;
         }
@@ -413,7 +413,7 @@ try {
         }
         
         .cart-summary {
-            border-top: 2px solid #f3f4f6;
+            border-top: 2px solid var(--ds-surface-alt);
             padding-top: 20px;
         }
         
@@ -426,8 +426,8 @@ try {
         .summary-row.total {
             font-size: 18px;
             font-weight: 700;
-            color: #1f2937;
-            border-top: 1px solid #e5e7eb;
+            color: var(--ds-text-900);
+            border-top: 1px solid var(--ds-border);
             padding-top: 10px;
             margin-top: 15px;
         }
@@ -445,7 +445,7 @@ try {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .client-search {
@@ -467,7 +467,7 @@ try {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
 
         .cashier-info {
@@ -489,8 +489,8 @@ try {
         }
 
         .cashier-status.open {
-            background: #dcfce7;
-            color: #166534;
+            background: var(--ds-green-bg);
+            color: var(--ds-green-dark);
         }
 
         .cashier-status.busy {
@@ -510,14 +510,14 @@ try {
         .form-group label {
             display: block;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 8px;
         }
         
         .form-group input, .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 8px;
             font-size: 14px;
             transition: border-color 0.3s;
@@ -525,11 +525,11 @@ try {
         
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
         
         .btn-primary {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -547,7 +547,7 @@ try {
         }
         
         .btn-secondary {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -561,11 +561,11 @@ try {
         }
         
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
         
         .btn-success {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -582,12 +582,12 @@ try {
         }
         
         .btn-success:hover {
-            background: #059669;
+            background: var(--ds-green);
         }
         
         .empty-cart {
             text-align: center;
-            color: #6b7280;
+            color: var(--ds-text-400);
             padding: 40px 20px;
         }
         
@@ -607,7 +607,7 @@ try {
         }
         
         .alert-success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             border: 1px solid #a7f3d0;
             color: #065f46;
         }
@@ -633,7 +633,7 @@ try {
         /* Select2 customization */
         .select2-container .select2-selection--single {
             height: 50px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 8px;
         }
         
@@ -647,12 +647,12 @@ try {
         }
         
         .select2-container--default.select2-container--focus .select2-selection--single {
-            border-color: #059669;
+            border-color: var(--ds-green);
             outline: none;
         }
         
         .select2-dropdown {
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 8px;
         }
         
@@ -661,7 +661,7 @@ try {
         }
         
         .select2-results__option--highlighted {
-            background-color: #059669 !important;
+            background-color: var(--ds-green) !important;
         }
         
         /* Mobile responsive */
@@ -853,7 +853,7 @@ try {
                                 <strong id="selectedCashierName">Caissier sélectionné</strong>
                                 <span id="cashierStatus" class="cashier-status open">Libre</span>
                             </div>
-                            <div style="font-size: 14px; color: #6b7280;">
+                            <div style="font-size: 14px; color: var(--ds-text-400);">
                                 <div>Paniers en attente: <span id="cashierPendingCarts"></span></div>
                             </div>
                         </div>
@@ -1003,9 +1003,9 @@ HTML;
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>
@@ -1764,7 +1764,7 @@ function loadAllProducts() {
             const modalHTML = `
                 <div class="modal" style="display:block; position:fixed; z-index:1100; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
                     <div class="modal-content" style="background-color:white; margin:15% auto; padding:20px; border-radius:8px; width:80%; max-width:400px;">
-                        <div style="color:#059669; margin-bottom:15px;">
+                        <div style="color:var(--ds-green); margin-bottom:15px;">
                             <i data-lucide="check-circle"></i>
                             <strong>Succès</strong>
                         </div>
@@ -1927,7 +1927,7 @@ const additionalCSS = `
     }
     
     .btn-success:disabled {
-        background: #9ca3af !important;
+        background: var(--ds-text-400) !important;
         cursor: not-allowed !important;
         opacity: 0.6 !important;
     }
@@ -2691,7 +2691,7 @@ function showScannerStatus(status) {
     
     const statusConfig = {
         ready: {
-            bg: '#10b981',
+            bg: 'var(--ds-green)',
             color: 'white',
             icon: 'scan',
             text: 'Scanner prêt'
@@ -2739,7 +2739,7 @@ function showScannerFeedback(type, message) {
     
     const typeConfig = {
         success: {
-            bg: '#d1fae5',
+            bg: 'var(--ds-green-bg)',
             border: '#a7f3d0',
             color: '#065f46',
             icon: 'check-circle'
@@ -2864,7 +2864,7 @@ function showScannerAlert(type, message) {
                 </p>
             </div>
             
-            <div style="padding: 20px; display: flex; justify-content: flex-end; background: white; border-top: 1px solid #e5e7eb;">
+            <div style="padding: 20px; display: flex; justify-content: flex-end; background: white; border-top: 1px solid var(--ds-border);">
                 <button onclick="document.getElementById('scannerAlert').remove()" style="
                     background: ${config.headerBg};
                     color: white;

@@ -159,14 +159,14 @@ try {
         .filter-label {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .filter-select,
         .filter-input {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 0.375rem;
             font-size: 0.875rem;
             transition: all 0.2s;
@@ -175,12 +175,12 @@ try {
         .filter-select:focus,
         .filter-input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
         }
 
         .btn-filter {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 0.5rem 1rem;
@@ -217,12 +217,12 @@ try {
         .summary-value {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .summary-label {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-top: 0.25rem;
         }
 
@@ -236,14 +236,14 @@ try {
         .table-header {
             background: #f8fafc;
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .table-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
@@ -283,28 +283,28 @@ try {
 
         .sales-table th {
             background: #f8fafc;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             font-size: 0.875rem;
         }
 
         .sales-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .sales-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .invoice-number {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-weight: 500;
@@ -319,8 +319,8 @@ try {
         }
 
         .payment-cash {
-            background: #dcfce7;
-            color: #166534;
+            background: var(--ds-green-bg);
+            color: var(--ds-green-dark);
         }
 
         .payment-card {
@@ -335,7 +335,7 @@ try {
 
         .amount {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .sale-actions {
@@ -363,7 +363,7 @@ try {
         }
 
         .btn-receipt {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 0.25rem 0.5rem;
@@ -377,7 +377,7 @@ try {
         }
 
         .btn-receipt:hover {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
         }
 
@@ -391,9 +391,9 @@ try {
 
         .pagination-btn {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             background: white;
-            color: #374151;
+            color: var(--ds-text-900);
             text-decoration: none;
             border-radius: 0.375rem;
             font-size: 0.875rem;
@@ -401,14 +401,14 @@ try {
         }
 
         .pagination-btn:hover {
-            background: #f9fafb;
-            border-color: #9ca3af;
-            color: #374151;
+            background: var(--ds-surface-alt);
+            border-color: var(--ds-text-400);
+            color: var(--ds-text-900);
         }
 
         .pagination-btn.active {
-            background: #059669;
-            border-color: #059669;
+            background: var(--ds-green);
+            border-color: var(--ds-green);
             color: white;
         }
 
@@ -420,14 +420,14 @@ try {
         .empty-state {
             text-align: center;
             padding: 3rem 1.5rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .empty-state i {
             width: 3rem;
             height: 3rem;
             margin-bottom: 1rem;
-            color: #d1d5db;
+            color: var(--ds-border);
         }
 
         .custom-date-inputs {
@@ -574,7 +574,7 @@ try {
 }
 
 .confirm-body p {
-    color: #374151;
+    color: var(--ds-text-900);
     line-height: 1.5;
 }
 
@@ -607,12 +607,12 @@ try {
 }
 
 .btn-cancel {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--ds-surface-alt);
+    color: var(--ds-text-900);
 }
 
 .btn-cancel:hover {
-    background: #e5e7eb;
+    background: var(--ds-border);
 }
 
 
@@ -686,7 +686,7 @@ try {
                             <i data-lucide="receipt"></i>
                             Ventes réalisées
                             <?php if ($totalSales > 0): ?>
-                                <span style="font-weight: 400; color: #6b7280;">(<?php echo $totalSales; ?> résultat<?php echo $totalSales > 1 ? 's' : ''; ?>)</span>
+                                <span style="font-weight: 400; color: var(--ds-text-400);">(<?php echo $totalSales; ?> résultat<?php echo $totalSales > 1 ? 's' : ''; ?>)</span>
                             <?php endif; ?>
                         </h2>
                         <div class="table-actions">
@@ -825,9 +825,9 @@ try {
 function setFavicon() {
     const svgData = `
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+            <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
             <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-            <g fill="#059669">
+            <g fill="var(--ds-green)">
                 <rect x="97" y="50" width="6" height="100"/>
                 <rect x="50" y="97" width="100" height="6"/>
             </g>

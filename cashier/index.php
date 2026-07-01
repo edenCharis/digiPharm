@@ -133,14 +133,14 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         .section-header {
             background: #f8fafc;
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             display: flex;
             justify-content: between;
             align-items: center;
         }
 
         .section-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
@@ -150,7 +150,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         }
 
         .section-action {
-            color: #059669;
+            color: var(--ds-green);
             text-decoration: none;
             font-weight: 500;
             display: flex;
@@ -173,12 +173,12 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
             align-items: center;
             justify-content: between;
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             transition: all 0.2s;
         }
 
         .cart-item:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .cart-item:last-child {
@@ -195,7 +195,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         .cart-avatar {
             width: 3rem;
             height: 3rem;
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -211,18 +211,18 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 
         .cart-seller {
             font-weight: 600;
-            color: #111827;
+            color: var(--ds-text-900);
             margin-bottom: 0.25rem;
         }
 
         .cart-client {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             margin-bottom: 0.25rem;
         }
 
         .cart-time {
-            color: #9ca3af;
+            color: var(--ds-text-400);
             font-size: 0.75rem;
         }
 
@@ -246,7 +246,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         }
 
         .btn-process {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 0.5rem 1rem;
@@ -262,7 +262,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         }
 
         .btn-process:hover {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             transform: translateY(-1px);
         }
@@ -281,28 +281,28 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 
         .recent-sales-table th {
             background: #f8fafc;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 0.75rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             font-size: 0.875rem;
         }
 
         .recent-sales-table td {
             padding: 0.75rem;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .recent-sales-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .invoice-number {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-weight: 500;
@@ -310,7 +310,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 
         .amount {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .low-stock-list {
@@ -322,7 +322,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
             justify-content: between;
             align-items: center;
             padding: 0.75rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
 
         .low-stock-item:last-child {
@@ -335,14 +335,14 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 
         .product-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
             margin-bottom: 0.25rem;
         }
 
         .product-code {
             font-family: 'Courier New', monospace;
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .stock-level {
@@ -362,14 +362,14 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         .empty-state {
             text-align: center;
             padding: 3rem 1.5rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .empty-state i {
             width: 3rem;
             height: 3rem;
             margin-bottom: 1rem;
-            color: #d1d5db;
+            color: var(--ds-border);
         }
 
         @media (max-width: 1024px) {
@@ -473,12 +473,12 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 .modal-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--ds-text-900);
     margin: 0;
 }
 
 .modal-body {
-    color: #6b7280;
+    color: var(--ds-text-400);
     margin-bottom: 1.5rem;
 }
 
@@ -489,8 +489,8 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 }
 
 .btn-cancel {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--ds-surface-alt);
+    color: var(--ds-text-900);
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
@@ -500,7 +500,7 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
 }
 
 .btn-cancel:hover {
-    background: #e5e7eb;
+    background: var(--ds-border);
 }
 
 .btn-confirm {
@@ -697,9 +697,9 @@ $pendingCarts = $pendingCartsResult ? $pendingCartsResult['count'] : 0;
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>

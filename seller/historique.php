@@ -157,7 +157,7 @@ try {
         }
 
         .sales-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.875rem;
             font-weight: 700;
             margin: 0;
@@ -183,7 +183,7 @@ try {
 
         .filter-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -195,7 +195,7 @@ try {
 
         .search-input, .filter-select select, .filter-date input {
             padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 0.875rem;
             transition: all 0.2s;
@@ -209,7 +209,7 @@ try {
 
         .search-input:focus, .filter-select select:focus, .filter-date input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
@@ -218,7 +218,7 @@ try {
             left: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6b7280;
+            color: var(--ds-text-400);
             width: 1.25rem;
             height: 1.25rem;
         }
@@ -234,12 +234,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 500;
         }
 
         .stat-item i {
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .sales-table-container {
@@ -256,11 +256,11 @@ try {
 
         .sales-table th {
             background: #f8fafc;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.025em;
@@ -268,12 +268,12 @@ try {
 
         .sales-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
         }
 
         .sales-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .sales-table tbody tr:last-child td {
@@ -282,7 +282,7 @@ try {
 
         .order-id {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.875rem;
@@ -291,27 +291,27 @@ try {
 
         .order-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
         }
 
         .client-name {
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 500;
         }
 
         .client-name.anonymous {
-            color: #9ca3af;
+            color: var(--ds-text-400);
             font-style: italic;
         }
 
         .order-amount {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.125rem;
         }
 
         .order-date {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -328,8 +328,8 @@ try {
         }
 
         .status-badge.completed {
-            background: #dcfce7;
-            color: #166534;
+            background: var(--ds-green-bg);
+            color: var(--ds-green-dark);
         }
 
         .status-badge.pending {
@@ -357,7 +357,7 @@ try {
         }
 
         .btn-view {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 0.5rem 0.75rem;
@@ -385,7 +385,7 @@ try {
         }
 
         .pagination-info {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -396,8 +396,8 @@ try {
 
         .pagination a, .pagination span {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 1px solid var(--ds-border);
+            color: var(--ds-text-900);
             text-decoration: none;
             border-radius: 0.375rem;
             font-size: 0.875rem;
@@ -405,31 +405,31 @@ try {
         }
 
         .pagination a:hover {
-            background: #f9fafb;
-            border-color: #059669;
+            background: var(--ds-surface-alt);
+            border-color: var(--ds-green);
         }
 
         .pagination .current {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
 
         .pagination .disabled {
-            color: #9ca3af;
+            color: var(--ds-text-400);
             cursor: not-allowed;
         }
 
         .no-sales {
             text-align: center;
             padding: 4rem 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .no-sales i {
             width: 4rem;
             height: 4rem;
-            color: #d1d5db;
+            color: var(--ds-border);
             margin-bottom: 1rem;
         }
 
@@ -495,7 +495,7 @@ try {
 
         .modal-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -504,7 +504,7 @@ try {
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
             margin: 0;
             display: flex;
             align-items: center;
@@ -514,7 +514,7 @@ try {
         .modal-close {
             background: none;
             border: none;
-            color: #6b7280;
+            color: var(--ds-text-400);
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 0.375rem;
@@ -522,8 +522,8 @@ try {
         }
 
         .modal-close:hover {
-            background: #f3f4f6;
-            color: #374151;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-900);
         }
 
         .modal-content {
@@ -535,14 +535,14 @@ try {
         .modal-loading {
             text-align: center;
             padding: 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .spinner {
             width: 3rem;
             height: 3rem;
-            border: 3px solid #e5e7eb;
-            border-top: 3px solid #059669;
+            border: 3px solid var(--ds-border);
+            border-top: 3px solid var(--ds-green);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
@@ -567,7 +567,7 @@ try {
             display: block;
             font-size: 0.875rem;
             font-weight: 500;
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -575,12 +575,12 @@ try {
 
         .order-info-item span, .order-info-item div {
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
         }
 
         .client-contact {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-top: 0.25rem;
         }
 
@@ -591,7 +591,7 @@ try {
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -599,10 +599,10 @@ try {
         }
 
         .order-items-table-container {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             border-radius: 0.5rem;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
         }
 
         .order-items-table {
@@ -611,8 +611,8 @@ try {
         }
 
         .order-items-table th {
-            background: #f3f4f6;
-            color: #374151;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 0.75rem;
             text-align: left;
@@ -623,8 +623,8 @@ try {
 
         .order-items-table td {
             padding: 0.75rem;
-            border-top: 1px solid #e5e7eb;
-            color: #374151;
+            border-top: 1px solid var(--ds-border);
+            color: var(--ds-text-900);
         }
 
         .product-info {
@@ -635,14 +635,14 @@ try {
 
         .product-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
         }
 
         .product-code {
             font-family: 'Courier New', monospace;
             font-size: 0.75rem;
-            color: #6b7280;
-            background: #e5e7eb;
+            color: var(--ds-text-400);
+            background: var(--ds-border);
             padding: 0.125rem 0.25rem;
             border-radius: 0.25rem;
             display: inline-block;
@@ -650,7 +650,7 @@ try {
 
         .product-description {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             line-height: 1.4;
         }
 
@@ -667,7 +667,7 @@ try {
 
         .item-price {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .item-quantity {
@@ -677,7 +677,7 @@ try {
 
         .item-total {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .modal-error {
@@ -694,7 +694,7 @@ try {
 
         .modal-footer {
             padding: 1.5rem;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--ds-border);
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
@@ -713,19 +713,19 @@ try {
         }
 
         .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-900);
+            border: 1px solid var(--ds-border);
         }
 
         .btn-secondary:hover {
-            background: #e5e7eb;
+            background: var(--ds-border);
         }
 
         .btn-primary {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
-            border: 1px solid #059669;
+            border: 1px solid var(--ds-green);
         }
 
         .btn-primary:hover {
@@ -783,19 +783,19 @@ try {
 
 /* Message de succès après modification/suppression */
 .success-message {
-    background: #dcfce7;
-    color: #166534;
+    background: var(--ds-green-bg);
+    color: var(--ds-green-dark);
     padding: 1rem;
     border-radius: 0.5rem;
     margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid #86efac;
+    border: 1px solid var(--ds-green-light);
 }
 
 .success-message i {
-    color: #059669;
+    color: var(--ds-green);
 }
     </style>
     
@@ -819,7 +819,7 @@ try {
 .report-title {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--ds-text-900);
     margin: 0;
     display: flex;
     align-items: center;
@@ -842,12 +842,12 @@ try {
 .report-field label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--ds-text-900);
 }
 
 .report-field input {
     padding: 0.75rem;
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--ds-border);
     border-radius: 0.5rem;
     font-size: 0.875rem;
     transition: all 0.2s;
@@ -855,12 +855,12 @@ try {
 
 .report-field input:focus {
     outline: none;
-    border-color: #059669;
+    border-color: var(--ds-green);
     box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 .btn-download {
-    background: #059669;
+    background: var(--ds-green);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -1275,9 +1275,9 @@ try {
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>
@@ -1493,7 +1493,7 @@ try {
                         body { font-family: Arial, sans-serif; margin: 20px; }
                         .header { text-align: center; margin-bottom: 30px; }
                         .order-info { margin-bottom: 30px; }
-                        .order-info h2 { color: #059669; }
+                        .order-info h2 { color: var(--ds-green); }
                         .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
                         .info-item { margin-bottom: 10px; }
                         .info-item label { font-weight: bold; color: #666; }

@@ -91,53 +91,53 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
-        .register-details-header { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:2rem; border-radius:12px; margin-bottom:2rem; }
+        .register-details-header { background:var(--ds-green); color:white; padding:2rem; border-radius:12px; margin-bottom:2rem; }
         .register-status { display:inline-block; padding:.5rem 1rem; border-radius:20px; font-weight:600; font-size:.875rem; margin-left:1rem; }
-        .register-status.open   { background:rgba(16,185,129,.2); color:#10b981; border:2px solid #10b981; }
-        .register-status.closed { background:rgba(107,114,128,.2); color:#6b7280; border:2px solid #6b7280; }
+        .register-status.open   { background:rgba(16,185,129,.2); color:var(--ds-green); border:2px solid var(--ds-green); }
+        .register-status.closed { background:rgba(107,114,128,.2); color:var(--ds-text-400); border:2px solid var(--ds-text-400); }
 
         .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; margin-bottom:2rem; }
-        .stat-card  { background:white; padding:1.5rem; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.1); text-align:center; border:1px solid #e5e7eb; }
+        .stat-card  { background:white; padding:1.5rem; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.1); text-align:center; border:1px solid var(--ds-border); }
         .stat-icon  { width:3rem; height:3rem; margin:0 auto 1rem; border-radius:50%; display:flex; align-items:center; justify-content:center; }
         .stat-icon.primary { background:#dbeafe; color:#3b82f6; }
-        .stat-icon.success { background:#d1fae5; color:#10b981; }
+        .stat-icon.success { background:var(--ds-green-bg); color:var(--ds-green); }
         .stat-icon.warning { background:#fef3c7; color:#f59e0b; }
         .stat-icon.danger  { background:#fee2e2; color:#ef4444; }
-        .stat-value { font-size:1.4rem; font-weight:700; color:#1f2937; margin-bottom:.25rem; }
-        .stat-label { color:#6b7280; font-weight:500; font-size:.875rem; }
+        .stat-value { font-size:1.4rem; font-weight:700; color:var(--ds-text-900); margin-bottom:.25rem; }
+        .stat-label { color:var(--ds-text-400); font-weight:500; font-size:.875rem; }
 
         .pending-section { background:white; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.1); overflow:hidden; margin-bottom:2rem; border:1px solid #fde68a; }
         .pending-section-header { background:linear-gradient(135deg,#fef3c7,#fde68a); padding:1.25rem 1.5rem; border-bottom:1px solid #fde68a; display:flex; align-items:center; justify-content:space-between; }
         .pending-section-title  { font-size:1.1rem; font-weight:700; color:#92400e; display:flex; align-items:center; gap:.5rem; margin:0; }
         .pending-badge { background:#f59e0b; color:white; border-radius:9999px; padding:.2rem .65rem; font-size:.8rem; font-weight:700; }
-        .pending-cart-row { display:flex; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid #f3f4f6; gap:1rem; transition:background .15s; }
+        .pending-cart-row { display:flex; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid var(--ds-surface-alt); gap:1rem; transition:background .15s; }
         .pending-cart-row:last-child { border-bottom:none; }
         .pending-cart-row:hover { background:#fffbeb; }
         .pending-avatar { width:2.5rem; height:2.5rem; background:#f59e0b; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; }
         .pending-info { flex:1; }
-        .pending-seller { font-weight:600; color:#111827; }
-        .pending-client { font-size:.85rem; color:#6b7280; }
-        .pending-time   { font-size:.75rem; color:#9ca3af; }
+        .pending-seller { font-weight:600; color:var(--ds-text-900); }
+        .pending-client { font-size:.85rem; color:var(--ds-text-400); }
+        .pending-time   { font-size:.75rem; color:var(--ds-text-400); }
         .pending-meta   { text-align:right; min-width:110px; }
         .pending-total  { font-weight:700; color:#92400e; }
-        .pending-items  { font-size:.8rem; color:#6b7280; }
+        .pending-items  { font-size:.8rem; color:var(--ds-text-400); }
         .btn-delete-cart { background:#ef4444; color:white; border:none; padding:.45rem .8rem; border-radius:8px; font-size:.8rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:.3rem; transition:all .2s; white-space:nowrap; }
         .btn-delete-cart:hover { background:#dc2626; }
 
         .sales-table { background:white; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.1); }
-        .table-header { background:#f8fafc; padding:1.5rem; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between; }
-        .table-title  { font-size:1.25rem; font-weight:600; color:#1f2937; display:flex; align-items:center; gap:.5rem; margin:0; }
+        .table-header { background:#f8fafc; padding:1.5rem; border-bottom:1px solid var(--ds-border); display:flex; align-items:center; justify-content:space-between; }
+        .table-title  { font-size:1.25rem; font-weight:600; color:var(--ds-text-900); display:flex; align-items:center; gap:.5rem; margin:0; }
 
-        .sale-card { display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid #f3f4f6; cursor:pointer; transition:background .15s, transform .1s; gap:1rem; }
+        .sale-card { display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid var(--ds-surface-alt); cursor:pointer; transition:background .15s, transform .1s; gap:1rem; }
         .sale-card:last-child { border-bottom:none; }
         .sale-card:hover { background:#f0f9ff; transform:translateX(3px); }
         .sale-card:hover .sale-arrow { color:#3b82f6; }
-        .sale-invoice-num { font-weight:700; color:#1f2937; font-size:.95rem; }
-        .sale-date-time   { font-size:.8rem; color:#6b7280; margin-top:2px; }
+        .sale-invoice-num { font-weight:700; color:var(--ds-text-900); font-size:.95rem; }
+        .sale-date-time   { font-size:.8rem; color:var(--ds-text-400); margin-top:2px; }
         .sale-client-tag  { display:inline-flex; align-items:center; gap:.3rem; font-size:.78rem; color:#6366f1; font-weight:600; background:#eef2ff; padding:.15rem .5rem; border-radius:20px; margin-top:4px; }
-        .sale-amount-val  { font-weight:700; color:#1f2937; font-size:1rem; }
-        .sale-sub-label   { font-size:.75rem; color:#9ca3af; }
-        .sale-arrow       { color:#d1d5db; transition:color .15s; display:flex; align-items:center; }
+        .sale-amount-val  { font-weight:700; color:var(--ds-text-900); font-size:1rem; }
+        .sale-sub-label   { font-size:.75rem; color:var(--ds-text-400); }
+        .sale-arrow       { color:var(--ds-border); transition:color .15s; display:flex; align-items:center; }
         .badge-items      { background:#e0e7ff; color:#4338ca; font-size:.72rem; font-weight:700; padding:.2rem .55rem; border-radius:20px; white-space:nowrap; }
 
         .drawer-overlay { position:fixed; inset:0; background:rgba(15,23,42,.45); z-index:1000; opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(2px); }
@@ -145,7 +145,7 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
         .drawer { position:fixed; top:0; right:0; width:520px; max-width:95vw; height:100vh; background:#fff; z-index:1001; transform:translateX(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; box-shadow:-8px 0 40px rgba(0,0,0,.18); }
         .drawer.show { transform:translateX(0); }
 
-        .drawer-header { padding:1.5rem; background:linear-gradient(135deg,#667eea,#764ba2); color:white; flex-shrink:0; }
+        .drawer-header { padding:1.5rem; background:var(--ds-green); color:white; flex-shrink:0; }
         .drawer-header-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:.75rem; }
         .drawer-invoice { font-size:1.3rem; font-weight:800; }
         .drawer-date    { font-size:.85rem; opacity:.85; margin-top:2px; }
@@ -183,17 +183,17 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
         .btn-refund-drawer { background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:.3rem .6rem; border-radius:6px; font-size:.75rem; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:.25rem; transition:all .2s; white-space:nowrap; flex-shrink:0; }
         .btn-refund-drawer:hover { background:#e11d48; color:white; border-color:#e11d48; }
 
-        .drawer-client-block { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:1rem; display:flex; align-items:center; gap:.75rem; }
-        .drawer-client-avatar { width:2.5rem; height:2.5rem; background:#10b981; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; flex-shrink:0; }
+        .drawer-client-block { background:#f0fdf4; border:1px solid var(--ds-green-bg); border-radius:10px; padding:1rem; display:flex; align-items:center; gap:.75rem; }
+        .drawer-client-avatar { width:2.5rem; height:2.5rem; background:var(--ds-green); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; flex-shrink:0; }
         .drawer-client-name   { font-weight:700; color:#065f46; }
-        .drawer-client-phone  { font-size:.8rem; color:#059669; }
+        .drawer-client-phone  { font-size:.8rem; color:var(--ds-green); }
 
-        .back-button  { background:#6b7280; color:white; border:none; padding:.75rem 1.5rem; border-radius:8px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; transition:background .2s; }
-        .back-button:hover { background:#4b5563; color:white; text-decoration:none; }
+        .back-button  { background:var(--ds-text-400); color:white; border:none; padding:.75rem 1.5rem; border-radius:8px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; transition:background .2s; }
+        .back-button:hover { background:var(--ds-text-600); color:white; text-decoration:none; }
         .print-button { background:#3b82f6; color:white; border:none; padding:.75rem 1.5rem; border-radius:8px; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; transition:background .2s; }
         .print-button:hover { background:#2563eb; }
         .actions-bar  { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
-        .text-success { color:#10b981 !important; }
+        .text-success { color:var(--ds-green) !important; }
         .text-danger  { color:#ef4444 !important; }
 
         .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:2000; align-items:center; justify-content:center; }
@@ -202,17 +202,17 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
         .modal-icon-wrap { width:3.5rem; height:3.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1rem; }
         .modal-icon-wrap.danger  { background:#fee2e2; color:#dc2626; }
         .modal-icon-wrap.warning { background:#fef3c7; color:#d97706; }
-        .modal-title { font-size:1.2rem; font-weight:700; color:#111827; margin-bottom:.5rem; }
-        .modal-desc  { color:#6b7280; margin-bottom:1.5rem; font-size:.9rem; }
+        .modal-title { font-size:1.2rem; font-weight:700; color:var(--ds-text-900); margin-bottom:.5rem; }
+        .modal-desc  { color:var(--ds-text-400); margin-bottom:1.5rem; font-size:.9rem; }
         .modal-actions { display:flex; gap:.75rem; justify-content:flex-end; }
-        .btn-cancel { background:#f3f4f6; color:#374151; border:none; padding:.5rem 1rem; border-radius:8px; font-weight:500; cursor:pointer; }
-        .btn-cancel:hover { background:#e5e7eb; }
+        .btn-cancel { background:var(--ds-surface-alt); color:var(--ds-text-900); border:none; padding:.5rem 1rem; border-radius:8px; font-weight:500; cursor:pointer; }
+        .btn-cancel:hover { background:var(--ds-border); }
         .btn-confirm-danger { background:#dc2626; color:white; border:none; padding:.5rem 1rem; border-radius:8px; font-weight:600; cursor:pointer; }
         .btn-confirm-danger:hover { background:#b91c1c; }
         .btn-confirm-danger:disabled { opacity:.5; cursor:not-allowed; }
 
-        .empty-state { text-align:center; padding:2.5rem 1.5rem; color:#6b7280; }
-        .no-sales-message { text-align:center; padding:3rem; color:#6b7280; }
+        .empty-state { text-align:center; padding:2.5rem 1.5rem; color:var(--ds-text-400); }
+        .no-sales-message { text-align:center; padding:3rem; color:var(--ds-text-400); }
 
         .print-content { display:none; }
         @media print {
@@ -316,8 +316,8 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
                 </div>
                 <?php if (empty($pendingCarts)): ?>
                     <div class="empty-state">
-                        <i data-lucide="check-circle" style="width:2.5rem;height:2.5rem;color:#10b981;display:block;margin:0 auto .75rem;"></i>
-                        <p style="font-weight:600;color:#374151;">Aucun panier en attente</p>
+                        <i data-lucide="check-circle" style="width:2.5rem;height:2.5rem;color:var(--ds-green);display:block;margin:0 auto .75rem;"></i>
+                        <p style="font-weight:600;color:var(--ds-text-900);">Aucun panier en attente</p>
                     </div>
                 <?php else: ?>
                     <?php foreach ($pendingCarts as $cart): ?>
@@ -355,7 +355,7 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
                 </div>
                 <?php if (empty($sales)): ?>
                     <div class="no-sales-message">
-                        <div style="font-size:4rem;color:#d1d5db;margin-bottom:1rem;"><i data-lucide="shopping-cart"></i></div>
+                        <div style="font-size:4rem;color:var(--ds-border);margin-bottom:1rem;"><i data-lucide="shopping-cart"></i></div>
                         <h4>Aucune vente enregistrée</h4>
                     </div>
                 <?php else: ?>
@@ -373,7 +373,7 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
                                 <?php endif; ?>
                             </div>
                             <div><div class="sale-amount-val"><?php echo formatCurrency($sale['totalAmount']); ?></div><div class="sale-sub-label">Total</div></div>
-                            <div><div class="sale-amount-val" style="color:#10b981"><?php echo formatCurrency($sale['cashReceived']); ?></div><div class="sale-sub-label">Reçu</div></div>
+                            <div><div class="sale-amount-val" style="color:var(--ds-green)"><?php echo formatCurrency($sale['cashReceived']); ?></div><div class="sale-sub-label">Reçu</div></div>
                             <div><span class="badge-items"><?php echo $itemCounts[$sale['id']]; ?> article(s)</span></div>
                             <div class="sale-arrow"><i data-lucide="chevron-right" style="width:20px;height:20px;"></i></div>
                         </div>
@@ -558,7 +558,7 @@ function renderDrawer(d) {
     // Résumé financier — données brutes de la base
     html += '<div><div class="drawer-section-title">Résumé financier</div><div class="drawer-summary">' +
         '<div class="drawer-summary-card"><div class="drawer-summary-val">' + fmt(d.totalAmount) + '</div><div class="drawer-summary-label">Total</div></div>' +
-        '<div class="drawer-summary-card"><div class="drawer-summary-val" style="color:#10b981">' + fmt(d.cashReceived) + '</div><div class="drawer-summary-label">Reçu</div></div>' +
+        '<div class="drawer-summary-card"><div class="drawer-summary-val" style="color:var(--ds-green)">' + fmt(d.cashReceived) + '</div><div class="drawer-summary-label">Reçu</div></div>' +
         '<div class="drawer-summary-card"><div class="drawer-summary-val" style="color:#f59e0b">' + fmt(d.changeAmount) + '</div><div class="drawer-summary-label">Rendu</div></div>';
     if (d.totalVAT > 0)
         html += '<div class="drawer-summary-card"><div class="drawer-summary-val" style="color:#6366f1">' + fmt(d.totalVAT) + '</div><div class="drawer-summary-label">TVA incluse</div></div>';
@@ -659,7 +659,7 @@ function confirmRefundItem(itemId, saleId, productName, lineTotal) {
     _refundItem = { itemId: itemId, saleId: saleId, productName: productName, lineTotal: lineTotal };
     document.getElementById('modalRefundItemDesc').innerHTML =
         'Rembourser <strong>' + productName + '</strong> (' + fmt(lineTotal) + ') ?<br>' +
-        '<small style="color:#6b7280;">L\'article sera retiré et le stock réajusté.</small>';
+        '<small style="color:var(--ds-text-400);">L\'article sera retiré et le stock réajusté.</small>';
     openModal('modalRefundItem');
 }
 function executeRefundItem() {
@@ -692,7 +692,7 @@ function executeRefundItem() {
 function showToast(msg, type) {
     var t = document.createElement('div');
     t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:99999;padding:.75rem 1.25rem;border-radius:10px;font-weight:600;font-size:.9rem;box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:360px;background:' +
-        (type === 'success' ? '#10b981' : '#ef4444') + ';color:white;animation:slideIn .25s ease;';
+        (type === 'success' ? 'var(--ds-green)' : '#ef4444') + ';color:white;animation:slideIn .25s ease;';
     t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(function() { t.remove(); }, 3500);

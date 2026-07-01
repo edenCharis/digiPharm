@@ -217,15 +217,15 @@ function calculateDifference($expected, $actual) {
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
         }
         
         .register-card.open {
-            border-left: 4px solid #10b981;
+            border-left: 4px solid var(--ds-green);
         }
         
         .register-card.closed {
-            border-left: 4px solid #6b7280;
+            border-left: 4px solid var(--ds-text-400);
         }
         
         .register-header {
@@ -238,7 +238,7 @@ function calculateDifference($expected, $actual) {
         .register-title {
             font-weight: 600;
             font-size: 1.1rem;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .register-status {
@@ -249,13 +249,13 @@ function calculateDifference($expected, $actual) {
         }
         
         .register-status.open {
-            background-color: #d1fae5;
-            color: #059669;
+            background-color: var(--ds-green-bg);
+            color: var(--ds-green);
         }
         
         .register-status.closed {
-            background-color: #f3f4f6;
-            color: #6b7280;
+            background-color: var(--ds-surface-alt);
+            color: var(--ds-text-400);
         }
         
         .register-info {
@@ -272,13 +272,13 @@ function calculateDifference($expected, $actual) {
         
         .info-label {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-bottom: 0.25rem;
         }
         
         .info-value {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .register-actions {
@@ -326,7 +326,7 @@ function calculateDifference($expected, $actual) {
         .form-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -353,13 +353,13 @@ function calculateDifference($expected, $actual) {
         
         .form-label {
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
         
         .form-control {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 1rem;
         }
@@ -392,8 +392,8 @@ function calculateDifference($expected, $actual) {
         }
         
         .alert-success {
-            background-color: #d1fae5;
-            color: #059669;
+            background-color: var(--ds-green-bg);
+            color: var(--ds-green);
             border: 1px solid #a7f3d0;
         }
         
@@ -429,19 +429,19 @@ function calculateDifference($expected, $actual) {
         }
         
         .stat-icon.primary { background-color: #dbeafe; color: #3b82f6; }
-        .stat-icon.success { background-color: #d1fae5; color: #10b981; }
+        .stat-icon.success { background-color: var(--ds-green-bg); color: var(--ds-green); }
         .stat-icon.warning { background-color: #fef3c7; color: #f59e0b; }
         .stat-icon.info { background-color: #e0e7ff; color: #8b5cf6; }
         
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
         
         .stat-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
         }
         
@@ -457,7 +457,7 @@ function calculateDifference($expected, $actual) {
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
         
         .history-item:last-child {
@@ -471,12 +471,12 @@ function calculateDifference($expected, $actual) {
         
         .history-cashier {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .history-time {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .history-amounts {
@@ -485,16 +485,16 @@ function calculateDifference($expected, $actual) {
         
         .history-sales {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .history-duration {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .text-success {
-            color: #10b981 !important;
+            color: var(--ds-green) !important;
         }
 
         .text-danger {
@@ -509,13 +509,13 @@ function calculateDifference($expected, $actual) {
         }
 
         .modal-header {
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             padding: 1.5rem;
         }
 
         .modal-title {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
 
         .modal-body {
@@ -523,7 +523,7 @@ function calculateDifference($expected, $actual) {
         }
 
         .modal-footer {
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--ds-border);
             padding: 1rem 1.5rem;
         }
 

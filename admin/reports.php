@@ -204,7 +204,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
         .reports-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -230,14 +230,14 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
 
         .filter-group label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .filter-group select,
         .filter-group input {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
             min-width: 150px;
@@ -270,7 +270,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
             display: flex;
             gap: 0.25rem;
             margin-bottom: 2rem;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem;
             border-radius: 12px;
             overflow-x: auto;
@@ -282,7 +282,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
             border: none;
             border-radius: 10px;
             font-weight: 600;
-            color: #6b7280;
+            color: var(--ds-text-400);
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
@@ -310,7 +310,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
         }
 
         .summary-card.revenue {
-            border-left-color: #10b981;
+            border-left-color: var(--ds-green);
         }
 
         .summary-card.transactions {
@@ -328,12 +328,12 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
         .summary-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .summary-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             font-weight: 600;
         }
@@ -347,14 +347,14 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
 
         .section-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
         }
 
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -373,18 +373,18 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
             text-align: left;
             padding: 1rem;
             font-weight: 600;
-            color: #374151;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            color: var(--ds-text-900);
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
         }
 
         .data-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
 
         .data-table tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .status-badge {
@@ -407,19 +407,19 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
         }
 
         .status-badge.normal {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
         .currency {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .no-data {
             text-align: center;
             padding: 3rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .export-buttons {
@@ -430,7 +430,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
 
         .btn-export {
             padding: 0.5rem 1rem;
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             border-radius: 6px;
@@ -442,7 +442,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to);
         }
 
         .btn-export:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .chart-container {

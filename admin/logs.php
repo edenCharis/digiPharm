@@ -210,7 +210,7 @@ function getActionBadgeClass($action) {
         .page-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin: 0;
             display: flex;
             align-items: center;
@@ -238,14 +238,14 @@ function getActionBadgeClass($action) {
 
         .filter-label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
         }
 
         .filter-input, .filter-select {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
             transition: border-color 0.2s;
@@ -289,12 +289,12 @@ function getActionBadgeClass($action) {
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
             color: white;
         }
 
@@ -314,23 +314,23 @@ function getActionBadgeClass($action) {
         .logs-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
         }
 
         .logs-table th {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .logs-table td {
-            color: #4b5563;
+            color: var(--ds-text-600);
             font-size: 0.875rem;
         }
 
         .logs-table tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .badge {
@@ -366,7 +366,7 @@ function getActionBadgeClass($action) {
 
         .badge-secondary {
             background: rgba(107, 114, 128, 0.1);
-            color: #374151;
+            color: var(--ds-text-900);
         }
 
         .user-info {
@@ -395,16 +395,16 @@ function getActionBadgeClass($action) {
 
         .user-name {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
 
         .user-email {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .timestamp {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -425,9 +425,9 @@ function getActionBadgeClass($action) {
 
         .pagination-btn {
             padding: 0.5rem 1rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             background: white;
-            color: #374151;
+            color: var(--ds-text-900);
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
@@ -438,8 +438,8 @@ function getActionBadgeClass($action) {
         }
 
         .pagination-btn:hover {
-            background: #f3f4f6;
-            color: #374151;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-900);
             text-decoration: none;
         }
 
@@ -471,11 +471,11 @@ function getActionBadgeClass($action) {
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
 
         .stat-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             margin-top: 0.5rem;
         }
@@ -649,7 +649,7 @@ function getActionBadgeClass($action) {
                         <tbody>
                             <?php if(empty($logs)): ?>
                                 <tr>
-                                    <td colspan="7" style="text-align: center; padding: 3rem; color: #6b7280;">
+                                    <td colspan="7" style="text-align: center; padding: 3rem; color: var(--ds-text-400);">
                                         <i data-lucide="inbox" style="width: 3rem; height: 3rem; margin-bottom: 1rem; display: block; margin: 0 auto 1rem;"></i>
                                         <div>Aucun log trouvé avec les critères sélectionnés</div>
                                     </td>

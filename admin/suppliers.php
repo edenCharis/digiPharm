@@ -187,7 +187,7 @@ function timeAgo($datetime) {
         .suppliers-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -213,14 +213,14 @@ function timeAgo($datetime) {
 
         .filter-group label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .filter-group select,
         .filter-group input {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
             min-width: 150px;
@@ -270,7 +270,7 @@ function timeAgo($datetime) {
         }
 
         .summary-card.total {
-            border-left-color: #10b981;
+            border-left-color: var(--ds-green);
         }
 
         .summary-card.active {
@@ -284,12 +284,12 @@ function timeAgo($datetime) {
         .summary-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .summary-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             font-weight: 600;
         }
@@ -303,8 +303,8 @@ function timeAgo($datetime) {
 
         .section-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -315,7 +315,7 @@ function timeAgo($datetime) {
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -352,33 +352,33 @@ function timeAgo($datetime) {
             text-align: left;
             padding: 1rem;
             font-weight: 600;
-            color: #374151;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            color: var(--ds-text-900);
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
         }
 
         .data-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             vertical-align: middle;
         }
 
         .data-table tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .supplier-name {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
 
         .supplier-contact {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
         .supplier-date {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -423,8 +423,8 @@ function timeAgo($datetime) {
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
+            background: var(--ds-surface-alt);
+            border-top: 1px solid var(--ds-border);
         }
 
         .pagination {
@@ -441,8 +441,8 @@ function timeAgo($datetime) {
 
         .page-link {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 1px solid var(--ds-border);
+            color: var(--ds-text-900);
             text-decoration: none;
             border-radius: 6px;
             transition: all 0.2s;
@@ -474,7 +474,7 @@ function timeAgo($datetime) {
         }
 
         .alert-success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -490,8 +490,8 @@ function timeAgo($datetime) {
         }
 
         .modal-header {
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
+            background: var(--ds-surface-alt);
+            border-bottom: 1px solid var(--ds-border);
             border-radius: 12px 12px 0 0;
         }
 
@@ -499,12 +499,12 @@ function timeAgo($datetime) {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #1f2937;
+            color: var(--ds-text-900);
             font-weight: 700;
         }
 
         .form-control {
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             padding: 0.75rem;
             transition: all 0.2s;
@@ -518,7 +518,7 @@ function timeAgo($datetime) {
         .no-data {
             text-align: center;
             padding: 3rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .no-data i {
@@ -536,7 +536,7 @@ function timeAgo($datetime) {
 
         .btn-export {
             padding: 0.5rem 1rem;
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             border-radius: 6px;
@@ -549,7 +549,7 @@ function timeAgo($datetime) {
         }
 
         .btn-export:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         @media (max-width: 768px) {
@@ -645,7 +645,7 @@ function timeAgo($datetime) {
                     </button>
                     
                     <?php if (!empty($search)): ?>
-                        <a href="?" class="btn-apply-filters" style="background: #6b7280;">
+                        <a href="?" class="btn-apply-filters" style="background: var(--ds-text-400);">
                             <i data-lucide="x"></i>
                             Effacer
                         </a>
@@ -935,13 +935,13 @@ function timeAgo($datetime) {
                     <title>Rapport des Fournisseurs - PharmaSys</title>
                     <style>
                         body { font-family: Arial, sans-serif; margin: 20px; }
-                        h1 { color: #1f2937; text-align: center; }
-                        .header-info { text-align: center; margin-bottom: 30px; color: #6b7280; }
+                        h1 { color: var(--ds-text-900); text-align: center; }
+                        .header-info { text-align: center; margin-bottom: 30px; color: var(--ds-text-400); }
                         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-                        th { background-color: #f9fafb; font-weight: bold; }
-                        tr:nth-child(even) { background-color: #f9fafb; }
-                        .footer { margin-top: 30px; text-align: center; color: #6b7280; font-size: 12px; }
+                        th { background-color: var(--ds-surface-alt); font-weight: bold; }
+                        tr:nth-child(even) { background-color: var(--ds-surface-alt); }
+                        .footer { margin-top: 30px; text-align: center; color: var(--ds-text-400); font-size: 12px; }
                         .actions { display: none; }
                     </style>
                 </head>

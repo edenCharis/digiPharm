@@ -142,7 +142,7 @@ function buildQuery($overrides = []) {
     <style>
         /* ── Page layout ─────────────────────────────── */
         .page-hero {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+            background: var(--ds-green);
             color: white;
             padding: 1.75rem 2rem;
             border-radius: 14px;
@@ -168,7 +168,7 @@ function buildQuery($overrides = []) {
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
             box-shadow: 0 1px 6px rgba(0,0,0,.08);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -179,13 +179,13 @@ function buildQuery($overrides = []) {
             flex-shrink: 0;
         }
         .s-icon.blue   { background:#dbeafe; color:#2563eb; }
-        .s-icon.green  { background:#d1fae5; color:#059669; }
+        .s-icon.green  { background:var(--ds-green-bg); color:var(--ds-green); }
         .s-icon.orange { background:#fef3c7; color:#d97706; }
         .s-icon.purple { background:#ede9fe; color:#7c3aed; }
         .s-icon.red    { background:#fee2e2; color:#dc2626; }
 
-        .s-label { font-size:.8rem; color:#6b7280; font-weight:500; margin-bottom:.2rem; }
-        .s-value { font-size:1.3rem; font-weight:700; color:#111827; line-height:1.2; }
+        .s-label { font-size:.8rem; color:var(--ds-text-400); font-weight:500; margin-bottom:.2rem; }
+        .s-value { font-size:1.3rem; font-weight:700; color:var(--ds-text-900); line-height:1.2; }
 
         /* ── Filter bar ──────────────────────────────── */
         .filter-bar {
@@ -193,27 +193,27 @@ function buildQuery($overrides = []) {
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
             box-shadow: 0 1px 6px rgba(0,0,0,.08);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             margin-bottom: 1.5rem;
         }
         .filter-bar form { display:flex; flex-wrap:wrap; gap:.75rem; align-items:flex-end; }
         .filter-group { display:flex; flex-direction:column; gap:.3rem; min-width:140px; flex:1; }
-        .filter-group label { font-size:.8rem; font-weight:600; color:#374151; }
+        .filter-group label { font-size:.8rem; font-weight:600; color:var(--ds-text-900); }
         .filter-group select,
-        .filter-group input  { border:1px solid #d1d5db; border-radius:8px; padding:.5rem .75rem; font-size:.875rem; background:white; }
+        .filter-group input  { border:1px solid var(--ds-border); border-radius:8px; padding:.5rem .75rem; font-size:.875rem; background:white; }
         .filter-group select:focus,
         .filter-group input:focus  { outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.1); }
         .btn-filter { background:#2563eb; color:white; border:none; padding:.55rem 1.25rem; border-radius:8px; font-weight:600; font-size:.875rem; cursor:pointer; display:flex; align-items:center; gap:.4rem; transition:background .2s; }
         .btn-filter:hover { background:#1d4ed8; }
-        .btn-reset  { background:#f3f4f6; color:#374151; border:1px solid #d1d5db; padding:.55rem 1rem; border-radius:8px; font-weight:500; font-size:.875rem; cursor:pointer; text-decoration:none; display:flex; align-items:center; gap:.4rem; transition:background .2s; }
-        .btn-reset:hover { background:#e5e7eb; color:#374151; }
+        .btn-reset  { background:var(--ds-surface-alt); color:var(--ds-text-900); border:1px solid var(--ds-border); padding:.55rem 1rem; border-radius:8px; font-weight:500; font-size:.875rem; cursor:pointer; text-decoration:none; display:flex; align-items:center; gap:.4rem; transition:background .2s; }
+        .btn-reset:hover { background:var(--ds-border); color:var(--ds-text-900); }
 
         /* ── Table ───────────────────────────────────── */
         .hist-table-wrap {
             background: white;
             border-radius: 14px;
             box-shadow: 0 1px 6px rgba(0,0,0,.08);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             overflow: hidden;
             margin-bottom: 1.5rem;
         }
@@ -221,10 +221,10 @@ function buildQuery($overrides = []) {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1.2rem 1.5rem;
             background: #f8fafc;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
         }
-        .hist-table-head h2 { margin:0; font-size:1rem; font-weight:700; color:#1f2937; display:flex;align-items:center;gap:.5rem; }
-        .result-count { font-size:.85rem; color:#6b7280; }
+        .hist-table-head h2 { margin:0; font-size:1rem; font-weight:700; color:var(--ds-text-900); display:flex;align-items:center;gap:.5rem; }
+        .result-count { font-size:.85rem; color:var(--ds-text-400); }
 
         table.hist { width:100%; border-collapse:collapse; }
         table.hist thead th {
@@ -232,20 +232,20 @@ function buildQuery($overrides = []) {
             padding:.75rem 1rem; text-align:left; white-space:nowrap;
             border-bottom: 1px solid #e2e8f0;
         }
-        table.hist tbody tr { border-bottom:1px solid #f3f4f6; transition:background .15s; }
+        table.hist tbody tr { border-bottom:1px solid var(--ds-surface-alt); transition:background .15s; }
         table.hist tbody tr:last-child { border-bottom:none; }
         table.hist tbody tr:hover { background:#f8fafc; }
         table.hist td { padding:.85rem 1rem; font-size:.875rem; vertical-align:middle; }
 
         /* status pill */
         .pill { display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .7rem; border-radius:9999px; font-size:.78rem; font-weight:700; white-space:nowrap; }
-        .pill-open   { background:#d1fae5; color:#065f46; }
-        .pill-closed { background:#f3f4f6; color:#4b5563; }
+        .pill-open   { background:var(--ds-green-bg); color:#065f46; }
+        .pill-closed { background:var(--ds-surface-alt); color:var(--ds-text-600); }
 
         /* difference badges */
-        .badge-pos     { background:#d1fae5; color:#065f46; padding:.2rem .55rem; border-radius:6px; font-size:.78rem; font-weight:700; }
+        .badge-pos     { background:var(--ds-green-bg); color:#065f46; padding:.2rem .55rem; border-radius:6px; font-size:.78rem; font-weight:700; }
         .badge-neg     { background:#fee2e2; color:#991b1b; padding:.2rem .55rem; border-radius:6px; font-size:.78rem; font-weight:700; }
-        .badge-neutral { background:#f3f4f6; color:#374151; padding:.2rem .55rem; border-radius:6px; font-size:.78rem; font-weight:700; }
+        .badge-neutral { background:var(--ds-surface-alt); color:var(--ds-text-900); padding:.2rem .55rem; border-radius:6px; font-size:.78rem; font-weight:700; }
 
         .cashier-cell { display:flex; align-items:center; gap:.6rem; }
         .cashier-avatar {
@@ -253,11 +253,11 @@ function buildQuery($overrides = []) {
             color:white; font-weight:700; font-size:.8rem;
             display:flex; align-items:center; justify-content:center; flex-shrink:0;
         }
-        .cashier-name  { font-weight:600; color:#111827; font-size:.875rem; }
-        .cashier-role  { font-size:.75rem; color:#6b7280; }
+        .cashier-name  { font-weight:600; color:var(--ds-text-900); font-size:.875rem; }
+        .cashier-role  { font-size:.75rem; color:var(--ds-text-400); }
 
-        .amount-cell   { font-weight:700; color:#111827; }
-        .sub-info      { font-size:.75rem; color:#9ca3af; margin-top:.1rem; }
+        .amount-cell   { font-weight:700; color:var(--ds-text-900); }
+        .sub-info      { font-size:.75rem; color:var(--ds-text-400); margin-top:.1rem; }
 
         /* action buttons */
         .btn-details {
@@ -272,14 +272,14 @@ function buildQuery($overrides = []) {
         .pagination-wrap {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1rem 1.5rem;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--ds-border);
             flex-wrap: wrap; gap: .75rem;
         }
-        .pag-info { font-size:.85rem; color:#6b7280; }
+        .pag-info { font-size:.85rem; color:var(--ds-text-400); }
         .pag-links { display:flex; gap:.4rem; flex-wrap:wrap; }
         .pag-btn {
             padding:.4rem .75rem; border-radius:7px; font-size:.85rem; font-weight:600;
-            border:1px solid #d1d5db; background:white; color:#374151;
+            border:1px solid var(--ds-border); background:white; color:var(--ds-text-900);
             text-decoration:none; display:inline-flex; align-items:center; gap:.3rem;
             transition:all .15s; cursor:pointer;
         }
@@ -288,9 +288,9 @@ function buildQuery($overrides = []) {
         .pag-btn.disabled { opacity:.4; pointer-events:none; }
 
         /* ── Empty state ─────────────────────────────── */
-        .empty-state { text-align:center; padding:4rem 2rem; color:#9ca3af; }
+        .empty-state { text-align:center; padding:4rem 2rem; color:var(--ds-text-400); }
         .empty-state svg { width:4rem; height:4rem; margin-bottom:1rem; opacity:.4; }
-        .empty-state h3 { font-size:1.1rem; color:#6b7280; margin-bottom:.5rem; }
+        .empty-state h3 { font-size:1.1rem; color:var(--ds-text-400); margin-bottom:.5rem; }
 
         /* ── Back link ───────────────────────────────── */
         .back-link {
@@ -457,7 +457,7 @@ function buildQuery($overrides = []) {
                         ?>
                             <tr>
                                 <!-- ID -->
-                                <td style="font-weight:700;color:#6b7280;font-size:.8rem;">#<?= $r['id'] ?></td>
+                                <td style="font-weight:700;color:var(--ds-text-400);font-size:.8rem;">#<?= $r['id'] ?></td>
 
                                 <!-- Caissier -->
                                 <td>
@@ -484,12 +484,12 @@ function buildQuery($overrides = []) {
                                         <div><?= date('d/m/Y', strtotime($r['closing_time'])) ?></div>
                                         <div class="sub-info"><?= date('H:i', strtotime($r['closing_time'])) ?></div>
                                     <?php else: ?>
-                                        <span style="color:#9ca3af;font-size:.8rem;">En cours…</span>
+                                        <span style="color:var(--ds-text-400);font-size:.8rem;">En cours…</span>
                                     <?php endif; ?>
                                 </td>
 
                                 <!-- Durée -->
-                                <td style="color:#6b7280;font-size:.85rem;">
+                                <td style="color:var(--ds-text-400);font-size:.85rem;">
                                     <?= fdur((int)$r['duration_minutes']) ?>
                                 </td>
 
@@ -507,7 +507,7 @@ function buildQuery($overrides = []) {
                                 </td>
 
                                 <!-- Transactions -->
-                                <td style="text-align:center;font-weight:700;color:#374151;">
+                                <td style="text-align:center;font-weight:700;color:var(--ds-text-900);">
                                     <?= $r['sales_count'] ?>
                                 </td>
 
@@ -516,7 +516,7 @@ function buildQuery($overrides = []) {
                                     <?php if ($r['status'] === 'closed' && $diff !== null): ?>
                                         <?= diffLabel($diff) ?>
                                     <?php else: ?>
-                                        <span style="color:#9ca3af;font-size:.8rem;">–</span>
+                                        <span style="color:var(--ds-text-400);font-size:.8rem;">–</span>
                                     <?php endif; ?>
                                 </td>
 

@@ -564,7 +564,7 @@ function timeAgo($datetime) {
                                 callback: function(value) {
                                     return value.toLocaleString() + ' ' + currency;
                                 },
-                                color: '#6b7280'
+                                color: 'var(--ds-text-400)'
                             },
                             grid: {
                                 color: 'rgba(0, 0, 0, 0.1)'
@@ -572,7 +572,7 @@ function timeAgo($datetime) {
                         },
                         x: {
                             ticks: {
-                                color: '#6b7280'
+                                color: 'var(--ds-text-400)'
                             },
                             grid: {
                                 display: false
@@ -661,12 +661,12 @@ function timeAgo($datetime) {
         .app-name {
             font-size: 1.75rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin: 0;
         }
 
         .pharmacy-name {
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin: 0;
             font-weight: 500;
         }
@@ -679,13 +679,13 @@ function timeAgo($datetime) {
 
         .stats-item {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
         }
 
         .pharmacy-info .info-item {
             padding: 0.5rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
 
         .pharmacy-info .info-item:last-child {

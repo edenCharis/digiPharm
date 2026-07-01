@@ -150,7 +150,7 @@ try {
         }
 
         .page-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.875rem;
             font-weight: 700;
             display: flex;
@@ -159,7 +159,7 @@ try {
         }
 
         .btn-back {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
@@ -173,7 +173,7 @@ try {
         }
 
         .btn-back:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
             color: white;
         }
 
@@ -188,13 +188,13 @@ try {
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--ds-border);
         }
 
         .form-grid {
@@ -212,14 +212,14 @@ try {
 
         .form-group label {
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .form-group input,
         .form-group select {
             padding: 0.75rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 0.875rem;
             transition: all 0.2s;
@@ -228,7 +228,7 @@ try {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
@@ -240,7 +240,7 @@ try {
         .search-input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 0.875rem;
         }
@@ -250,7 +250,7 @@ try {
             left: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6b7280;
+            color: var(--ds-text-400);
             width: 1.25rem;
             height: 1.25rem;
         }
@@ -261,7 +261,7 @@ try {
             left: 0;
             right: 0;
             background: white;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             margin-top: 0.25rem;
             max-height: 300px;
@@ -278,12 +278,12 @@ try {
         .product-result-item {
             padding: 0.75rem;
             cursor: pointer;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             transition: background 0.2s;
         }
 
         .product-result-item:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .product-result-item:last-child {
@@ -292,18 +292,18 @@ try {
 
         .product-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
         }
 
         .product-code {
             font-family: 'Courier New', monospace;
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-top: 0.25rem;
         }
 
         .product-price {
-            color: #059669;
+            color: var(--ds-green);
             font-weight: 600;
             margin-top: 0.25rem;
         }
@@ -319,19 +319,19 @@ try {
             padding: 0.75rem;
             text-align: left;
             font-weight: 600;
-            color: #374151;
-            border-bottom: 2px solid #e5e7eb;
+            color: var(--ds-text-900);
+            border-bottom: 2px solid var(--ds-border);
             font-size: 0.875rem;
         }
 
         .items-table td {
             padding: 0.75rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
 
         .items-table input {
             padding: 0.5rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--ds-border);
             border-radius: 0.375rem;
             font-size: 0.875rem;
             width: 100%;
@@ -339,7 +339,7 @@ try {
 
         .items-table input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
 
         .btn-remove {
@@ -363,11 +363,11 @@ try {
         .no-items {
             text-align: center;
             padding: 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .total-section {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             padding: 1.5rem;
             border-radius: 0.5rem;
             margin-top: 1.5rem;
@@ -379,11 +379,11 @@ try {
             align-items: center;
             font-size: 1.25rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
         }
 
         .total-amount {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.5rem;
         }
 
@@ -409,7 +409,7 @@ try {
         }
 
         .btn-save {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
         }
 
@@ -427,12 +427,12 @@ try {
         }
 
         .btn-cancel {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
         }
 
         .btn-cancel:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .alert {
@@ -505,12 +505,12 @@ try {
         .modal-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 1rem;
         }
 
         .modal-message {
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-bottom: 1.5rem;
         }
 
@@ -609,7 +609,7 @@ try {
                                         type="text" 
                                         value="<?php echo date('d/m/Y H:i', strtotime($cart['created_at'])); ?>"
                                         disabled
-                                        style="background: #f3f4f6; color: #6b7280;"
+                                        style="background: var(--ds-surface-alt); color: var(--ds-text-400);"
                                     >
                                 </div>
                             </div>
@@ -872,3 +872,4 @@ try {
         }
 
         </script>
+<?php } ?>

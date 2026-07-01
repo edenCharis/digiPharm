@@ -258,7 +258,7 @@ function getRoleText($role) {
         .users-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -294,7 +294,7 @@ function getRoleText($role) {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
         }
         
         .users-table-container {
@@ -313,13 +313,13 @@ function getRoleText($role) {
         .users-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
         }
         
         .users-table th {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
         }
         
         .user-info {
@@ -332,7 +332,7 @@ function getRoleText($role) {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            background: var(--ds-green);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -344,11 +344,11 @@ function getRoleText($role) {
         .user-details h6 {
             margin: 0;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .user-details small {
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .role-badge {
@@ -360,9 +360,9 @@ function getRoleText($role) {
         }
         
         .badge-primary { background: #dbeafe; color: #1e40af; }
-        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-success { background: var(--ds-green-bg); color: #065f46; }
         .badge-danger { background: #fee2e2; color: #991b1b; }
-        .badge-secondary { background: #f3f4f6; color: #374151; }
+        .badge-secondary { background: var(--ds-surface-alt); color: var(--ds-text-900); }
         
         .action-buttons {
             display: flex;
@@ -377,8 +377,8 @@ function getRoleText($role) {
         
         .pagination-container {
             padding: 1.5rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
+            background: var(--ds-surface-alt);
+            border-top: 1px solid var(--ds-border);
         }
         
         .stats-grid {
@@ -409,7 +409,7 @@ function getRoleText($role) {
         }
         
         .stat-icon.primary { background: #3b82f6; }
-        .stat-icon.success { background: #10b981; }
+        .stat-icon.success { background: var(--ds-green); }
         .stat-icon.warning { background: #f59e0b; }
         .stat-icon.danger { background: #ef4444; }
         
@@ -417,12 +417,12 @@ function getRoleText($role) {
             margin: 0;
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .stat-content p {
             margin: 0;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
         
@@ -443,7 +443,7 @@ function getRoleText($role) {
         .empty-state {
             text-align: center;
             padding: 3rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .empty-state i {

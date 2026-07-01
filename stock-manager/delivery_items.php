@@ -354,7 +354,7 @@ function getStatusBadge($status) {
     
     <style>
         .delivery-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ds-green);
             color: white;
             padding: 2rem;
             border-radius: 12px;
@@ -400,7 +400,7 @@ function getStatusBadge($status) {
         }
         
         .card-header {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             padding: 1.5rem;
             border-bottom: 1px solid #e9ecef;
             display: flex;
@@ -542,13 +542,13 @@ function getStatusBadge($status) {
         
         .search-result {
             padding: 0.75rem;
-            border-bottom: 1px solid #f8f9fa;
+            border-bottom: 1px solid var(--ds-surface-alt);
             cursor: pointer;
             transition: background-color 0.15s ease;
         }
         
         .search-result:hover {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
         }
         
         .search-result:last-child {
@@ -598,13 +598,13 @@ function getStatusBadge($status) {
         }
         
         .items-table th {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             font-weight: 600;
             color: #495057;
         }
         
         .items-table tr:hover {
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
         }
         
         .badge {
@@ -672,7 +672,7 @@ function getStatusBadge($status) {
         .summary-item {
             text-align: center;
             padding: 1rem;
-            background: #f8f9fa;
+            background: var(--ds-surface-alt);
             border-radius: 8px;
         }
         

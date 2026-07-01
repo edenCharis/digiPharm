@@ -113,7 +113,7 @@ try {
         }
 
         .page-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 2rem;
             font-weight: 700;
             margin: 0;
@@ -123,7 +123,7 @@ try {
         }
 
         .page-subtitle {
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin: 0.5rem 0 0 0;
             font-size: 1.125rem;
         }
@@ -152,7 +152,7 @@ try {
 
         .stat-badge.amount {
             background: #ecfdf5;
-            border-color: #10b981;
+            border-color: var(--ds-green);
             color: #065f46;
         }
 
@@ -190,13 +190,13 @@ try {
 
         .form-label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .form-input {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 0.875rem;
             transition: all 0.2s;
@@ -204,7 +204,7 @@ try {
 
         .form-input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
@@ -223,7 +223,7 @@ try {
         }
 
         .btn-primary {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
         }
 
@@ -234,14 +234,14 @@ try {
         }
 
         .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-900);
+            border: 1px solid var(--ds-border);
         }
 
         .btn-secondary:hover {
-            background: #e5e7eb;
-            color: #374151;
+            background: var(--ds-border);
+            color: var(--ds-text-900);
         }
 
         .carts-section {
@@ -254,14 +254,14 @@ try {
         .section-header {
             background: #f8fafc;
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .section-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.25rem;
             font-weight: 600;
             margin: 0;
@@ -273,19 +273,19 @@ try {
         .cart-grid {
             display: grid;
             gap: 1px;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
         }
 
         .cart-card {
             background: white;
             padding: 1.5rem;
             transition: all 0.2s;
-            border-left: 4px solid #e5e7eb;
+            border-left: 4px solid var(--ds-border);
         }
 
         .cart-card:hover {
-            background: #f9fafb;
-            border-left-color: #059669;
+            background: var(--ds-surface-alt);
+            border-left-color: var(--ds-green);
             transform: translateX(2px);
         }
 
@@ -302,8 +302,8 @@ try {
 
         .cart-id {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
-            color: #6b7280;
+            background: var(--ds-surface-alt);
+            color: var(--ds-text-400);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
@@ -313,19 +313,19 @@ try {
 
         .cart-seller {
             font-weight: 600;
-            color: #111827;
+            color: var(--ds-text-900);
             font-size: 1.125rem;
             margin-bottom: 0.25rem;
         }
 
         .cart-client {
-            color: #059669;
+            color: var(--ds-green);
             font-weight: 500;
             margin-bottom: 0.25rem;
         }
 
         .cart-phone {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             font-family: 'Courier New', monospace;
         }
@@ -347,7 +347,7 @@ try {
         .cart-amount {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .cart-details {
@@ -361,7 +361,7 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
         }
 
@@ -371,7 +371,7 @@ try {
         }
 
         .btn-process {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
@@ -385,7 +385,7 @@ try {
         }
 
         .btn-process:hover {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             transform: translateY(-1px);
         }
@@ -412,14 +412,14 @@ try {
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .empty-state i {
             width: 4rem;
             height: 4rem;
             margin-bottom: 1rem;
-            color: #d1d5db;
+            color: var(--ds-border);
         }
 
         .empty-state h3 {
@@ -432,7 +432,7 @@ try {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             width: 3.5rem;
             height: 3.5rem;
@@ -535,7 +535,7 @@ try {
                             <i data-lucide="list"></i>
                             Liste des paniers
                             <?php if ($totalPendingCarts > 0): ?>
-                                <span style="color: #6b7280; font-weight: normal; font-size: 0.875rem;">
+                                <span style="color: var(--ds-text-400); font-weight: normal; font-size: 0.875rem;">
                                     (<?php echo $totalPendingCarts; ?> trouvé<?php echo $totalPendingCarts > 1 ? 's' : ''; ?>)
                                 </span>
                             <?php endif; ?>
@@ -628,9 +628,9 @@ try {
         function setFavicon() {
             const svgData = `
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
                     <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#059669">
+                    <g fill="var(--ds-green)">
                         <rect x="97" y="50" width="6" height="100"/>
                         <rect x="50" y="97" width="100" height="6"/>
                     </g>

@@ -543,7 +543,7 @@ function isExpired($expiryDate) {
         .products-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -569,14 +569,14 @@ function isExpired($expiryDate) {
 
         .filter-group label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             font-size: 0.875rem;
         }
 
         .filter-group select,
         .filter-group input {
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
             min-width: 150px;
@@ -626,7 +626,7 @@ function isExpired($expiryDate) {
         }
 
         .summary-card.total {
-            border-left-color: #10b981;
+            border-left-color: var(--ds-green);
         }
 
         .summary-card.low-stock {
@@ -644,12 +644,12 @@ function isExpired($expiryDate) {
         .summary-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .summary-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             font-weight: 600;
         }
@@ -663,8 +663,8 @@ function isExpired($expiryDate) {
 
         .section-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -675,7 +675,7 @@ function isExpired($expiryDate) {
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -713,25 +713,25 @@ function isExpired($expiryDate) {
             text-align: left;
             padding: 0.75rem 0.5rem;
             font-weight: 600;
-            color: #374151;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            color: var(--ds-text-900);
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
             white-space: nowrap;
         }
 
         .data-table td {
             padding: 0.75rem 0.5rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             vertical-align: middle;
         }
 
         .data-table tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .product-name {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             max-width: 200px;
             white-space: nowrap;
             overflow: hidden;
@@ -740,7 +740,7 @@ function isExpired($expiryDate) {
 
         .product-code {
             font-family: monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -748,7 +748,7 @@ function isExpired($expiryDate) {
 
         .product-price {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .stock-badge {
@@ -759,7 +759,7 @@ function isExpired($expiryDate) {
         }
 
         .stock-badge.success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -845,7 +845,7 @@ function isExpired($expiryDate) {
         }
 
         .alert-success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -859,8 +859,8 @@ function isExpired($expiryDate) {
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
+            background: var(--ds-surface-alt);
+            border-top: 1px solid var(--ds-border);
         }
 
         .pagination {
@@ -877,8 +877,8 @@ function isExpired($expiryDate) {
 
         .page-link {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 1px solid var(--ds-border);
+            color: var(--ds-text-900);
             text-decoration: none;
             border-radius: 6px;
             transition: all 0.2s;
@@ -904,7 +904,7 @@ function isExpired($expiryDate) {
 
         .btn-export {
             padding: 0.5rem 1rem;
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             border-radius: 6px;
@@ -917,13 +917,13 @@ function isExpired($expiryDate) {
         }
 
         .btn-export:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .no-data {
             text-align: center;
             padding: 3rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .no-data i {
@@ -1066,7 +1066,7 @@ function isExpired($expiryDate) {
                     </button>
                     
                     <?php if (!empty($search) || $categoryFilter > 0 || $supplierFilter > 0): ?>
-                        <a href="?" class="btn-apply-filters" style="background: #6b7280;">
+                        <a href="?" class="btn-apply-filters" style="background: var(--ds-text-400);">
                             <i data-lucide="x"></i>
                             Effacer
                         </a>
@@ -1076,7 +1076,7 @@ function isExpired($expiryDate) {
                 <!-- Export Buttons -->
             <!-- Export Buttons -->
 <div class="export-buttons">
-    <button onclick="openExportModal()" class="btn-export" style="background: #10b981;">
+    <button onclick="openExportModal()" class="btn-export" style="background: var(--ds-green);">
         <i data-lucide="file-spreadsheet"></i>
         Exporter Excel
     </button>
@@ -1102,7 +1102,7 @@ function isExpired($expiryDate) {
             <i data-lucide="printer"></i>
             Imprimer Codes-Barres
         </a>
-        <button class="btn-add-product" data-bs-toggle="modal" data-bs-target="#uploadCsvModal" style="background: #10b981;">
+        <button class="btn-add-product" data-bs-toggle="modal" data-bs-target="#uploadCsvModal" style="background: var(--ds-green);">
             <i data-lucide="upload"></i>
             Importer CSV
         </button>
@@ -1239,7 +1239,7 @@ function isExpired($expiryDate) {
 <div class="modal fade" id="exportExcelModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="background: #10b981; color: white;">
+            <div class="modal-header" style="background: var(--ds-green); color: white;">
                 <h5 class="modal-title">
                     <i data-lucide="file-spreadsheet"></i>
                     Exporter les Produits en Excel
@@ -1722,13 +1722,13 @@ PROD002,Vitamine C,Complément alimentaire,1000,800,1200,50,18,2026-06-30,Vitami
                     <title>Rapport des Produits - PharmaSys</title>
                     <style>
                         body { font-family: Arial, sans-serif; margin: 20px; }
-                        h1 { color: #1f2937; text-align: center; }
-                        .header-info { text-align: center; margin-bottom: 30px; color: #6b7280; }
+                        h1 { color: var(--ds-text-900); text-align: center; }
+                        .header-info { text-align: center; margin-bottom: 30px; color: var(--ds-text-400); }
                         table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
                         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f9fafb; font-weight: bold; }
-                        tr:nth-child(even) { background-color: #f9fafb; }
-                        .footer { margin-top: 30px; text-align: center; color: #6b7280; font-size: 12px; }
+                        th { background-color: var(--ds-surface-alt); font-weight: bold; }
+                        tr:nth-child(even) { background-color: var(--ds-surface-alt); }
+                        .footer { margin-top: 30px; text-align: center; color: var(--ds-text-400); font-size: 12px; }
                     </style>
                 </head>
                 <body>

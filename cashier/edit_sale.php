@@ -107,7 +107,7 @@ try {
         }
 
         .page-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.5rem;
             font-weight: 600;
             margin: 0;
@@ -127,18 +127,18 @@ try {
             background: #f8fafc;
             padding: 1rem;
             border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
         }
 
         .info-label {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
             margin-bottom: 0.25rem;
         }
 
         .info-value {
-            color: #111827;
+            color: var(--ds-text-900);
             font-weight: 600;
         }
 
@@ -158,11 +158,11 @@ try {
         .section-header {
             background: #f8fafc;
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
         }
 
         .section-title {
-            color: #059669;
+            color: var(--ds-green);
             font-size: 1.125rem;
             font-weight: 600;
             margin: 0;
@@ -178,22 +178,22 @@ try {
 
         .items-table th {
             background: #f8fafc;
-            color: #374151;
+            color: var(--ds-text-900);
             font-weight: 600;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--ds-border);
             font-size: 0.875rem;
         }
 
         .items-table td {
             padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
+            border-bottom: 1px solid var(--ds-surface-alt);
+            color: var(--ds-text-900);
         }
 
         .items-table tbody tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .product-info {
@@ -204,12 +204,12 @@ try {
 
         .product-name {
             font-weight: 500;
-            color: #111827;
+            color: var(--ds-text-900);
         }
 
         .product-code {
             font-family: 'Courier New', monospace;
-            background: #f3f4f6;
+            background: var(--ds-surface-alt);
             padding: 0.125rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.75rem;
@@ -228,7 +228,7 @@ try {
         .quantity-input, .price-input {
             width: 80px;
             padding: 0.5rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 0.375rem;
             text-align: center;
             font-weight: 600;
@@ -257,8 +257,8 @@ try {
 
         .add-product-section {
             padding: 1.5rem;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
+            background: var(--ds-surface-alt);
+            border-top: 1px solid var(--ds-border);
         }
 
         .product-search {
@@ -269,14 +269,14 @@ try {
         .search-input {
             width: 100%;
             padding: 0.75rem 2.5rem 0.75rem 1rem;
-            border: 2px solid #d1d5db;
+            border: 2px solid var(--ds-border);
             border-radius: 0.5rem;
             font-size: 0.875rem;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
         }
 
         .search-icon {
@@ -284,26 +284,26 @@ try {
             right: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .product-list {
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             border-radius: 0.5rem;
             background: white;
         }
 
         .product-item {
             padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             cursor: pointer;
             transition: background 0.2s;
         }
 
         .product-item:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .product-item:last-child {
@@ -320,7 +320,7 @@ try {
         }
 
         .panel-header {
-            background: #059669;
+            background: var(--ds-green);
             color: white;
             padding: 1.5rem;
             border-radius: 0.75rem 0.75rem 0 0;
@@ -344,26 +344,26 @@ try {
             display: block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .form-input, .form-select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 0.375rem;
             font-size: 0.875rem;
         }
 
         .form-input:focus, .form-select:focus {
             outline: none;
-            border-color: #059669;
+            border-color: var(--ds-green);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
 
         .totals-section {
-            border: 2px solid #f3f4f6;
+            border: 2px solid var(--ds-surface-alt);
             border-radius: 0.5rem;
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -381,10 +381,10 @@ try {
         .total-row:last-child {
             margin-bottom: 0;
             padding-top: 0.75rem;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid var(--ds-border);
             font-size: 1.125rem;
             font-weight: 700;
-            color: #059669;
+            color: var(--ds-green);
         }
 
         .action-buttons {
@@ -408,22 +408,22 @@ try {
         }
 
         .btn-primary {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #059669;
+            background: var(--ds-green);
             transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .warning-box {
@@ -516,7 +516,7 @@ try {
                                                             <span class="product-code"><?php echo htmlspecialchars($item['productCode']); ?></span>
                                                             <span class="product-category"><?php echo htmlspecialchars($item['categoryName'] ?: 'Général'); ?></span>
                                                         </div>
-                                                        <small style="color: #6b7280;">Stock disponible: <?php echo $item['currentStock'] + $item['quantity']; ?></small>
+                                                        <small style="color: var(--ds-text-400);">Stock disponible: <?php echo $item['currentStock'] + $item['quantity']; ?></small>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -543,7 +543,7 @@ try {
                                                            onchange="updateItemTotal(this)">
                                                 </td>
                                                 <td>
-                                                    <span class="price item-total" style="font-weight: 600; color: #059669;">
+                                                    <span class="price item-total" style="font-weight: 600; color: var(--ds-green);">
                                                         <?php echo number_format($item['quantity'] * $item['unitPrice'], 0); ?> XAF
                                                     </span>
                                                 </td>
@@ -559,7 +559,7 @@ try {
 
                                 <!-- Add New Product Section -->
                                 <div class="add-product-section">
-                                    <h3 style="color: #059669; margin-bottom: 1rem; font-size: 1rem;">
+                                    <h3 style="color: var(--ds-green); margin-bottom: 1rem; font-size: 1rem;">
                                         <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i>
                                         Ajouter un produit
                                     </h3>
@@ -589,7 +589,7 @@ try {
                                                         <span class="product-code"><?php echo htmlspecialchars($product['code']); ?></span>
                                                         <span class="product-category"><?php echo htmlspecialchars($product['categoryName'] ?: 'Général'); ?></span>
                                                     </div>
-                                                    <small style="color: #6b7280;">
+                                                    <small style="color: var(--ds-text-400);">
                                                         Prix: <?php echo number_format($product['sellingPrice'], 0); ?> XAF | 
                                                         Stock: <?php echo $product['stock']; ?>
                                                     </small>
@@ -643,7 +643,7 @@ try {
                                                    step="0.01"
                                                    onchange="updateTotals()"
                                                    style="flex: 1;">
-                                            <span style="padding: 0.75rem; background: #f3f4f6; border-radius: 0.375rem;">XAF</span>
+                                            <span style="padding: 0.75rem; background: var(--ds-surface-alt); border-radius: 0.375rem;">XAF</span>
                                         </div>
                                     </div>
 
@@ -789,7 +789,7 @@ function addNewProduct(element) {
                     <span class="product-code">${code}</span>
                     <span class="product-category">${category}</span>
                 </div>
-                <small style="color: #6b7280;">Stock disponible: ${stock}</small>
+                <small style="color: var(--ds-text-400);">Stock disponible: ${stock}</small>
             </div>
         </td>
         <td>
@@ -812,7 +812,7 @@ function addNewProduct(element) {
                    onchange="updateItemTotal(this)">
         </td>
         <td>
-            <span class="price item-total" style="font-weight: 600; color: #059669;">
+            <span class="price item-total" style="font-weight: 600; color: var(--ds-green);">
                 ${parseInt(price).toLocaleString()} XAF
             </span>
         </td>
@@ -917,9 +917,9 @@ function setupSidebar() {
 function setFavicon() {
     const svgData = `
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#059669"/>
+            <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="var(--ds-green)"/>
             <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-            <g fill="#059669">
+            <g fill="var(--ds-green)">
                 <rect x="97" y="50" width="6" height="100"/>
                 <rect x="50" y="97" width="100" height="6"/>
             </g>

@@ -219,7 +219,7 @@ function formatDateTime($datetime) {
         }
         
         .register-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--ds-green);
             color: white;
             border-radius: 12px;
             padding: 2rem;
@@ -263,13 +263,13 @@ function formatDateTime($datetime) {
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             padding-bottom: 0.75rem;
-            border-bottom: 2px solid #f3f4f6;
+            border-bottom: 2px solid var(--ds-surface-alt);
         }
         
         .denominations-grid {
@@ -283,7 +283,7 @@ function formatDateTime($datetime) {
             align-items: center;
             justify-content: space-between;
             padding: 1rem;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             transition: all 0.2s;
         }
@@ -310,7 +310,7 @@ function formatDateTime($datetime) {
             color: white;
         }
         
-        .bill { background: linear-gradient(135deg, #10b981, #059669); }
+        .bill { background: var(--ds-green); }
         .coin { background: linear-gradient(135deg, #f59e0b, #d97706); }
         
         .denomination-details {
@@ -320,12 +320,12 @@ function formatDateTime($datetime) {
         
         .denomination-value {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .denomination-type {
             font-size: 0.875rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .count-input-group {
@@ -337,7 +337,7 @@ function formatDateTime($datetime) {
         .count-input {
             width: 80px;
             text-align: center;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 6px;
             padding: 0.5rem;
             font-weight: 500;
@@ -352,7 +352,7 @@ function formatDateTime($datetime) {
         .count-btn {
             width: 32px;
             height: 32px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             background: white;
             border-radius: 4px;
             display: flex;
@@ -363,13 +363,13 @@ function formatDateTime($datetime) {
         }
         
         .count-btn:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
+            background: var(--ds-surface-alt);
+            border-color: var(--ds-text-400);
         }
         
         .subtotal {
             font-weight: 600;
-            color: #059669;
+            color: var(--ds-green);
             min-width: 100px;
             text-align: right;
         }
@@ -385,7 +385,7 @@ function formatDateTime($datetime) {
             align-items: center;
             gap: 1rem;
             padding: 1rem;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
         }
         
@@ -399,13 +399,13 @@ function formatDateTime($datetime) {
             color: white;
         }
         
-        .cards { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .cards { background: var(--ds-blue); }
         .checks { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
         .vouchers { background: linear-gradient(135deg, #ef4444, #dc2626); }
         
         .payment-input {
             flex: 1;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 6px;
             padding: 0.75rem;
             font-size: 1rem;
@@ -449,7 +449,7 @@ function formatDateTime($datetime) {
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem 0;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
         }
         
         .summary-item:last-child {
@@ -459,16 +459,16 @@ function formatDateTime($datetime) {
         }
         
         .summary-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .summary-value {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--ds-text-900);
         }
         
         .difference-positive {
-            color: #059669;
+            color: var(--ds-green);
         }
         
         .difference-negative {
@@ -476,7 +476,7 @@ function formatDateTime($datetime) {
         }
         
         .difference-zero {
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
         
         .justification-section {
@@ -500,13 +500,13 @@ function formatDateTime($datetime) {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #374151;
+            color: var(--ds-text-900);
         }
         
         .form-control {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 6px;
             font-size: 1rem;
         }
@@ -518,7 +518,7 @@ function formatDateTime($datetime) {
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: var(--ds-blue);
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -537,7 +537,7 @@ function formatDateTime($datetime) {
         }
         
         .btn-secondary {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
@@ -552,7 +552,7 @@ function formatDateTime($datetime) {
         }
         
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
             color: white;
             text-decoration: none;
         }
@@ -567,8 +567,8 @@ function formatDateTime($datetime) {
         }
         
         .alert-success {
-            background-color: #d1fae5;
-            color: #059669;
+            background-color: var(--ds-green-bg);
+            color: var(--ds-green);
             border: 1px solid #a7f3d0;
         }
         
@@ -585,7 +585,7 @@ function formatDateTime($datetime) {
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 2px solid #f3f4f6;
+            border: 2px solid var(--ds-surface-alt);
         }
         
         .total-row {
@@ -597,7 +597,7 @@ function formatDateTime($datetime) {
         }
         
         .total-row.main {
-            border-top: 2px solid #e5e7eb;
+            border-top: 2px solid var(--ds-border);
             margin-top: 0.5rem;
             padding-top: 1rem;
             font-weight: 700;
@@ -608,7 +608,7 @@ function formatDateTime($datetime) {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 20px;
@@ -625,7 +625,7 @@ function formatDateTime($datetime) {
         /* Fix for missing payment method inputs */
         .payment-method-input {
             width: 100%;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 6px;
             padding: 0.75rem;
             font-size: 1rem;
@@ -664,13 +664,13 @@ function formatDateTime($datetime) {
 .section-subtitle {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--ds-text-900);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--ds-border);
 }
 
 .bills-grid,
@@ -685,7 +685,7 @@ function formatDateTime($datetime) {
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--ds-border);
     border-radius: 8px;
     transition: all 0.2s;
 }
@@ -713,7 +713,7 @@ function formatDateTime($datetime) {
 }
 
 .bill { 
-    background: linear-gradient(135deg, #10b981, #059669); 
+    background: var(--ds-green); 
 }
 
 .coin { 
@@ -727,12 +727,12 @@ function formatDateTime($datetime) {
 
 .denomination-value {
     font-weight: 600;
-    color: #1f2937;
+    color: var(--ds-text-900);
 }
 
 .denomination-type {
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--ds-text-400);
 }
 
 .count-input-group {
@@ -744,7 +744,7 @@ function formatDateTime($datetime) {
 .count-input {
     width: 80px;
     text-align: center;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--ds-border);
     border-radius: 6px;
     padding: 0.5rem;
     font-weight: 500;
@@ -759,7 +759,7 @@ function formatDateTime($datetime) {
 .count-btn {
     width: 32px;
     height: 32px;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--ds-border);
     background: white;
     border-radius: 4px;
     display: flex;
@@ -770,13 +770,13 @@ function formatDateTime($datetime) {
 }
 
 .count-btn:hover {
-    background: #f3f4f6;
-    border-color: #9ca3af;
+    background: var(--ds-surface-alt);
+    border-color: var(--ds-text-400);
 }
 
 .subtotal {
     font-weight: 600;
-    color: #059669;
+    color: var(--ds-green);
     min-width: 100px;
     text-align: right;
 }

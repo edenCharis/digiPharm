@@ -205,7 +205,7 @@ function getRoleBadge($role) {
         .page-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -239,8 +239,8 @@ function getRoleBadge($role) {
 
         .section-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -249,7 +249,7 @@ function getRoleBadge($role) {
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -263,7 +263,7 @@ function getRoleBadge($role) {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            background: var(--ds-blue);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -280,12 +280,12 @@ function getRoleBadge($role) {
         .profile-name {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .profile-email {
-            color: #6b7280;
+            color: var(--ds-text-400);
             margin-bottom: 1rem;
         }
 
@@ -307,20 +307,20 @@ function getRoleBadge($role) {
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem;
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             border-radius: 8px;
         }
 
         .info-label {
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .info-value {
-            color: #1f2937;
+            color: var(--ds-text-900);
             font-weight: 500;
         }
 
@@ -331,7 +331,7 @@ function getRoleBadge($role) {
         .form-group label {
             display: block;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
         }
@@ -339,7 +339,7 @@ function getRoleBadge($role) {
         .form-group input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
             transition: border-color 0.2s;
@@ -352,8 +352,8 @@ function getRoleBadge($role) {
         }
 
         .form-group input:disabled {
-            background-color: #f3f4f6;
-            color: #6b7280;
+            background-color: var(--ds-surface-alt);
+            color: var(--ds-text-400);
         }
 
         .btn-primary {
@@ -377,7 +377,7 @@ function getRoleBadge($role) {
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: var(--ds-text-400);
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
@@ -393,7 +393,7 @@ function getRoleBadge($role) {
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
+            background: var(--ds-text-600);
         }
 
         .badge {
@@ -406,12 +406,12 @@ function getRoleBadge($role) {
             gap: 0.25rem;
         }
 
-        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-success { background: var(--ds-green-bg); color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
         .badge-info { background: #dbeafe; color: #1e40af; }
         .badge-primary { background: #dbeafe; color: #1e40af; }
         .badge-danger { background: #fee2e2; color: #991b1b; }
-        .badge-secondary { background: #f3f4f6; color: #374151; }
+        .badge-secondary { background: var(--ds-surface-alt); color: var(--ds-text-900); }
 
         .alert {
             padding: 1rem 1.5rem;
@@ -424,7 +424,7 @@ function getRoleBadge($role) {
         }
 
         .alert-success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -441,7 +441,7 @@ function getRoleBadge($role) {
         }
 
         .stat-card {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             padding: 1rem;
             border-radius: 8px;
             text-align: center;
@@ -450,13 +450,13 @@ function getRoleBadge($role) {
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.25rem;
         }
 
         .stat-label {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-weight: 500;
         }
 
@@ -466,7 +466,7 @@ function getRoleBadge($role) {
         }
 
         .password-requirements {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             padding: 1rem;
             border-radius: 8px;
             margin-top: 1rem;
@@ -478,7 +478,7 @@ function getRoleBadge($role) {
         }
 
         .password-requirements li {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             margin-bottom: 0.25rem;
         }
@@ -752,7 +752,7 @@ function getRoleBadge($role) {
                     if (newPasswordInput.value && confirmPasswordInput.value) {
                         if (newPasswordInput.value === confirmPasswordInput.value) {
                             confirmPasswordInput.setCustomValidity('');
-                            confirmPasswordInput.style.borderColor = '#10b981';
+                            confirmPasswordInput.style.borderColor = 'var(--ds-green)';
                         } else {
                             confirmPasswordInput.setCustomValidity('Les mots de passe ne correspondent pas');
                             confirmPasswordInput.style.borderColor = '#ef4444';

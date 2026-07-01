@@ -204,7 +204,7 @@ function getStatusBadge($status, $itemCount) {
         .page-title {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -225,7 +225,7 @@ function getStatusBadge($status, $itemCount) {
             border-left: 4px solid;
         }
 
-        .summary-card.total { border-left-color: #10b981; }
+        .summary-card.total { border-left-color: var(--ds-green); }
         .summary-card.low-stock { border-left-color: #f59e0b; }
         .summary-card.out-stock { border-left-color: #ef4444; }
         .summary-card.value { border-left-color: #3b82f6; }
@@ -233,12 +233,12 @@ function getStatusBadge($status, $itemCount) {
         .summary-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
         }
 
         .summary-label {
-            color: #6b7280;
+            color: var(--ds-text-400);
             font-size: 0.875rem;
             font-weight: 600;
         }
@@ -259,8 +259,8 @@ function getStatusBadge($status, $itemCount) {
 
         .section-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -269,7 +269,7 @@ function getStatusBadge($status, $itemCount) {
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--ds-text-900);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -286,7 +286,7 @@ function getStatusBadge($status, $itemCount) {
         .form-group label {
             display: block;
             font-weight: 600;
-            color: #374151;
+            color: var(--ds-text-900);
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
         }
@@ -295,7 +295,7 @@ function getStatusBadge($status, $itemCount) {
         .form-group select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--ds-border);
             border-radius: 8px;
             font-size: 0.875rem;
         }
@@ -328,7 +328,7 @@ function getStatusBadge($status, $itemCount) {
         }
 
         .btn-success {
-            background: #10b981;
+            background: var(--ds-green);
             color: white;
             border: none;
             padding: 0.5rem 1rem;
@@ -343,7 +343,7 @@ function getStatusBadge($status, $itemCount) {
         }
 
         .btn-success:hover {
-            background: #059669;
+            background: var(--ds-green);
         }
 
         .btn-danger {
@@ -394,19 +394,19 @@ function getStatusBadge($status, $itemCount) {
             text-align: left;
             padding: 0.75rem 0.5rem;
             font-weight: 600;
-            color: #374151;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
+            color: var(--ds-text-900);
+            border-bottom: 1px solid var(--ds-border);
+            background: var(--ds-surface-alt);
         }
 
         .data-table td {
             padding: 0.75rem 0.5rem;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid var(--ds-surface-alt);
             vertical-align: middle;
         }
 
         .data-table tr:hover {
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
         }
 
         .badge {
@@ -416,15 +416,15 @@ function getStatusBadge($status, $itemCount) {
             font-weight: 600;
         }
 
-        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-success { background: var(--ds-green-bg); color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
         .badge-info { background: #dbeafe; color: #1e40af; }
-        .badge-secondary { background: #f3f4f6; color: #374151; }
+        .badge-secondary { background: var(--ds-surface-alt); color: var(--ds-text-900); }
 
         .no-data {
             text-align: center;
             padding: 2rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .alert {
@@ -438,7 +438,7 @@ function getStatusBadge($status, $itemCount) {
         }
 
         .alert-success {
-            background: #d1fae5;
+            background: var(--ds-green-bg);
             color: #065f46;
         }
 
@@ -461,7 +461,7 @@ function getStatusBadge($status, $itemCount) {
 
         .delivery-meta {
             font-size: 0.75rem;
-            color: #6b7280;
+            color: var(--ds-text-400);
         }
 
         .stats-grid {
@@ -475,7 +475,7 @@ function getStatusBadge($status, $itemCount) {
         .stat-item {
             text-align: center;
             padding: 0.25rem;
-            background: #f9fafb;
+            background: var(--ds-surface-alt);
             border-radius: 4px;
         }
 
