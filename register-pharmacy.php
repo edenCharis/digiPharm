@@ -1,5 +1,6 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/Mailer.php';
 
 // Create registrations table if it doesn't exist
 try {
@@ -52,6 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->execute(
                     "INSERT INTO pharmacy_registrations (plan, pharmacy_name, responsible_name, email, phone, city) VALUES (?, ?, ?, ?, ?, ?)",
                     [$formData['plan'], $formData['pharmacy_name'], $formData['responsible_name'], $formData['email'], $formData['phone'], $formData['city']]
+                );
+                // Send confirmation email — non-blocking (failure doesn't break the flow)
+                Mailer::registrationConfirmation(
+                    $formData['email'],
+                    $formData['pharmacy_name'],
+                    $formData['responsible_name'],
+                    $formData['plan']
                 );
                 $success = true;
             }

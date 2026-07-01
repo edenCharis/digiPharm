@@ -116,9 +116,26 @@ AppSettings::init($db);
                         <i data-lucide="file-text" class="menu-icon"></i>
                         <div class="menu-content">
                             <div class="menu-title">Logs</div>
-                            <div class="menu-description">Activité système</div>        
+                            <div class="menu-description">Activité système</div>
                         </div>
-                    </a>    
+                    </a>
+                </div>
+
+                <div class="sidebar-menu-item">
+                    <a href="registrations.php" class="sidebar-menu-link" data-page="registrations">
+                        <i data-lucide="user-plus" class="menu-icon"></i>
+                        <div class="menu-content">
+                            <div class="menu-title">Inscriptions</div>
+                            <div class="menu-description">Demandes de pharmacies</div>
+                        </div>
+                        <?php
+                        try {
+                            $pendingRegs = $db->fetch("SELECT COUNT(*) as c FROM pharmacy_registrations WHERE status='pending'");
+                            if ($pendingRegs && $pendingRegs['c'] > 0):
+                        ?>
+                        <div class="menu-badge" style="background:var(--ds-amber-bg);color:var(--ds-amber-text)"><?= $pendingRegs['c'] ?></div>
+                        <?php endif; } catch (Exception $e) {} ?>
+                    </a>
                 </div>
             </div>
         </div>
