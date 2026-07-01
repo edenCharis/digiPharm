@@ -1,9 +1,9 @@
 <?php
-session_start();
-if ($_SESSION['role'] !== 'ADMIN' || $_SESSION['id'] != session_id()) {
-    header('Location: ../index.php');
-    exit;
-}
+// This page is platform-level — superadmin only.
+// Regular pharmacy admins must never access it.
+if (session_status() === PHP_SESSION_NONE) session_start();
+require_once '../superadmin/config/auth.php';
+sa_check_auth(); // redirects to /superadmin/login.php if not superadmin
 
 error_reporting(E_ALL);
 ini_set('display_errors', 0);

@@ -95,7 +95,7 @@ class OTPAuth {
     }
 
     public function authenticateCredentials($username, $password) {
-        $query = "SELECT id, username, email, role, password FROM user WHERE username = :username";
+        $query = "SELECT id, username, email, role, password, pharmacy_id FROM user WHERE username = :username";
         $user = $this->db->fetch($query, ['username' => $username]);
 
         if (!$user) {
@@ -111,10 +111,11 @@ class OTPAuth {
         if ($this->storeOTP($user['id'], $otp)) {
             $this->sendOTPEmail($user['email'], $user['username'], $otp);
             $_SESSION['temp_user'] = [
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'role' => $user['role']
+                'id'          => $user['id'],
+                'username'    => $user['username'],
+                'email'       => $user['email'],
+                'role'        => $user['role'],
+                'pharmacy_id' => (int)($user['pharmacy_id'] ?? 1),
             ];
             return [
                 'success' => true,
@@ -146,10 +147,11 @@ class OTPAuth {
             $deleteQuery = "DELETE FROM user_otp WHERE user_id = :user_id";
             $this->db->query($deleteQuery, ['user_id' => $userId]);
 
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['id'] = session_id();
+            $_SESSION['user_id']    = $user['id'];
+            $_SESSION['username']   = $user['username'];
+            $_SESSION['role']       = $user['role'];
+            $_SESSION['pharmacy_id'] = (int)($user['pharmacy_id'] ?? 1);
+            $_SESSION['id']         = session_id();
             $_SESSION['login_time'] = time();
 
             $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt)
