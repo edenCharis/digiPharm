@@ -61,31 +61,122 @@ class OTPAuth {
             $mail->addAddress($email, $username);
 
             $mail->isHTML(true);
-            $mail->Subject = 'Code de vérification - DigiPharma';
-            $mail->Body = "
-            <div style='font-family:Arial,sans-serif;max-width:500px;margin:auto;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;'>
-                <div style='background:#22C55E;padding:24px;text-align:center;'>
-                    <svg viewBox='0 0 200 200' width='60' height='60' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z' fill='white'/>
-                        <path d='M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z' fill='#22C55E'/>
-                        <rect x='97' y='50' width='6' height='100' fill='white'/>
-                    </svg>
-                    <h1 style='color:white;margin:8px 0 0;font-size:22px;'>DigiPharma</h1>
-                </div>
-                <div style='padding:32px;'>
-                    <h2 style='color:#111827;margin-top:0;'>Bonjour $username,</h2>
-                    <p style='color:#6b7280;'>Votre code de vérification est :</p>
-                    <div style='background:#f0fdf4;border:2px solid #22C55E;border-radius:8px;text-align:center;padding:16px;margin:24px 0;'>
-                        <span style='font-size:36px;font-weight:bold;letter-spacing:8px;color:#22C55E;'>$otp</span>
-                    </div>
-                    <p style='color:#6b7280;'>Ce code expire dans <strong>5 minutes</strong>.</p>
-                    <p style='color:#9ca3af;font-size:13px;'>Si vous n'avez pas demandé ce code, ignorez cet email.</p>
-                </div>
-                <div style='background:#f9fafb;padding:16px;text-align:center;border-top:1px solid #e5e7eb;'>
-                    <p style='color:#6b7280;margin:0;font-size:13px;'>Cordialement,<br><strong>L'équipe DigiPharma</strong></p>
-                </div>
-            </div>
-            ";
+            $mail->Subject = "[$otp] Votre code de vérification — digiPharm";
+            $otpSpaced = implode('&nbsp;&nbsp;', str_split($otp));
+            $mail->Body = <<<HTML
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>digiPharm — Code de vérification</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f4f0;font-family:Arial,'Helvetica Neue',sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f0f4f0" style="background-color:#f0f4f0;">
+  <tr>
+    <td align="center" style="padding:48px 16px 40px;">
+
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;">
+
+        <!-- Header -->
+        <tr>
+          <td bgcolor="#188038" style="background-color:#188038;padding:32px 48px;">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="48" height="48" bgcolor="#0d652d" style="background-color:rgba(0,0,0,0.15);border-radius:10px;text-align:center;vertical-align:middle;">
+                  <span style="display:block;color:#ffffff;font-size:26px;font-weight:900;line-height:48px;text-align:center;">✚</span>
+                </td>
+                <td style="padding-left:16px;vertical-align:middle;">
+                  <div style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;line-height:1.2;">digiPharm</div>
+                  <div style="color:rgba(255,255,255,0.65);font-size:10.5px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;margin-top:3px;">by Digitech Congo</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Accent line -->
+        <tr>
+          <td height="3" bgcolor="#0d652d" style="background-color:#0d652d;height:3px;font-size:0;line-height:0;">&nbsp;</td>
+        </tr>
+
+        <!-- Content -->
+        <tr>
+          <td style="padding:44px 48px 36px;">
+
+            <h1 style="margin:0 0 6px;font-size:23px;font-weight:700;color:#1a1a1a;letter-spacing:-0.4px;">Code de vérification</h1>
+            <table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;">
+              <tr>
+                <td width="36" height="3" bgcolor="#188038" style="background-color:#188038;border-radius:2px;height:3px;font-size:0;">&nbsp;</td>
+              </tr>
+            </table>
+
+            <p style="margin:0 0 24px;font-size:15.5px;color:#374151;line-height:1.6;">
+              Bonjour <strong style="color:#1a1a1a;">$username</strong>,
+            </p>
+            <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.7;">
+              Entrez le code ci-dessous pour finaliser votre connexion à digiPharm.
+            </p>
+
+            <!-- OTP Box -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 32px;">
+              <tr>
+                <td align="center" bgcolor="#e8f5e9" style="background-color:#e8f5e9;border:2px solid #188038;border-radius:14px;padding:32px 24px;">
+                  <div style="font-family:'Courier New',Courier,monospace;font-size:46px;font-weight:700;letter-spacing:14px;color:#188038;text-align:center;line-height:1;text-indent:14px;">$otpSpaced</div>
+                  <p style="margin:16px 0 0;font-size:13px;color:#388e3c;text-align:center;">
+                    ⏱&nbsp; Ce code expire dans <strong>5 minutes</strong>
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Security note -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;">
+              <tr>
+                <td bgcolor="#fafafa" style="background-color:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:14px 18px;">
+                  <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+                    🔒 &nbsp;digiPharm ne vous demandera <strong>jamais</strong> ce code par téléphone ou chat. Ne le partagez avec personne.
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td bgcolor="#f8faf8" style="background-color:#f8faf8;border-top:1px solid #e0ece4;padding:24px 48px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td>
+                  <p style="margin:0;font-size:11.5px;color:#9ca3af;line-height:1.7;">
+                    © 2026 <strong style="color:#6b7280;">Digitech Congo</strong> · digiPharm<br>
+                    <a href="mailto:support@digitaltechnologiescongo.com" style="color:#188038;text-decoration:none;font-weight:500;">support@digitaltechnologiescongo.com</a>
+                  </p>
+                </td>
+                <td align="right">
+                  <span style="font-size:18px;font-weight:700;color:#188038;letter-spacing:-0.3px;">digi<span style="color:#0d652d;">Pharm</span></span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+
+      <p style="margin:20px auto 0;max-width:440px;font-size:11px;color:#a8b3a8;text-align:center;line-height:1.6;">
+        Si vous n'avez pas demandé ce code, ignorez simplement cet email.
+      </p>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
+HTML;
 
             return $mail->send();
         } catch (Exception $e) {
