@@ -53,7 +53,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
 
         if ($action === 'approve' && $reg['status'] !== 'approved') {
 
-            // Build unique username from email
+            // 1. Ensure pharmacies table exists
+            $db->execute("CREATE TABLE IF NOT EXISTS pharmacies (
+                id               INT AUTO_INCREMENT PRIMARY KEY,
+                name             VARCHAR(255) NOT NULL,
+                responsible_name VARCHAR(255),
+                email            VARCHAR(255),
+                phone            VARCHAR(50),
+                city             VARCHAR(100),
+                plan             ENUM('basic','pro') DEFAULT 'basic',
+                status           ENUM('active','suspended') DEFAULT 'active',
+                trial_ends_at    DATETIME NULL,
+                created_at       DATETIME DEFAULT NOW()
+            )");
+
+            // 2. Ensure pharmacy_registrations.pharmacy_id column exists
+            try {
+                $db->execute("ALTER TABLE pharmacy_registrations ADD COLUMN pharmacy_id INT NULL AFTER id");
+            } catch (Exception $e) { /* already exists */ }
+
+            // 3. Create the pharmacy record (14-day trial from approval date)
+            $db->execute(
+                "INSERT INTO pharmacies (name, responsible_name, email, phone, city, plan, trial_ends_at, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 14 DAY), NOW())",
+                [
+                    $reg['pharmacy_name'],
+                    $reg['responsible_name'],
+                    $reg['email'],
+                    $reg['phone'] ?? '',
+                    $reg['city']  ?? '',
+                    $reg['plan'],
+                ]
+            );
+            $newPharmacyId = (int) $db->lastInsertId();
+
+            // 4. Build unique username from email
             $baseUser = slugUsername($reg['email']);
             $username = $baseUser;
             $suffix = 1;
@@ -65,19 +99,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
             $userId   = generateUUID();
 
             $db->execute(
-                "INSERT INTO user (id, username, password, role, email, statut)
-                 VALUES (?, ?, ?, 'ADMIN', ?, 1)",
-                [$userId, $username, password_hash($tempPass, PASSWORD_DEFAULT), $reg['email']]
+                "INSERT INTO user (id, username, password, role, email, statut, pharmacy_id)
+                 VALUES (?, ?, ?, 'ADMIN', ?, 1, ?)",
+                [$userId, $username, password_hash($tempPass, PASSWORD_DEFAULT), $reg['email'], $newPharmacyId]
             );
 
-            // Ensure approved_at column exists before using it
+            // 5. Ensure approved_at column exists, then stamp the registration
             try {
                 $db->execute("ALTER TABLE pharmacy_registrations ADD COLUMN approved_at DATETIME NULL AFTER status");
-            } catch (Exception $e) { /* column already exists — fine */ }
+            } catch (Exception $e) { /* already exists */ }
 
             $db->execute(
-                "UPDATE pharmacy_registrations SET status = 'approved', approved_at = NOW() WHERE id = ?",
-                [$regId]
+                "UPDATE pharmacy_registrations SET status = 'approved', approved_at = NOW(), pharmacy_id = ? WHERE id = ?",
+                [$newPharmacyId, $regId]
             );
 
             $loginUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/index.php';
@@ -90,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
                 $loginUrl
             );
 
-            $flash = ['type' => 'success', 'msg' => "✅ Compte activé pour <strong>{$reg['pharmacy_name']}</strong>. Email envoyé à {$reg['email']}."];
+            $flash = ['type' => 'success', 'msg' => "✅ Compte activé pour <strong>{$reg['pharmacy_name']}</strong> (pharmacie #{$newPharmacyId}). Email envoyé à {$reg['email']}."];
 
         } elseif ($action === 'reject' && $reg['status'] !== 'rejected') {
 
