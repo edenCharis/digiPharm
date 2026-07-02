@@ -18,7 +18,7 @@ AppSettings::init($db);
                     <?php  echo getAppIcon('icon-class')?>
                 </div>
                 <div>
-                    <div class="icon-class'brand-text"><?php echo appName()?></div>
+                    <div class="brand-text"><?php echo appName()?></div>
                    
                 </div>
             </a>

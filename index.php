@@ -1,728 +1,705 @@
-
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-
-
-
-
+ini_set('display_errors', 0);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pharmacie - Connexion Sécurisée</title>
+    <title>digiPharm — Connexion</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNNjAgMjAgTDE0MCAyMCBMMTQwIDYwIEwxODAgNjAgTDE4MCAxNDAgTDE0MCAxNDAgTDE0MCAxODAgTDYwIDE4MCBMNTAG0xNDAgTDIwIDE0MCBMMJAG0NjAgTDYwIDYwIFoiIGZpbGw9IiMyMkM1NUUiLz4KICA8cGF0aCBkPSJNNzUgMzUgTDEyNSAzNSBMMTI1IDc1IEwxNjUgNzUgTDE2NSAxMjUgTDEyNSAxMjUgTDEyNSAxNjUgTDc1IDE2NSBMNTAW0xMjUgTDM1IDEyNSBMMzUgNzUgTDc1IDc1IFoiIGZpbGw9IndoaXRlIi8+CiAgPGcgZmlsbD0iIzIyQzU1RSI+CiAgICA8cmVjdCB4PSI5NyIgeT0iNTAiIHdpZHRoPSI2IiBoZWlnaHQ9IjEwMCIvPgogICAgPHBhdGggZD0iTTg1IDcwIFE3NSA3NSA4NSA4NSBRMTETY0NOM5NRCXM0QTEI4MCA3MCAXMW0ZhOVcQgQPNXUgODBZRAMTAwIDkwURA2pUMTAlMjUgMTA1IDFYGNQMRUSMTI1IDkwIDEyMCAxFDwgUTEx1IDExMCAxMDUgMTA1IFE5NSAxGMERJVUAygFJMA=ICQRA2pMA0VMA9NEQR23cWENIDUgcTRWOTU2MTA2M2IETARDUVMGA1UQVEgMG11MC3U0aME0FIFQ5NSAwMFM5IDEwM0UBMRJVDSgEgRAPNIgWRGQCAxTFcQg2mNSAwMWU05IDUCZUEgMa24gBG9SgBGMTaAy5BIUA2pUN0RBRTA1GW5G05IDz1jUQl5IDYgMTMwO0gUGMEJzNIAQNIIQ2NUzXUEgkBXM9TYgB3cSBGOTU2YH0gQVMUR0gERE2QYQcXQQ=="/+gCGAYYCQEIGYGEI8UWUCgDY3cgKYE4CAg0JnJ4IE4nIDUgcj0iOCIgcnk9IjUNICU+CiAgPC9nPgogIDxwYXRoIGQ9Ik05RCBMRMHRC0cXU0MSRE0T0SMRU4UTM5MCBMMHJcSAg2zSUgRiA0NDQ5IGdWlHAEYNIHYGYcSgBGQmNOAEg5MCAMI2NUMRKEgXJVMA0PNOYmNCcQo9IjQ1LEcXQYgQCKzAcNOgGAg5MCBSAwMQYQEIGYNUYgXAg9ACJOBEGJa9G2 JEcTOW3F5MRCAJMA40JQg6PSI5PCBRIQ4gZIVSIG9SGFNXFFgRUAUGRQhYFc6NEw0N0QmBASQ4XQVbKCGY0MSAxaAIMKCYYURgNNCQQUAOJaAgagVOEgcBSA9cRRAMAIBMQg02STgEAYFXNABNNMHA0AH1QgYFUMCAsH0wCCIOFZ0AGQC04NAG0MG5QNGHEQGENaGAIGhBSQU5CrETVQVNYGE9BgcRNBFOMAYBHQAwU5JQ0OOJVCAGXQ4o0YgVNQg9QYyAQEQUQOAHaGUGRaAA4CKGXRA4GHlWS6mNMYGCZRQAZ8VE2mQGAZB0AXNA50OQBFR0QAYG0GGCmQAWAmN2FCEYWRN0AMYQVNQERWFNQAYyPUOJQAFUEQVAGCAgFc6YVUKiGUBAgFEhRQIYAD1gCmgB0YQgU4N9GMgVRaF1Q9z1N0g0sGNAgA4GGQVdXvMgFWYAdYXBMVGAI&5A3QgYGKQVGW2FQhUGYgFMUYPmGIMQAUmYUxGGAJlQVUQd1A1GGNICrFBGYWOtmCA05AGxVNXVCF5Q32FVGwUZRQVCQBFhF1BAQRGAGMAgAsAnBCgOYzaAAKYg3q9EY&" fill="#22C55E"/>
-    </g>
-    <path d="M90 140 L110 140 Q115 140 115 145 L115 155 Q115 160 110 160 L90 160 Q85 160 85 155 L85 145 Q85 140 90 140 Z" fill="#22C55E"/>
-</svg>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green:      #1ea84b;
+            --green-dark: #0d6e2f;
+            --ink:        #080d09;
+            --ink-soft:   rgba(255,255,255,0.55);
+            --border:     #dadce0;
+            --text:       #202124;
+            --muted:      #5f6368;
         }
 
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #f3f4f6;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f8f9fa;
             min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Shell ───────────────────────────────────────────── */
+        .auth-shell {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* ── Left dark panel ─────────────────────────────────── */
+        .auth-left {
+            width: 50%;
+            background: var(--ink);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem;
+        }
+
+        /* Animated blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: blobPulse 8s ease-in-out infinite;
+        }
+        .blob1 {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle, #1ea84b 0%, transparent 70%);
+            top: -120px; left: -100px;
+            animation-delay: 0s;
+        }
+        .blob2 {
+            width: 340px; height: 340px;
+            background: radial-gradient(circle, #0d6e2f 0%, transparent 70%);
+            bottom: 80px; right: -80px;
+            animation-delay: 3s;
+        }
+        @keyframes blobPulse {
+            0%, 100% { transform: scale(1) translate(0, 0); }
+            50%       { transform: scale(1.08) translate(12px, -10px); }
+        }
+
+        /* Dot grid texture */
+        .auth-left::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+        }
+
+        .left-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Brand */
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            width: fit-content;
+        }
+        .brand-icon {
+            width: 44px; height: 44px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            color: var(--green);
+            font-size: 22px;
+            font-weight: 900;
+            backdrop-filter: blur(4px);
         }
-
-        .card {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            width: 100%;
-            max-width: 28rem;
-            overflow: hidden;
-            transition: all 0.3s ease-in-out;
+        .brand-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.4px;
         }
-
-        .card-header {
-            padding: 1.5rem 1.5rem 0;
-            text-align: center;
-        }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .pharmacy-logo {
-            width: 5rem;
-            height: 5rem;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-description {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-content {
-            padding: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-            position: relative;
-        }
-
-        .label {
-            display: block;
-            font-size: 0.875rem;
+        .brand-by {
+            font-size: 10.5px;
+            color: var(--ink-soft);
             font-weight: 500;
-            color: #374151;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
-        .input {
+        /* Main content */
+        .left-content {
+            margin-top: auto;
+            margin-bottom: auto;
+            padding: 2rem 0;
+        }
+        .left-heading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(2rem, 3vw, 2.75rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+            margin-bottom: 1rem;
+        }
+        .left-heading em {
+            font-style: italic;
+            background: linear-gradient(135deg, #1ea84b, #34c363);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .left-sub {
+            color: var(--ink-soft);
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 340px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Feature list */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .feature-dot {
+            width: 36px; height: 36px;
+            background: rgba(30, 168, 75, 0.15);
+            border: 1px solid rgba(30, 168, 75, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        .feature-text {
+            font-size: 13.5px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Left footer */
+        .left-footer {
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .register-link {
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color .2s;
+        }
+        .register-link:hover { color: #fff; }
+        .register-link span { color: var(--green); font-weight: 600; }
+
+        /* ── Right white panel ───────────────────────────────── */
+        .auth-right {
+            width: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .form-box {
             width: 100%;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            max-width: 400px;
         }
 
-        .input:focus {
-            outline: none;
-            border-color: #188038;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        .form-header {
+            margin-bottom: 2rem;
+        }
+        .form-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.625rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+        }
+        .form-desc {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.5;
         }
 
-        .input::placeholder {
-            color: #9ca3af;
-        }
-
-        .password-input {
-            padding-right: 3rem;
-        }
-
-        .otp-input {
-            text-align: center;
-            font-size: 1.5rem;
+        /* Form fields */
+        .field { margin-bottom: 1rem; }
+        .field label {
+            display: block;
+            font-size: 12.5px;
             font-weight: 600;
-            letter-spacing: 0.5rem;
-            padding: 1rem;
+            color: var(--text);
+            margin-bottom: 6px;
         }
+        .field input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: #fff;
+            transition: border-color .15s, box-shadow .15s;
+            outline: none;
+        }
+        .field input:hover { border-color: #adb5bd; }
+        .field input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(30, 168, 75, 0.12);
+        }
+        .field input::placeholder { color: #adb5bd; }
 
-        .toggle-password {
+        /* Password wrapper */
+        .pw-wrap { position: relative; }
+        .pw-wrap input { padding-right: 44px; }
+        .pw-toggle {
             position: absolute;
-            right: 0.75rem;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            color: #6b7280;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-            transition: color 0.15s ease-in-out;
-        }
-
-        .toggle-password:hover {
-            color: #374151;
-        }
-
-        .toggle-password:focus {
-            outline: none;
-            color: #188038;
-        }
-
-        .toggle-icon {
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        .error, .success, .info {
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            padding: 0.75rem;
-            border-radius: 0.375rem;
+            color: #9ca3af;
+            padding: 4px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            transition: color .15s;
+        }
+        .pw-toggle:hover { color: var(--muted); }
+        .pw-toggle svg { width: 18px; height: 18px; }
+
+        /* OTP input */
+        .otp-input {
+            text-align: center;
+            font-size: 2rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.5rem !important;
+            padding: 14px !important;
+            font-family: 'Inter', monospace !important;
         }
 
-        .error {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-        }
-
-        .success {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #0d652d;
-        }
-
-        .info {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #2563eb;
-        }
-
-        .message-icon {
-            width: 1.25rem;
-            height: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .button {
+        /* Buttons */
+        .btn-main {
             width: 100%;
-            background-color: #188038;
-            color: white;
+            padding: 12px;
+            background: var(--green);
+            color: #fff;
             border: none;
-            border-radius: 0.375rem;
-            padding: 0.625rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: background-color 0.15s ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            position: relative;
+            gap: 8px;
+            transition: background .15s, box-shadow .15s;
+            margin-top: 6px;
         }
-
-        .button:hover:not(:disabled) {
-            background-color: #0d652d;
+        .btn-main:hover:not(:disabled) {
+            background: var(--green-dark);
+            box-shadow: 0 4px 12px rgba(14, 110, 47, 0.3);
         }
+        .btn-main:disabled { background: #d1d5db; cursor: not-allowed; }
 
-        .button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+        .btn-secondary {
+            width: 100%;
+            padding: 11px;
+            background: #f8f9fa;
+            color: var(--muted);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .15s, border-color .15s;
+            margin-top: 8px;
         }
+        .btn-secondary:hover:not(:disabled) { background: #f1f3f5; border-color: #adb5bd; }
+        .btn-secondary:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        .button:disabled {
-            background-color: #d1d5db;
-            cursor: not-allowed;
+        /* Messages */
+        .msg-area { margin-bottom: 16px; }
+        .msg {
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+        .msg svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .msg.error   { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+        .msg.success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #0d652d; }
+        .msg.info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
 
-        .button-secondary {
-            background-color: #6b7280;
-            margin-top: 0.5rem;
-        }
-
-        .button-secondary:hover:not(:disabled) {
-            background-color: #4b5563;
-        }
-
-        .login-icon {
-            width: 1rem;
-            height: 1rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .slide-in-right {
-            animation: slideInRight 0.3s ease-in-out;
-        }
-
+        /* Countdown */
         .countdown {
-            font-size: 0.75rem;
-            color: #6b7280;
+            font-size: 12px;
+            color: var(--muted);
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 10px;
         }
 
-        .loading-spinner {
-            width: 1rem;
-            height: 1rem;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        /* Helpers */
+        .hidden { display: none !important; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes slideRight {
+            from { opacity: 0; transform: translateX(16px); }
+            to   { opacity: 1; transform: translateX(0); }
         }
+        .fade-in      { animation: fadeIn .25s ease-out; }
+        .slide-in-right { animation: slideRight .25s ease-out; }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .loading-spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive — stack on small screens */
+        @media (max-width: 860px) {
+            .auth-left { display: none; }
+            .auth-right { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <div class="logo-container">
-                <svg viewBox="0 0 200 200" class="pharmacy-logo" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M60 20 L140 20 L140 60 L180 60 L180 140 L140 140 L140 180 L60 180 L60 140 L20 140 L20 60 L60 60 Z" fill="#188038"/>
-                    <path d="M75 35 L125 35 L125 75 L165 75 L165 125 L125 125 L125 165 L75 165 L75 125 L35 125 L35 75 L75 75 Z" fill="white"/>
-                    <g fill="#188038">
-                        <rect x="97" y="50" width="6" height="100"/>
-                        <path d="M85 70 Q75 75 85 85 Q110 95 115 80 Q120 70 105 75 Q95 80 100 90 Q105 100 115 95 Q125 90 120 100 Q115 110 105 105 Q95 100 100 110 Q105 120 115 125 Q125 130 115 135 L105 140 Q95 135 105 130 Q115 125 110 120 Q105 115 95 120 Q85 125 90 115 Q95 105 105 110 Q115 115 110 105 Q105 95 95 100 Q85 105 90 95 Q95 85 105 90 Q115 95 110 85 Q105 75 95 80 Q85 85 90 75 Z"/>
-                        <ellipse cx="85" cy="72" rx="8" ry="5"/>
-                    </g>
-                    <path d="M90 140 L110 140 Q115 140 115 145 L115 155 Q115 160 110 160 L90 160 Q85 160 85 155 L85 145 Q85 140 90 140 Z" fill="#188038"/>
-                </svg>
-            </div>
-            <h1 class="card-title" id="cardTitle">Connexion Sécurisée</h1>
-            <p class="card-description" id="cardDescription">Entrez vos identifiants pour accéder au système</p>
-        </div>
-        
-        <div class="card-content">
-            <div id="messageContainer"></div>
+<div class="auth-shell">
 
-            <!-- Step 1: Login Form -->
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username" class="label">Nom d'utilisateur</label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        name="username"
-                        class="input" 
-                        placeholder="Votre nom d'utilisateur" 
-                        required
-                    />
+    <!-- ── Left panel ──────────────────────────────────────── -->
+    <div class="auth-left">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="left-inner">
+
+            <a href="landing" class="brand-link">
+                <div class="brand-icon">✚</div>
+                <div>
+                    <div class="brand-name">digiPharm</div>
+                    <div class="brand-by">by Digitech Congo</div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password" class="label">Mot de passe</label>
-                    <div style="position: relative;">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password"
-                            class="input password-input" 
-                            placeholder="Votre mot de passe" 
-                            required
-                        />
-                        <button 
-                            type="button" 
-                            class="toggle-password" 
-                            onclick="togglePassword()"
-                            aria-label="Afficher/Masquer le mot de passe"
-                        >
-                            <svg id="eyeIcon" class="toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            </a>
+
+            <div class="left-content">
+                <h1 class="left-heading">Bon retour sur<br><em>digiPharm.</em></h1>
+                <p class="left-sub">Connectez-vous pour accéder à votre tableau de bord et gérer votre pharmacie en temps réel.</p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-dot">📊</div>
+                        <div class="feature-text">Ventes & chiffre d'affaires en temps réel</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-dot">📦</div>
+                        <div class="feature-text">Gestion de stock intelligente avec alertes</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-dot">🔒</div>
+                        <div class="feature-text">Connexion sécurisée par code OTP par email</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="left-footer">
+                <a href="register" class="register-link">
+                    Pas encore client ? <span>Créer un compte gratuit →</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ── Right panel ─────────────────────────────────────── -->
+    <div class="auth-right">
+        <div class="form-box">
+
+            <div class="form-header">
+                <div class="form-title" id="cardTitle">Connexion</div>
+                <div class="form-desc" id="cardDescription">Entrez vos identifiants pour accéder à votre espace</div>
+            </div>
+
+            <div class="msg-area" id="messageContainer"></div>
+
+            <!-- Step 1: Login -->
+            <form id="loginForm">
+                <div class="field">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" placeholder="Votre identifiant" autocomplete="username" required>
+                </div>
+
+                <div class="field">
+                    <label for="password">Mot de passe</label>
+                    <div class="pw-wrap">
+                        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" class="password-input" required>
+                        <button type="button" class="pw-toggle" onclick="togglePassword()" aria-label="Afficher le mot de passe">
+                            <svg id="eyeIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
-                            <svg id="eyeOffIcon" class="toggle-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg id="eyeOffIcon" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
                             </svg>
                         </button>
                     </div>
                 </div>
-                
-                <button type="submit" class="button" id="loginButton">
-                    <svg class="login-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                <button type="submit" class="btn-main" id="loginButton">
+                    <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                     </svg>
                     <span id="loginButtonText">Se connecter</span>
                 </button>
             </form>
 
-            <!-- Step 2: OTP Verification Form -->
+            <!-- Step 2: OTP -->
             <form id="otpForm" class="hidden">
-                <div class="form-group">
-                    <label for="otp" class="label">Code de vérification</label>
-                    <input 
-                        type="text" 
-                        id="otp" 
-                        name="otp"
-                        class="input otp-input" 
-                        placeholder="000000"
-                        maxlength="6"
-                        pattern="[0-9]{6}"
-                        required
-                    />
-                    <small style="color: #6b7280; font-size: 0.75rem; margin-top: 0.25rem; display: block;">
-                        Entrez le code à 6 chiffres envoyé à votre email
-                    </small>
+                <div class="field">
+                    <label for="otp">Code de vérification</label>
+                    <input type="text" id="otp" name="otp" class="otp-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" inputmode="numeric" required>
+                    <div style="font-size:12px;color:#9ca3af;margin-top:6px;">Code à 6 chiffres envoyé à votre email</div>
                 </div>
-                
-                <button type="submit" class="button" id="otpButton">
-                    <svg class="login-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                <button type="submit" class="btn-main" id="otpButton">
+                    <svg style="width:16px;height:16px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <span id="otpButtonText">Vérifier le code</span>
                 </button>
 
-                <button type="button" class="button button-secondary" id="resendButton">
-                    <svg class="login-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="button" class="btn-secondary" id="resendButton">
+                    <svg style="width:15px;height:15px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
                     <span id="resendButtonText">Renvoyer le code</span>
                 </button>
 
-                <button type="button" class="button button-secondary" id="backButton">
-                    <svg class="login-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="button" class="btn-secondary" id="backButton">
+                    <svg style="width:15px;height:15px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                    Retour à la connexion
+                    Retour
                 </button>
 
                 <div id="countdown" class="countdown hidden"></div>
             </form>
+
         </div>
-        <p style="text-align:center;margin-top:20px;font-size:13px;color:#9ca3af">
-            Pas encore client ?
-            <a href="landing.php" style="color:#188038;font-weight:500;text-decoration:none">Découvrir digiPharm</a>
-        </p>
     </div>
 
-    <script>
-        let currentStep = 'login';
-        let countdownTimer = null;
-        let resendCountdown = 60;
+</div>
 
-        // Form elements
-        const loginForm = document.getElementById('loginForm');
-        const otpForm = document.getElementById('otpForm');
-        const messageContainer = document.getElementById('messageContainer');
-        const cardTitle = document.getElementById('cardTitle');
-        const cardDescription = document.getElementById('cardDescription');
-        
-        // Buttons
-        const loginButton = document.getElementById('loginButton');
-        const otpButton = document.getElementById('otpButton');
-        const resendButton = document.getElementById('resendButton');
-        const backButton = document.getElementById('backButton');
-        
-        // Button texts
-        const loginButtonText = document.getElementById('loginButtonText');
-        const otpButtonText = document.getElementById('otpButtonText');
-        const resendButtonText = document.getElementById('resendButtonText');
+<script>
+    let currentStep = 'login';
+    let countdownTimer = null;
+    let resendCountdown = 60;
 
-        // Toggle password visibility
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
-            const eyeOffIcon = document.getElementById('eyeOffIcon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.classList.add('hidden');
-                eyeOffIcon.classList.remove('hidden');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.classList.remove('hidden');
-                eyeOffIcon.classList.add('hidden');
+    const loginForm   = document.getElementById('loginForm');
+    const otpForm     = document.getElementById('otpForm');
+    const messageContainer = document.getElementById('messageContainer');
+    const cardTitle   = document.getElementById('cardTitle');
+    const cardDescription = document.getElementById('cardDescription');
+
+    const loginButton = document.getElementById('loginButton');
+    const otpButton   = document.getElementById('otpButton');
+    const resendButton = document.getElementById('resendButton');
+    const backButton  = document.getElementById('backButton');
+
+    const loginButtonText  = document.getElementById('loginButtonText');
+    const otpButtonText    = document.getElementById('otpButtonText');
+    const resendButtonText = document.getElementById('resendButtonText');
+
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const eyeOn  = document.getElementById('eyeIcon');
+        const eyeOff = document.getElementById('eyeOffIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOn.classList.add('hidden');
+            eyeOff.classList.remove('hidden');
+        } else {
+            input.type = 'password';
+            eyeOn.classList.remove('hidden');
+            eyeOff.classList.add('hidden');
+        }
+    }
+
+    function showMessage(message, type = 'info') {
+        const icons = {
+            error:   '<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>',
+            success: '<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>',
+            info:    '<svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>',
+        };
+        const div = document.createElement('div');
+        div.className = `msg ${type} fade-in`;
+        div.innerHTML = (icons[type] || icons.info) + `<span>${message}</span>`;
+        messageContainer.innerHTML = '';
+        messageContainer.appendChild(div);
+    }
+
+    function clearMessages() { messageContainer.innerHTML = ''; }
+
+    function switchToOTPStep() {
+        currentStep = 'otp';
+        loginForm.classList.add('hidden');
+        otpForm.classList.remove('hidden');
+        otpForm.classList.add('slide-in-right');
+        cardTitle.textContent = 'Vérification OTP';
+        cardDescription.textContent = 'Un code de vérification a été envoyé à votre email';
+        document.getElementById('otp').focus();
+        startResendCountdown();
+    }
+
+    function switchToLoginStep() {
+        currentStep = 'login';
+        otpForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        loginForm.classList.add('slide-in-right');
+        cardTitle.textContent = 'Connexion';
+        cardDescription.textContent = 'Entrez vos identifiants pour accéder à votre espace';
+        clearCountdown();
+        clearMessages();
+    }
+
+    function startResendCountdown() {
+        resendCountdown = 60;
+        resendButton.disabled = true;
+        const cntDiv = document.getElementById('countdown');
+        cntDiv.classList.remove('hidden');
+        countdownTimer = setInterval(() => {
+            resendCountdown--;
+            cntDiv.textContent = `Nouveau code disponible dans ${resendCountdown}s`;
+            resendButtonText.textContent = `Renvoyer le code (${resendCountdown}s)`;
+            if (resendCountdown <= 0) {
+                clearCountdown();
+                resendButton.disabled = false;
+                resendButtonText.textContent = 'Renvoyer le code';
+                cntDiv.textContent = 'Vous pouvez demander un nouveau code';
             }
-        }
+        }, 1000);
+    }
 
-        // Show message
-        function showMessage(message, type = 'info') {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `${type} fade-in`;
-            
-            let icon = '';
-            switch (type) {
-                case 'error':
-                    icon = `<svg class="message-icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                    </svg>`;
-                    break;
-                case 'success':
-                    icon = `<svg class="message-icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>`;
-                    break;
-                default:
-                    icon = `<svg class="message-icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                    </svg>`;
-            }
-            
-            messageDiv.innerHTML = `${icon}<span>${message}</span>`;
-            messageContainer.innerHTML = '';
-            messageContainer.appendChild(messageDiv);
-        }
+    function clearCountdown() {
+        if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+        document.getElementById('countdown').classList.add('hidden');
+    }
 
-        // Clear messages
-        function clearMessages() {
-            messageContainer.innerHTML = '';
+    function setButtonLoading(button, textEl, loading) {
+        if (loading) {
+            button.disabled = true;
+            textEl.innerHTML = '<div class="loading-spinner"></div>';
+        } else {
+            button.disabled = false;
+            if (button === loginButton)  textEl.textContent = 'Se connecter';
+            if (button === otpButton)    textEl.textContent = 'Vérifier le code';
+            if (button === resendButton) textEl.textContent = 'Renvoyer le code';
         }
+    }
 
-        // Switch to OTP step
-        function switchToOTPStep() {
-            currentStep = 'otp';
-            
-            loginForm.classList.add('hidden');
-            otpForm.classList.remove('hidden');
-            otpForm.classList.add('slide-in-right');
-            
-            cardTitle.textContent = 'Vérification OTP';
-            cardDescription.textContent = 'Un code de vérification a été envoyé à votre email';
-            
+    async function makeRequest(action, data) {
+        try {
+            const form = new FormData();
+            form.append('action', action);
+            for (const k in data) form.append(k, data[k]);
+            const r = await fetch('config/auth.php', { method: 'POST', body: form });
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return await r.json();
+        } catch (e) {
+            return { success: false, message: 'Erreur réseau. Réessayez.' };
+        }
+    }
+
+    loginForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        if (!username || !password) { showMessage('Veuillez remplir tous les champs', 'error'); return; }
+        clearMessages();
+        setButtonLoading(loginButton, loginButtonText, true);
+        const r = await makeRequest('login', { username, password });
+        setButtonLoading(loginButton, loginButtonText, false);
+        if (r.success) {
+            if (r.redirect) { showMessage(r.message, 'success'); setTimeout(() => window.location.href = r.redirect, 800); return; }
+            showMessage(r.message, 'success');
+            setTimeout(switchToOTPStep, 1200);
+        } else {
+            showMessage(r.message, 'error');
+        }
+    });
+
+    otpForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const otp = document.getElementById('otp').value.trim();
+        if (!otp || otp.length !== 6) { showMessage('Entrez le code à 6 chiffres', 'error'); return; }
+        clearMessages();
+        setButtonLoading(otpButton, otpButtonText, true);
+        const r = await makeRequest('verify_otp', { otp });
+        setButtonLoading(otpButton, otpButtonText, false);
+        if (r.success) {
+            showMessage(r.message, 'success');
+            setTimeout(() => window.location.href = r.redirect, 800);
+        } else {
+            showMessage(r.message, 'error');
+            document.getElementById('otp').value = '';
             document.getElementById('otp').focus();
-            startResendCountdown();
         }
+    });
 
-        // Switch back to login step
-        function switchToLoginStep() {
-            currentStep = 'login';
-            
-            otpForm.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            loginForm.classList.add('slide-in-right');
-            
-            cardTitle.textContent = 'Connexion Sécurisée';
-            cardDescription.textContent = 'Entrez vos identifiants pour accéder au système';
-            
-            clearCountdown();
-            clearMessages();
-        }
+    resendButton.addEventListener('click', async () => {
+        clearMessages();
+        setButtonLoading(resendButton, resendButtonText, true);
+        const r = await makeRequest('resend_otp', {});
+        setButtonLoading(resendButton, resendButtonText, false);
+        if (r.success) { showMessage(r.message, 'success'); startResendCountdown(); }
+        else showMessage(r.message, 'error');
+    });
 
-        // Start resend countdown
-        function startResendCountdown() {
-            resendCountdown = 60;
-            resendButton.disabled = true;
-            
-            const countdownDiv = document.getElementById('countdown');
-            countdownDiv.classList.remove('hidden');
-            
-            countdownTimer = setInterval(() => {
-                resendCountdown--;
-                countdownDiv.textContent = `Nouveau code disponible dans ${resendCountdown} secondes`;
-                resendButtonText.textContent = `Renvoyer le code (${resendCountdown}s)`;
-                
-                if (resendCountdown <= 0) {
-                    clearCountdown();
-                    resendButton.disabled = false;
-                    resendButtonText.textContent = 'Renvoyer le code';
-                    countdownDiv.textContent = 'Vous pouvez maintenant demander un nouveau code';
-                }
-            }, 1000);
-        }
+    backButton.addEventListener('click', switchToLoginStep);
 
-        // Clear countdown
-        function clearCountdown() {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-            }
-            document.getElementById('countdown').classList.add('hidden');
-        }
+    document.getElementById('otp').addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length === 6) setTimeout(() => otpForm.dispatchEvent(new Event('submit')), 300);
+    });
 
-        // Set button loading state
-        function setButtonLoading(button, textElement, loading = true) {
-            if (loading) {
-                button.disabled = true;
-                textElement.innerHTML = '<div class="loading-spinner"></div>';
-            } else {
-                button.disabled = false;
-                // Reset text based on button type
-                if (button === loginButton) {
-                    textElement.textContent = 'Se connecter';
-                } else if (button === otpButton) {
-                    textElement.textContent = 'Vérifier le code';
-                } else if (button === resendButton) {
-                    textElement.textContent = 'Renvoyer le code';
-                }
-            }
-        }
+    document.querySelectorAll('.field input').forEach(inp =>
+        inp.addEventListener('input', clearMessages)
+    );
 
-        // Make API request
-        async function makeRequest(action, data) {
-            try {
-                const formData = new FormData();
-                formData.append('action', action);
-                
-                for (const key in data) {
-                    formData.append(key, data[key]);
-                }
-                
-                const response = await fetch('config/auth.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Erreur de réseau: ' + response.status);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error('Request error:', error);
-                return { success: false, message: error };
-            }
-        }
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.key === 'h' && currentStep === 'login') { e.preventDefault(); togglePassword(); }
+        if (e.key === 'Escape' && currentStep === 'otp') switchToLoginStep();
+    });
 
-        // Handle login form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!username || !password) {
-                showMessage('Veuillez remplir tous les champs', 'error');
-                return;
-            }
-            
-            clearMessages();
-            setButtonLoading(loginButton, loginButtonText, true);
-            
-            const result = await makeRequest('login', { username, password });
-            
-            setButtonLoading(loginButton, loginButtonText, false);
-            
-            if (result.success) {
-                showMessage(result.message, 'success');
-                
-                // Debug: Show OTP in development
-                if (result.otp_debug) {
-                    setTimeout(() => {
-                        showMessage(`Code OTP (dev): ${result.otp_debug}`, 'info');
-                    }, 1000);
-                }
-                
-                setTimeout(() => {
-                    switchToOTPStep();
-                }, 1500);
-            } else {
-                showMessage(result.message, 'error');
-            }
-        });
-
-        // Handle OTP form submission
-        otpForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const otp = document.getElementById('otp').value.trim();
-            
-            if (!otp || otp.length !== 6) {
-                showMessage('Veuillez entrer un code à 6 chiffres', 'error');
-                return;
-            }
-            
-            clearMessages();
-            setButtonLoading(otpButton, otpButtonText, true);
-            
-            const result = await makeRequest('verify_otp', { otp });
-            
-            setButtonLoading(otpButton, otpButtonText, false);
-            
-            if (result.success) {
-                showMessage(result.message, 'success');
-                setTimeout(() => {
-                    window.location.href = result.redirect;
-                }, 1500);
-            } else {
-                showMessage(result.message, 'error');
-                document.getElementById('otp').value = '';
-                document.getElementById('otp').focus();
-            }
-        });
-
-        // Handle resend OTP
-        resendButton.addEventListener('click', async () => {
-            clearMessages();
-            setButtonLoading(resendButton, resendButtonText, true);
-            
-            const result = await makeRequest('resend_otp', {});
-            
-            setButtonLoading(resendButton, resendButtonText, false);
-            
-            if (result.success) {
-                showMessage(result.message, 'success');
-                
-                // Debug: Show OTP in development
-                if (result.otp_debug) {
-                    setTimeout(() => {
-                        showMessage(`Nouveau code OTP (dev): ${result.otp_debug}`, 'info');
-                    }, 1000);
-                }
-                
-                startResendCountdown();
-            } else {
-                showMessage(result.message, 'error');
-            }
-        });
-
-        // Handle back button
-        backButton.addEventListener('click', () => {
-            switchToLoginStep();
-        });
-
-        // OTP input formatting
-        document.getElementById('otp').addEventListener('input', function(e) {
-            // Only allow numbers
-            this.value = this.value.replace(/[^0-9]/g, '');
-            
-            // Auto-submit when 6 digits are entered
-            if (this.value.length === 6) {
-                setTimeout(() => {
-                    otpForm.dispatchEvent(new Event('submit'));
-                }, 300);
-            }
-        });
-
-        // Clear messages when user starts typing
-        const allInputs = document.querySelectorAll('.input');
-        allInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                clearMessages();
-            });
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Ctrl+H to toggle password
-            if (e.ctrlKey && e.key === 'h' && currentStep === 'login') {
-                e.preventDefault();
-                togglePassword();
-            }
-            
-            // Escape to go back in OTP step
-            if (e.key === 'Escape' && currentStep === 'otp') {
-                switchToLoginStep();
-            }
-        });
-
-        // Auto-focus on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('username').focus();
-        });
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('username').focus();
+    });
+</script>
 </body>
-</html> 
+</html>

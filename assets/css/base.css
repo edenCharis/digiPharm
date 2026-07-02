@@ -107,29 +107,29 @@ body {
 .stat-card {
     background: white;
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--ds-border-light, #e8eaed);
     border-left: 4px solid;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: none;
+    transition: box-shadow 0.2s;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
 }
 
-.stat-card.primary { border-left-color: #3b82f6; }
-.stat-card.success { border-left-color: #10b981; }
+.stat-card.primary { border-left-color: var(--ds-green, #188038); }
+.stat-card.success { border-left-color: var(--ds-green-dark, #0d652d); }
 .stat-card.warning { border-left-color: #f59e0b; }
-.stat-card.info { border-left-color: #8b5cf6; }
+.stat-card.info    { border-left-color: var(--ds-blue, #1a73e8); }
 
 .stat-icon {
-    width: 48px;
+    width: 44px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,23 +137,23 @@ body {
 }
 
 .stat-card.primary .stat-icon {
-    background: #dbeafe;
-    color: #3b82f6;
+    background: var(--ds-green-bg, #e6f4ea);
+    color: var(--ds-green, #188038);
 }
 
 .stat-card.success .stat-icon {
-    background: #d1fae5;
-    color: #10b981;
+    background: var(--ds-green-bg, #e6f4ea);
+    color: var(--ds-green-dark, #0d652d);
 }
 
 .stat-card.warning .stat-icon {
     background: #fef3c7;
-    color: #f59e0b;
+    color: #b45309;
 }
 
 .stat-card.info .stat-icon {
-    background: #ede9fe;
-    color: #8b5cf6;
+    background: #e8f0fe;
+    color: var(--ds-blue, #1a73e8);
 }
 
 .stat-content {
@@ -183,11 +183,11 @@ body {
 }
 
 .stat-change.positive {
-    color: #10b981;
+    color: var(--ds-green, #188038);
 }
 
 .stat-change.negative {
-    color: #ef4444;
+    color: var(--ds-red, #d93025);
 }
 
 .stat-change i {
@@ -298,8 +298,8 @@ body {
 }
 
 .status.completed {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--ds-green-bg, #e6f4ea);
+    color: var(--ds-green-dark, #0d652d);
 }
 
 /* Quick Actions */
@@ -416,7 +416,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: #10b981;
+    background: var(--ds-green, #188038);
     border-radius: 4px;
     transition: width 0.3s ease;
 }

@@ -1239,12 +1239,12 @@ function isExpired($expiryDate) {
 <div class="modal fade" id="exportExcelModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="background: var(--ds-green); color: white;">
+            <div class="modal-header">
                 <h5 class="modal-title">
-                    <i data-lucide="file-spreadsheet"></i>
+                    <i data-lucide="file-spreadsheet" style="width:16px;height:16px;margin-right:6px;vertical-align:-2px;color:var(--ds-green)"></i>
                     Exporter les Produits en Excel
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form action="export-products.php" method="GET" target="_blank">
                 <div class="modal-body">
