@@ -53,16 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
 
         if ($action === 'approve' && $reg['status'] !== 'approved') {
 
-            // 1. Ensure pharmacies table exists
+            // 1. Ensure pharmacies table exists (canonical schema lives in superadmin/config/auth.php)
             $db->execute("CREATE TABLE IF NOT EXISTS pharmacies (
                 id               INT AUTO_INCREMENT PRIMARY KEY,
                 name             VARCHAR(255) NOT NULL,
                 responsible_name VARCHAR(255),
                 email            VARCHAR(255),
                 phone            VARCHAR(50),
+                address          VARCHAR(255),
                 city             VARCHAR(100),
-                plan             ENUM('basic','pro') DEFAULT 'basic',
-                status           ENUM('active','suspended') DEFAULT 'active',
+                plan             ENUM('basic','pro','enterprise') DEFAULT 'basic',
+                status           ENUM('active','trial','suspended') DEFAULT 'trial',
                 trial_ends_at    DATETIME NULL,
                 created_at       DATETIME DEFAULT NOW()
             )");
@@ -74,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
 
             // 3. Create the pharmacy record (14-day trial from approval date)
             $db->execute(
-                "INSERT INTO pharmacies (name, responsible_name, email, phone, city, plan, trial_ends_at, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 14 DAY), NOW())",
+                "INSERT INTO pharmacies (name, responsible_name, email, phone, city, plan, status, trial_ends_at, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, 'trial', DATE_ADD(NOW(), INTERVAL 14 DAY), NOW())",
                 [
                     $reg['pharmacy_name'],
                     $reg['responsible_name'],

@@ -97,4 +97,37 @@ try {
     </div>
 </header>
 
+<?php
+// Trial / subscription status banner
+if (!empty($_SESSION['pharmacy_id']) && $_SESSION['pharmacy_id'] > 0) {
+    try {
+        $__trial = $db->fetch(
+            "SELECT status, trial_ends_at FROM pharmacies WHERE id = ?",
+            [$_SESSION['pharmacy_id']]
+        );
+        if ($__trial) {
+            if ($__trial['status'] === 'suspended') {
+                echo '<div style="background:#fef2f2;border-bottom:1px solid #fecaca;padding:10px 24px;font-size:13px;color:#991b1b;display:flex;align-items:center;gap:8px;">'
+                   . '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                   . '<strong>Compte suspendu.</strong> Contactez <a href="mailto:support@digitech.cg" style="color:#991b1b;">support@digitech.cg</a> pour réactiver votre abonnement.'
+                   . '</div>';
+            } elseif ($__trial['status'] === 'trial' && $__trial['trial_ends_at']) {
+                $__days = (int) ceil((strtotime($__trial['trial_ends_at']) - time()) / 86400);
+                if ($__days < 0) {
+                    echo '<div style="background:#fef2f2;border-bottom:1px solid #fecaca;padding:10px 24px;font-size:13px;color:#991b1b;display:flex;align-items:center;gap:8px;">'
+                       . '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                       . '<strong>Période d\'essai expirée.</strong> Contactez <a href="mailto:support@digitech.cg" style="color:#991b1b;">support@digitech.cg</a> pour souscrire.'
+                       . '</div>';
+                } elseif ($__days <= 5) {
+                    echo '<div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:10px 24px;font-size:13px;color:#92400e;display:flex;align-items:center;gap:8px;">'
+                       . '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                       . "<strong>Essai gratuit :</strong> il vous reste <strong>$__days jour" . ($__days > 1 ? 's' : '') . "</strong>. Contactez <a href=\"mailto:support@digitech.cg\" style=\"color:#92400e;\">support@digitech.cg</a> pour continuer."
+                       . '</div>';
+                }
+            }
+        }
+    } catch (Exception $e) { /* pharmacies table may not exist on first run */ }
+}
+?>
+
 <?php include_once '../assets/header-shared.php'; ?>

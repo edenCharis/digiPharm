@@ -40,12 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$name, $address, $city, $phone, $email, $plan, $status, $trial_ends]);
         $pharmacy_id = $db->lastInsertId();
 
-        // Créer le compte admin
-        $hash = password_hash($admin_pass, PASSWORD_BCRYPT);
+        // Créer le compte admin (schema: UUID id, no name column, role uppercase, statut=1)
+        $hash    = password_hash($admin_pass, PASSWORD_BCRYPT);
+        $uuid    = sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex(random_bytes(16)), 4));
         $db->prepare("
-            INSERT INTO user (pharmacy_id, name, username, email, password, role)
-            VALUES (?, ?, ?, ?, ?, 'admin')
-        ")->execute([$pharmacy_id, $admin_name ?: $admin_user, $admin_user, $admin_email, $hash]);
+            INSERT INTO user (id, username, email, password, role, statut, pharmacy_id)
+            VALUES (?, ?, ?, ?, 'ADMIN', 1, ?)
+        ")->execute([$uuid, $admin_user, $admin_email, $hash, $pharmacy_id]);
 
         header("Location: list.php?msg=created");
         exit;

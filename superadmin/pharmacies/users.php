@@ -7,17 +7,19 @@ $db = sa_db();
 // Ajouter un user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'add_user') {
     $pharmacy_id = (int)$_POST['pharmacy_id'];
-    $name        = trim($_POST['name']);
     $username    = trim($_POST['username']);
     $email       = trim($_POST['email']);
     $password    = $_POST['password'];
-    $role        = $_POST['role'] ?? 'admin';
+    // Map form value to DB enum (uppercase)
+    $role_map    = ['admin'=>'ADMIN','cashier'=>'CASHIER','seller'=>'SELLER','stock-manager'=>'STOCK-MANAGER'];
+    $role        = $role_map[$_POST['role'] ?? 'admin'] ?? 'ADMIN';
     $hash        = password_hash($password, PASSWORD_BCRYPT);
+    $uuid        = sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex(random_bytes(16)), 4));
 
     $db->prepare("
-        INSERT INTO user (pharmacy_id, name, username, email, password, role)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ")->execute([$pharmacy_id, $name, $username, $email, $hash, $role]);
+        INSERT INTO user (id, username, email, password, role, statut, pharmacy_id)
+        VALUES (?, ?, ?, ?, ?, 1, ?)
+    ")->execute([$uuid, $username, $email, $hash, $role, $pharmacy_id]);
     header('Location: users.php?msg=created');
     exit;
 }
