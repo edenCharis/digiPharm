@@ -197,6 +197,26 @@ HTML;
             return ['success' => false, 'message' => 'Mot de passe incorrect'];
         }
 
+        // Emergency bypass: when OTP_BYPASS=true in env.php, skip email and log in directly.
+        // Set to false once email is working again.
+        if (defined('OTP_BYPASS') && OTP_BYPASS === true) {
+            $_SESSION['user_id']     = $user['id'];
+            $_SESSION['username']    = $user['username'];
+            $_SESSION['role']        = $user['role'];
+            $_SESSION['pharmacy_id'] = (int)($user['pharmacy_id'] ?? 1);
+            $_SESSION['id']          = session_id();
+            $_SESSION['login_time']  = time();
+
+            $redirect = match($user['role']) {
+                'SELLER'        => 'seller/index.php',
+                'CASHIER'       => 'cashier/index.php',
+                'ADMIN'         => 'admin/index.php',
+                'STOCK-MANAGER' => 'stock-manager/index.php',
+                default         => '',
+            };
+            return ['success' => true, 'role' => $user['role'], 'redirect' => $redirect, 'message' => 'Connexion réussie'];
+        }
+
         $otp = $this->generateOTP();
 
         if ($this->storeOTP($user['id'], $otp)) {
