@@ -62,7 +62,7 @@ class OTPAuth {
 
             $mail->isHTML(true);
             $mail->Subject = "[$otp] Votre code de vérification — digiPharm";
-            $otpSpaced = implode('&nbsp;&nbsp;', str_split($otp));
+            $otpSpaced = implode('', str_split($otp));
             $mail->Body = <<<HTML
 <!DOCTYPE html>
 <html lang="fr">
@@ -105,7 +105,7 @@ class OTPAuth {
         <tr>
           <td style="padding:44px 48px 36px;">
 
-            <h1 style="margin:0 0 6px;font-size:23px;font-weight:700;color:#1a1a1a;letter-spacing:-0.4px;">Code de vérification</h1>
+            <h1 style="margin:0 0 6px;font-size:23px;font-weight:700;color:#1a1a1a;letter-spacing:-0.4px;">Code OTP</h1>
             <table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;">
               <tr>
                 <td width="36" height="3" bgcolor="#188038" style="background-color:#188038;border-radius:2px;height:3px;font-size:0;">&nbsp;</td>

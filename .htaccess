@@ -1,0 +1,15 @@
+Options -Indexes
+RewriteEngine On
+
+# Landing page is the homepage
+DirectoryIndex landing.php
+
+# Explicit mappings for renamed clean URLs
+RewriteRule ^login/?$    index.php             [L,NC]
+RewriteRule ^register/?$ register-pharmacy.php [L,NC]
+RewriteRule ^logout/?$   logout.php            [L,NC]
+
+# Generic rule: /pagename -> pagename.php (if not a real file/dir)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z0-9_-]+)/?$ $1.php [L,NC]
