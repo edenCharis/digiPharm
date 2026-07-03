@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>digiPharm — Template Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:      #188038;
+  --green-dark: #0d5c2a;
+  --green-glow: rgba(24,128,56,.25);
+  --ink:        #0a0f0b;
+  --ink-soft:   #1a221c;
+  --white:      #ffffff;
+  --gray-50:    #f6f8f6;
+  --gray-100:   #edf0ed;
+  --gray-400:   #8a9a8d;
+  --gray-600:   #4a5e4d;
+  --font-head:  'Plus Jakarta Sans', sans-serif;
+  --font-body:  'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--white); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+/* ─── NAV ─────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 64px;
+  background: rgba(10,15,11,.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-head); font-weight: 800; font-size: 18px; color: #fff;
+  text-decoration: none; letter-spacing: -.3px;
+}
+.nav-logo-icon {
+  width: 32px; height: 32px; background: var(--green); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; color: #fff;
+}
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { color: rgba(255,255,255,.65); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+.nav-links a:hover { color: #fff; }
+.nav-cta {
+  background: var(--green); color: #fff; text-decoration: none;
+  padding: 9px 22px; border-radius: 8px; font-size: 14px; font-weight: 600;
+  transition: background .2s, transform .15s;
+}
+.nav-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+/* ─── HERO ────────────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh; background: var(--ink);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 64px;
+  padding: 120px 80px 80px;
+  position: relative; overflow: hidden;
+}
+
+/* animated gradient blobs */
+.hero::before {
+  content: ''; position: absolute;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(24,128,56,.18) 0%, transparent 70%);
+  top: -200px; left: -200px; pointer-events: none;
+  animation: blobMove 8s ease-in-out infinite alternate;
+}
+.hero::after {
+  content: ''; position: absolute;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(24,128,56,.10) 0%, transparent 70%);
+  bottom: -100px; right: 10%; pointer-events: none;
+  animation: blobMove 10s ease-in-out infinite alternate-reverse;
+}
+@keyframes blobMove { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
+
+/* noise texture overlay */
+.hero-noise {
+  position: absolute; inset: 0; pointer-events: none; opacity: .03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.hero-left { position: relative; z-index: 2; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(24,128,56,.12); border: 1px solid rgba(24,128,56,.3);
+  color: #5dba7a; padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.hero-badge-dot { width: 6px; height: 6px; background: #5dba7a; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+.hero h1 {
+  font-family: var(--font-head); font-size: clamp(38px, 4.5vw, 58px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -1.5px;
+  color: #fff; margin-bottom: 20px;
+}
+.hero h1 em { font-style: normal; color: #5dba7a; }
+
+.hero-sub {
+  font-size: 17px; color: rgba(255,255,255,.55); line-height: 1.7;
+  max-width: 440px; margin-bottom: 36px;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 44px; flex-wrap: wrap; }
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: #fff; text-decoration: none;
+  padding: 14px 28px; border-radius: 10px; font-size: 15px; font-weight: 700;
+  transition: all .2s; box-shadow: 0 0 0 0 var(--green-glow);
+}
+.btn-hero-primary:hover { background: #1a9944; transform: translateY(-2px); box-shadow: 0 8px 32px var(--green-glow); }
+.btn-hero-primary svg { width: 16px; height: 16px; }
+.btn-hero-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: rgba(255,255,255,.7); text-decoration: none;
+  font-size: 15px; font-weight: 500; transition: color .2s;
+}
+.btn-hero-secondary:hover { color: #fff; }
+.btn-hero-secondary svg { width: 14px; height: 14px; }
+
+.hero-trust {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; color: rgba(255,255,255,.4); font-weight: 500;
+}
+.trust-item svg { width: 14px; height: 14px; color: var(--green); opacity: .8; }
+
+/* ─── DASHBOARD MOCKUP ────────────────────────────────────────────── */
+.hero-right { position: relative; z-index: 2; }
+
+.mockup-browser {
+  background: #141a14; border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+  transition: transform .4s ease;
+}
+.mockup-browser:hover { transform: perspective(1200px) rotateY(-1deg) rotateX(0deg); }
+
+.browser-bar {
+  display: flex; align-items: center; gap: 8px; padding: 11px 16px;
+  background: #1a211a; border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+.d-red    { background: #ff5f57; }
+.d-yellow { background: #ffbd2e; }
+.d-green  { background: #28c940; }
+.browser-url {
+  flex: 1; background: rgba(255,255,255,.05); border-radius: 5px;
+  padding: 4px 12px; font-size: 11px; color: rgba(255,255,255,.3);
+  font-family: monospace; margin: 0 12px;
+}
+
+.browser-body { display: flex; height: 320px; }
+
+/* mini sidebar */
+.mini-sidebar {
+  width: 56px; background: #0f1510; border-right: 1px solid rgba(255,255,255,.05);
+  display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px;
+}
+.mini-logo { width: 28px; height: 28px; background: var(--green); border-radius: 7px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
+.mini-logo span { color: #fff; font-size: 12px; font-weight: 900; }
+.mini-menu-item { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; cursor: default; }
+.mini-menu-item.active { background: rgba(24,128,56,.25); }
+.mini-menu-item svg { width: 15px; height: 15px; color: rgba(255,255,255,.25); }
+.mini-menu-item.active svg { color: #5dba7a; }
+
+/* mini main */
+.mini-main { flex: 1; background: #0f1a12; padding: 14px; overflow: hidden; }
+.mini-topbar {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+}
+.mini-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.7); font-family: var(--font-head); }
+.mini-topbar-right { display: flex; gap: 6px; }
+.mini-avatar { width: 22px; height: 22px; background: var(--green); border-radius: 50%; }
+.mini-dot { width: 22px; height: 22px; background: rgba(255,255,255,.08); border-radius: 6px; }
+
+/* mini stat cards */
+.mini-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 12px; }
+.mini-stat {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px; padding: 8px;
+}
+.mini-stat-val { font-size: 14px; font-weight: 700; color: #fff; font-family: var(--font-head); }
+.mini-stat-lbl { font-size: 8px; color: rgba(255,255,255,.3); margin-top: 2px; }
+.mini-stat-up { font-size: 7px; color: #5dba7a; margin-top: 3px; }
+
+/* mini chart */
+.mini-chart-area { display: flex; gap: 8px; }
+.mini-chart {
+  flex: 1.5; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.05);
+  border-radius: 8px; padding: 10px; height: 130px; position: relative; overflow: hidden;
+}
+.mini-chart-title { font-size: 8px; font-weight: 600; color: rgba(255,255,255,.4); margin-bottom: 8px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 3px; height: 80px; }
+.chart-bar { flex: 1; border-radius: 3px 3px 0 0; background: rgba(24,128,56,.25); transition: background .2s; }
+.chart-bar.active { background: var(--green); }
+.chart-bar:nth-child(7) { background: var(--green); }
+
+.mini-table {
+  flex: 1; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.05);
+  border-radius: 8px; padding: 10px; height: 130px; overflow: hidden;
+}
+.mini-table-title { font-size: 8px; font-weight: 600; color: rgba(255,255,255,.4); margin-bottom: 8px; }
+.mini-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+.mini-row-name { font-size: 8px; color: rgba(255,255,255,.5); }
+.mini-row-val { font-size: 8px; font-weight: 600; color: #5dba7a; }
+
+/* ─── TRUST BAR ───────────────────────────────────────────────────── */
+.trust-bar {
+  background: var(--white); border-top: 1px solid var(--gray-100); border-bottom: 1px solid var(--gray-100);
+  padding: 20px 80px; display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap;
+}
+.trust-bar-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--gray-400); font-weight: 500; }
+.trust-bar-item svg { width: 18px; height: 18px; color: var(--green); }
+.trust-bar-sep { width: 1px; height: 20px; background: var(--gray-100); }
+
+/* ─── SECTIONS ────────────────────────────────────────────────────── */
+section { padding: 100px 80px; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--green); font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px;
+}
+.section-label::before { content: ''; width: 18px; height: 2px; background: var(--green); border-radius: 1px; }
+
+h2.section-title {
+  font-family: var(--font-head); font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.15; color: var(--ink); margin-bottom: 16px;
+}
+.section-sub { font-size: 17px; color: var(--gray-400); line-height: 1.7; max-width: 520px; }
+
+/* ─── FEATURES ────────────────────────────────────────────────────── */
+.features { background: var(--white); }
+.features-header { text-align: center; margin-bottom: 64px; }
+.features-header .section-label { justify-content: center; }
+.features-header .section-sub { margin: 0 auto; }
+
+.features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.feature-card {
+  background: var(--gray-50); border: 1px solid var(--gray-100);
+  border-radius: 16px; padding: 32px; transition: all .25s;
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.feature-card:hover { border-color: rgba(24,128,56,.2); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(24,128,56,.07); }
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 48px; height: 48px; background: rgba(24,128,56,.08); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+}
+.feature-icon svg { width: 22px; height: 22px; color: var(--green); }
+.feature-card h3 { font-family: var(--font-head); font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.feature-card p { font-size: 14.5px; color: var(--gray-400); line-height: 1.7; }
+
+/* ─── FEATURE SPOTLIGHT ───────────────────────────────────────────── */
+.spotlight {
+  background: var(--ink); display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 80px;
+}
+.spotlight-text .section-label { color: #5dba7a; }
+.spotlight-text .section-label::before { background: #5dba7a; }
+.spotlight-text h2 { color: #fff; }
+.spotlight-text .section-sub { color: rgba(255,255,255,.5); }
+.spotlight-list { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+.spotlight-item { display: flex; align-items: flex-start; gap: 14px; }
+.spotlight-check {
+  width: 22px; height: 22px; background: rgba(24,128,56,.2); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.spotlight-check svg { width: 12px; height: 12px; color: #5dba7a; }
+.spotlight-item-text h4 { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.spotlight-item-text p { font-size: 13.5px; color: rgba(255,255,255,.45); line-height: 1.6; }
+
+.spotlight-visual {
+  background: linear-gradient(135deg, rgba(24,128,56,.08), rgba(24,128,56,.02));
+  border: 1px solid rgba(255,255,255,.07); border-radius: 16px;
+  padding: 32px; min-height: 300px; display: flex; align-items: center; justify-content: center;
+}
+.mini-receipt {
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px; padding: 20px; width: 100%; max-width: 280px;
+}
+.receipt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.receipt-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.7); font-family: var(--font-head); }
+.receipt-badge { background: rgba(24,128,56,.2); color: #5dba7a; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 100px; }
+.receipt-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.receipt-row:last-of-type { border: none; }
+.receipt-name { font-size: 11.5px; color: rgba(255,255,255,.5); }
+.receipt-qty { font-size: 11px; color: rgba(255,255,255,.25); }
+.receipt-price { font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.7); }
+.receipt-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(24,128,56,.3); }
+.receipt-total span { font-size: 13px; font-weight: 700; color: #fff; }
+.receipt-total .total-val { color: #5dba7a; }
+
+/* ─── HOW IT WORKS ────────────────────────────────────────────────── */
+.how { background: var(--gray-50); text-align: center; }
+.how-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 64px; position: relative; }
+.how-steps::before {
+  content: ''; position: absolute; top: 32px; left: calc(16.66% + 16px); right: calc(16.66% + 16px);
+  height: 1px; background: linear-gradient(90deg, transparent, var(--gray-100) 20%, var(--gray-100) 80%, transparent);
+}
+.how-step { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.how-step-num {
+  width: 64px; height: 64px; background: var(--white); border: 2px solid var(--gray-100);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--green);
+  position: relative; z-index: 1; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+.how-step h3 { font-family: var(--font-head); font-size: 17px; font-weight: 700; color: var(--ink); }
+.how-step p { font-size: 14px; color: var(--gray-400); line-height: 1.7; max-width: 220px; }
+
+/* ─── PRICING ─────────────────────────────────────────────────────── */
+.pricing { background: var(--white); text-align: center; }
+.pricing-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; max-width: 740px; margin: 64px auto 0; }
+.pricing-card {
+  border: 1.5px solid var(--gray-100); border-radius: 20px; padding: 36px; text-align: left;
+  transition: all .25s;
+}
+.pricing-card.featured {
+  border-color: var(--green); background: linear-gradient(145deg, #f0f9f2, #fff);
+  box-shadow: 0 20px 60px rgba(24,128,56,.1);
+}
+.pricing-badge {
+  display: inline-block; background: var(--green); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 100px;
+  letter-spacing: .04em; text-transform: uppercase; margin-bottom: 20px;
+}
+.pricing-name { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+.pricing-desc { font-size: 13.5px; color: var(--gray-400); margin-bottom: 24px; line-height: 1.6; }
+.pricing-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 28px; }
+.pricing-price-val { font-family: var(--font-head); font-size: 48px; font-weight: 800; color: var(--ink); letter-spacing: -2px; }
+.pricing-price-period { font-size: 14px; color: var(--gray-400); }
+.pricing-features { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.pricing-feat { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--gray-600); }
+.pricing-feat svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
+.btn-pricing {
+  display: block; text-align: center; text-decoration: none;
+  padding: 13px 24px; border-radius: 10px; font-size: 14.5px; font-weight: 700;
+  transition: all .2s;
+}
+.btn-pricing-primary { background: var(--green); color: #fff; }
+.btn-pricing-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+.btn-pricing-secondary { background: var(--gray-50); color: var(--ink); border: 1.5px solid var(--gray-100); }
+.btn-pricing-secondary:hover { border-color: var(--green); color: var(--green); }
+.pricing-trial { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gray-400); }
+
+/* ─── STATS ───────────────────────────────────────────────────────── */
+.stats-section {
+  background: var(--ink); text-align: center; padding: 80px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; max-width: 700px; width: 100%; margin-top: 48px; }
+.stat-item { padding: 32px; border-right: 1px solid rgba(255,255,255,.07); }
+.stat-item:last-child { border-right: none; }
+.stat-val { font-family: var(--font-head); font-size: 52px; font-weight: 800; color: #fff; letter-spacing: -2px; line-height: 1; margin-bottom: 8px; }
+.stat-val span { color: var(--green); }
+.stat-lbl { font-size: 13px; color: rgba(255,255,255,.4); font-weight: 500; }
+
+/* ─── CTA SECTION ─────────────────────────────────────────────────── */
+.cta-section {
+  background: linear-gradient(135deg, #0d4a20 0%, #188038 50%, #0d4a20 100%);
+  text-align: center; padding: 100px 80px; position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.08) 0%, transparent 60%);
+}
+.cta-section h2 {
+  font-family: var(--font-head); font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 14px; position: relative;
+}
+.cta-section p { font-size: 17px; color: rgba(255,255,255,.7); margin-bottom: 36px; position: relative; }
+.cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; position: relative; }
+.btn-cta-white {
+  background: #fff; color: var(--green); padding: 14px 32px; border-radius: 10px;
+  font-size: 15px; font-weight: 700; text-decoration: none; transition: all .2s;
+  box-shadow: 0 4px 24px rgba(0,0,0,.15);
+}
+.btn-cta-white:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,.2); }
+.btn-cta-ghost {
+  background: rgba(255,255,255,.12); color: #fff; padding: 14px 32px; border-radius: 10px;
+  font-size: 15px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,.25);
+  transition: all .2s; backdrop-filter: blur(8px);
+}
+.btn-cta-ghost:hover { background: rgba(255,255,255,.2); }
+
+/* ─── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: #080d09; padding: 64px 80px 40px;
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px;
+}
+.footer-brand .nav-logo { margin-bottom: 14px; }
+.footer-brand p { font-size: 13.5px; color: rgba(255,255,255,.3); line-height: 1.7; max-width: 220px; }
+.footer-col h4 { font-family: var(--font-head); font-size: 12px; font-weight: 700; color: rgba(255,255,255,.35); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }
+.footer-col a { display: block; color: rgba(255,255,255,.45); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color .2s; }
+.footer-col a:hover { color: #fff; }
+.footer-bottom {
+  background: #080d09; padding: 20px 80px; border-top: 1px solid rgba(255,255,255,.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-bottom p { font-size: 12.5px; color: rgba(255,255,255,.2); }
+.sfec-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(24,128,56,.12); border: 1px solid rgba(24,128,56,.25);
+  color: #5dba7a; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">✚</div>
+    digiPharm
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Fonctionnalités</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#">À propos</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <a href="#" class="nav-cta">Essai gratuit</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Nouvelle génération · Congo
+    </div>
+
+    <h1>La pharmacie<br><em>intelligente,</em><br>entre vos mains.</h1>
+
+    <p class="hero-sub">
+      Gérez ventes, stocks et caisse depuis une seule plateforme.
+      Conçue pour les pharmacies congolaises, conforme SFEC.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#" class="btn-hero-primary">
+        Démarrer gratuitement
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+      <a href="#" class="btn-hero-secondary">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M6 5.5l5 2.5-5 2.5V5.5z" fill="currentColor" stroke="none"/></svg>
+        Voir la démo
+      </a>
+    </div>
+
+    <div class="hero-trust">
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        14 jours gratuits
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Conforme SFEC
+      </div>
+      <div class="trust-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        Sans carte requise
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard mockup -->
+  <div class="hero-right">
+    <div class="mockup-browser">
+      <div class="browser-bar">
+        <div class="browser-dot d-red"></div>
+        <div class="browser-dot d-yellow"></div>
+        <div class="browser-dot d-green"></div>
+        <div class="browser-url">pharma.digitaltechnologiescongo.com/admin</div>
+      </div>
+      <div class="browser-body">
+        <!-- mini sidebar -->
+        <div class="mini-sidebar">
+          <div class="mini-logo"><span>✚</span></div>
+          <div class="mini-menu-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10h4v-6h6v6h4V10"/></svg>
+          </div>
+          <div class="mini-menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+          </div>
+          <div class="mini-menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div class="mini-menu-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+          </div>
+        </div>
+        <!-- mini main content -->
+        <div class="mini-main">
+          <div class="mini-topbar">
+            <span class="mini-title">Tableau de bord</span>
+            <div class="mini-topbar-right">
+              <div class="mini-dot"></div>
+              <div class="mini-avatar"></div>
+            </div>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <div class="mini-stat-val">42</div>
+              <div class="mini-stat-lbl">Ventes</div>
+              <div class="mini-stat-up">↑ +12%</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-val">186</div>
+              <div class="mini-stat-lbl">Produits</div>
+              <div class="mini-stat-up">↑ +3</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-val">8</div>
+              <div class="mini-stat-lbl">Ruptures</div>
+              <div class="mini-stat-up" style="color:#ff6b6b;">↓ -2</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-val">97k</div>
+              <div class="mini-stat-lbl">Revenus</div>
+              <div class="mini-stat-up">↑ +8%</div>
+            </div>
+          </div>
+          <div class="mini-chart-area">
+            <div class="mini-chart">
+              <div class="mini-chart-title">VENTES / SEMAINE</div>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:40%"></div>
+                <div class="chart-bar" style="height:65%"></div>
+                <div class="chart-bar" style="height:45%"></div>
+                <div class="chart-bar" style="height:80%"></div>
+                <div class="chart-bar" style="height:55%"></div>
+                <div class="chart-bar" style="height:70%"></div>
+                <div class="chart-bar active" style="height:90%"></div>
+              </div>
+            </div>
+            <div class="mini-table">
+              <div class="mini-table-title">DERNIÈRES VENTES</div>
+              <div class="mini-row"><span class="mini-row-name">Paracétamol 500mg</span><span class="mini-row-val">2,400 F</span></div>
+              <div class="mini-row"><span class="mini-row-name">Amoxicilline 250mg</span><span class="mini-row-val">4,800 F</span></div>
+              <div class="mini-row"><span class="mini-row-name">Ibuprofène 400mg</span><span class="mini-row-val">1,500 F</span></div>
+              <div class="mini-row"><span class="mini-row-name">Metformine 500mg</span><span class="mini-row-val">3,200 F</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-bar-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Certifié SFEC Congo
+  </div>
+  <div class="trust-bar-sep"></div>
+  <div class="trust-bar-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Données sécurisées & isolées
+  </div>
+  <div class="trust-bar-sep"></div>
+  <div class="trust-bar-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Disponible 24h/24
+  </div>
+  <div class="trust-bar-sep"></div>
+  <div class="trust-bar-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    Multi-rôles & multi-caisses
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-header">
+    <div class="section-label">Fonctionnalités</div>
+    <h2 class="section-title">Tout ce dont votre pharmacie<br>a besoin, rien de plus.</h2>
+    <p class="section-sub">Une plateforme pensée pour la réalité des pharmacies congolaises — rapide, fiable et simple à prendre en main.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      </div>
+      <h3>Caisse intelligente</h3>
+      <p>Gestion des sessions de caisse, reçus imprimables, suivi des encaissements en temps réel.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+      </div>
+      <h3>Gestion de stock</h3>
+      <p>Alertes de rupture automatiques, suivi par lot, réceptions de livraisons et inventaire simplifié.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <h3>Multi-rôles</h3>
+      <p>Admin, vendeur, caissier, gestionnaire de stock — chacun avec son espace dédié et ses permissions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      </div>
+      <h3>Rapports & analyses</h3>
+      <p>Tableaux de bord clairs, historique des ventes, performance par produit et par vendeur.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Sécurité & isolation</h3>
+      <p>Authentification OTP, données strictement isolées par pharmacie, accès sécurisé depuis n'importe où.</p>
+    </div>
+    <div class="feature-card" style="border: 1.5px dashed rgba(24,128,56,.3); background: linear-gradient(145deg,rgba(24,128,56,.03),transparent);">
+      <div class="feature-icon" style="background:rgba(24,128,56,.05);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 6v4l3 3"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
+      </div>
+      <h3>IA Pro — Bientôt</h3>
+      <p>Prédictions de stock, analyse des tendances, suggestions de commandes automatisées par intelligence artificielle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPOTLIGHT -->
+<section class="spotlight">
+  <div class="spotlight-text">
+    <div class="section-label">Ventes simplifiées</div>
+    <h2 class="section-title">De la prescription au reçu en quelques secondes.</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,.45);">Le vendeur scanne ou cherche un produit, l'ajoute au panier, le caissier valide et le reçu est imprimé.</p>
+    <div class="spotlight-list">
+      <div class="spotlight-item">
+        <div class="spotlight-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+        </div>
+        <div class="spotlight-item-text">
+          <h4>Recherche produit instantanée</h4>
+          <p>Par nom commercial, DCI ou code-barre.</p>
+        </div>
+      </div>
+      <div class="spotlight-item">
+        <div class="spotlight-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+        </div>
+        <div class="spotlight-item-text">
+          <h4>Panier partagé vendeur / caissier</h4>
+          <p>Le vendeur prépare, le caissier encaisse — flux fluide.</p>
+        </div>
+      </div>
+      <div class="spotlight-item">
+        <div class="spotlight-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+        </div>
+        <div class="spotlight-item-text">
+          <h4>Stock mis à jour en temps réel</h4>
+          <p>Chaque vente décrémente le stock automatiquement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spotlight-visual">
+    <div class="mini-receipt">
+      <div class="receipt-header">
+        <span class="receipt-title">Vente #VT-2847</span>
+        <span class="receipt-badge">✓ Validée</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-name">Paracétamol 500mg</span>
+        <span class="receipt-qty">x3</span>
+        <span class="receipt-price">2 400 F</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-name">Amoxicilline 250mg</span>
+        <span class="receipt-qty">x1</span>
+        <span class="receipt-price">4 800 F</span>
+      </div>
+      <div class="receipt-row">
+        <span class="receipt-name">Ibuprofène 400mg</span>
+        <span class="receipt-qty">x2</span>
+        <span class="receipt-price">3 000 F</span>
+      </div>
+      <div class="receipt-total">
+        <span>Total</span>
+        <span class="total-val">10 200 FCFA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="section-label" style="justify-content:center;display:flex;">Comment ça marche</div>
+  <h2 class="section-title" style="text-align:center;">Opérationnel en 24 heures.</h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <h3>Inscrivez votre pharmacie</h3>
+      <p>Remplissez le formulaire en ligne en 2 minutes. Aucun engagement requis.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <h3>Recevez vos accès</h3>
+      <p>Notre équipe active votre compte sous 24h et vous envoie vos identifiants.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <h3>Gérez votre pharmacie</h3>
+      <p>Accédez à votre tableau de bord depuis n'importe quel appareil, immédiatement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-label" style="justify-content:center;display:flex;">Tarifs</div>
+  <h2 class="section-title">Simple et transparent.</h2>
+  <p class="section-sub" style="margin:0 auto;">14 jours d'essai gratuit sur les deux formules. Aucune carte bancaire requise.</p>
+  <div class="pricing-cards">
+    <div class="pricing-card">
+      <div class="pricing-name">Basique</div>
+      <div class="pricing-desc">Tout ce qu'il faut pour gérer votre pharmacie au quotidien.</div>
+      <div class="pricing-price">
+        <span class="pricing-price-val">10</span>
+        <span class="pricing-price-period">$ HT / mois</span>
+      </div>
+      <div class="pricing-features">
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Gestion des ventes & caisse
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Suivi du stock & alertes
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Multi-rôles (admin, vendeur, caissier)
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Rapports mensuels
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Support par email
+        </div>
+      </div>
+      <a href="#" class="btn-pricing btn-pricing-secondary">Commencer l'essai gratuit</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Recommandé</div>
+      <div class="pricing-name">Pro + IA</div>
+      <div class="pricing-desc">Toutes les fonctionnalités Basique, plus l'intelligence artificielle.</div>
+      <div class="pricing-price">
+        <span class="pricing-price-val">25</span>
+        <span class="pricing-price-period">$ HT / mois</span>
+      </div>
+      <div class="pricing-features">
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Tout le forfait Basique
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Prédictions de stock par IA
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Analyse des tendances de ventes
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Suggestions de commandes auto
+        </div>
+        <div class="pricing-feat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          Support prioritaire 24h/24
+        </div>
+      </div>
+      <a href="#" class="btn-pricing btn-pricing-primary">Commencer l'essai gratuit</a>
+    </div>
+  </div>
+  <p class="pricing-trial">✦ &nbsp;14 jours gratuits · Sans carte bancaire · Annulation à tout moment</p>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="section-label" style="color:#5dba7a;">En chiffres</div>
+  <h2 class="section-title" style="color:#fff;text-align:center;">Conçu pour le marché congolais.</h2>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-val">14<span>j</span></div>
+      <div class="stat-lbl">Essai gratuit sans engagement</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val"><span>100</span>%</div>
+      <div class="stat-lbl">Conforme réglementation SFEC</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">24<span>h</span></div>
+      <div class="stat-lbl">Activation du compte garantie</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Prêt à moderniser votre pharmacie ?</h2>
+  <p>Rejoignez digiPharm et profitez de 14 jours d'essai gratuit, sans engagement.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn-cta-white">Inscription gratuite →</a>
+    <a href="#" class="btn-cta-ghost">Parler à l'équipe</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">✚</div>
+      digiPharm
+    </a>
+    <p>La solution de gestion de pharmacie nouvelle génération pour le Congo.</p>
+    <br>
+    <span class="sfec-badge">✓ Certifié SFEC</span>
+  </div>
+  <div class="footer-col">
+    <h4>Produit</h4>
+    <a href="#">Fonctionnalités</a>
+    <a href="#">Tarifs</a>
+    <a href="#">Sécurité</a>
+    <a href="#">Feuille de route</a>
+  </div>
+  <div class="footer-col">
+    <h4>Entreprise</h4>
+    <a href="#">À propos</a>
+    <a href="#">Digitech Congo</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-col">
+    <h4>Support</h4>
+    <a href="#">Documentation</a>
+    <a href="#">Centre d'aide</a>
+    <a href="mailto:support@digitaltechnologiescongo.com">Email support</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 Digitech Congo · Tous droits réservés</p>
+  <p>Brazzaville, République du Congo</p>
+</div>
+
+</body>
+</html>

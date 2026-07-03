@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>digiPharm — Template Admin (Dark Sidebar)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+/* ── Reset & tokens ─────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --ink:          #080d09;
+    --ink-700:      #0f1a12;
+    --green:        #1ea84b;
+    --green-dark:   #0d6e2f;
+    --green-bg:     rgba(30, 168, 75, 0.12);
+    --green-border: rgba(30, 168, 75, 0.3);
+    --surface:      #ffffff;
+    --bg:           #f2f4f7;
+    --border:       #e2e5ea;
+    --border-light: #eceef2;
+    --text:         #111827;
+    --muted:        #6b7280;
+    --muted-lite:   #9ca3af;
+    --red:          #e02020;
+    --red-bg:       #fff0f0;
+    --amber:        #d97706;
+    --amber-bg:     #fef3c7;
+    --blue:         #1a73e8;
+    --blue-bg:      #e8f0fe;
+    --radius:       12px;
+    --radius-lg:    16px;
+    --sidebar-w:    248px;
+    --header-h:     62px;
+}
+
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+/* ── App shell ──────────────────────────────────────────── */
+.shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ── Mobile overlay ─────────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(8,13,9,0.55);
+    z-index: 90;
+    cursor: pointer;
+    animation: fadeOverlay .2s ease;
+}
+.sidebar-overlay.show { display: block; }
+@keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR — ultra-minimal icon rail, expands on toggle
+══════════════════════════════════════════════════════════ */
+:root { --sidebar-w: 240px; --rail-w: 50px; }
+
+.sidebar {
+    width: var(--rail-w);
+    background: #13141a;          /* very dark, slightly cool */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 100;
+    transition: width .28s cubic-bezier(.4,0,.2,1);
+}
+.sidebar.expanded { width: var(--sidebar-w); }
+
+/* Subtle green top glow */
+.sidebar::after {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(30,168,75,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Labels: fade + max-width slide — no display:none ───── */
+.sidebar-label {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity .18s ease, max-width .28s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+}
+.sidebar.expanded .sidebar-label {
+    opacity: 1;
+    max-width: 160px;
+    pointer-events: auto;
+}
+
+/* ── Brand area ──────────────────────────────────────────── */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--header-h);
+    text-decoration: none;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    overflow: hidden;
+    padding: 0;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+}
+.sidebar.expanded .sidebar-brand {
+    justify-content: flex-start;
+    padding: 0 16px;
+    gap: 12px;
+}
+.sidebar-brand .sidebar-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+.nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 0;
+    scrollbar-width: none;
+    position: relative;
+    /* PAS de z-index ici — sinon le stacking context du nav
+       empêche les nav-items d'apparaître au-dessus du pill-tab */
+}
+.nav::-webkit-scrollbar { display: none; }
+
+/* Each item: icon centered in rail, text slides in */
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    margin: 2px auto;
+    text-decoration: none;
+    color: rgba(255,255,255,0.38);
+    transition: background .15s, color .15s, width .28s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.nav-item i {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    transition: color .15s;
+}
+
+/* Expanded: item stretches full width */
+.sidebar.expanded .nav-item {
+    width: calc(var(--sidebar-w) - 20px);
+    justify-content: flex-start;
+    padding: 0 12px;
+    border-radius: 10px;
+    margin: 2px 10px;
+}
+.nav-item .sidebar-label { padding-left: 10px; font-size: 13.5px; font-weight: 500; }
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.85);
+}
+.nav-item.active {
+    background: rgba(30,168,75,0.18);
+    color: #5de082;
+}
+.nav-item.active i { color: var(--green); }
+
+/* ── Pill actif — pill blanc + animation glisse ─────────── */
+
+/* L'item actif en mode expanded : texte sombre (lisible sur blanc),
+   z-index élevé pour passer au-dessus du pill-tab                  */
+.sidebar.expanded .nav-item.active {
+    background: transparent;
+    color: #111827;
+    border-radius: 20px 0 0 20px;
+    margin: 2px 0 2px 8px;
+    width: calc(var(--sidebar-w) - 8px);
+    position: relative;
+    z-index: 3;               /* au-dessus du pill (z=2) */
+}
+.sidebar.expanded .nav-item.active i       { color: #111827; }
+.sidebar.expanded .nav-item.active .sidebar-label { color: #111827; font-weight: 600; }
+
+/* ── Le pill blanc flottant ─────────────────────────────── */
+.sidebar-active-tab {
+    position: absolute;
+    right: 0;
+    left: 8px;
+    height: 38px;
+    background: #ffffff;
+    border-radius: 20px 0 0 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+        top  .3s  cubic-bezier(.4, 0, .2, 1),
+        opacity .25s ease;
+    z-index: 2;               /* au-dessus des nav-items (z=auto) */
+    /* Ombre douce — donne le relief de la "pilule qui sort" */
+    box-shadow:
+        -4px  0   18px rgba(0, 0, 0, .18),
+         0    2px  8px rgba(0, 0, 0, .10);
+}
+.sidebar.expanded .sidebar-active-tab { opacity: 1; }
+
+
+/* Tooltip when rail (not expanded) */
+.sidebar:not(.expanded) .nav-item:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e2420;
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 7px 13px;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 300;
+    pointer-events: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Section label */
+.nav-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    padding: 10px 10px 4px 14px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Badge */
+.nav-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--green);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 99px;
+    min-width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.nav-badge.info { background: var(--blue); }
+.nav-badge.warn { background: var(--amber); }
+
+.nav-sep {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 6px 0;
+}
+.sidebar.expanded .nav-sep { margin: 6px 16px; }
+
+/* ── User strip ──────────────────────────────────────────── */
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    height: 56px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: background .15s;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+}
+.sidebar.expanded .sidebar-user {
+    justify-content: flex-start;
+    padding: 0 14px;
+    gap: 10px;
+}
+.sidebar-user:hover { background: rgba(255,255,255,0.05); }
+.sidebar-user .user-info  { padding-left: 0; flex: 1; }
+.sidebar-user .user-chevron { margin-left: auto; }
+
+/* ── Mobile: off-screen, slides in ──────────────────────── */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0; height: 100%;
+        width: var(--sidebar-w) !important;
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
+    }
+    .sidebar.expanded { transform: translateX(0); }
+
+    .sidebar .sidebar-label { opacity: 1 !important; max-width: 160px !important; }
+    .sidebar .nav-item {
+        width: calc(var(--sidebar-w) - 20px) !important;
+        justify-content: flex-start !important;
+        padding: 0 12px !important;
+        margin: 2px 10px !important;
+    }
+    .sidebar-brand { justify-content: flex-start !important; padding: 0 16px !important; gap: 12px !important; }
+    .sidebar-user  { justify-content: flex-start !important; padding: 0 14px !important; gap: 10px !important; }
+}
+
+/* ── Shared sub-elements ─────────────────────────────────── */
+.brand-icon {
+    width: 32px; height: 32px;
+    background: rgba(30,168,75,0.15);
+    border: 1px solid rgba(30,168,75,0.3);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-size: 17px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+.brand-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px; font-weight: 800;
+    color: #fff; letter-spacing: -0.3px;
+}
+.brand-role {
+    font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--green); margin-top: 1px;
+}
+
+.user-avatar {
+    width: 30px; height: 30px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 12px; flex-shrink: 0;
+}
+.user-info    { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.user-name    { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; }
+.user-email   { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-chevron { flex-shrink: 0; color: rgba(255,255,255,0.22); display: flex; align-items: center; }
+.user-chevron i { width: 14px; height: 14px; }
+
+/* ══════════════════════════════════════════════════════════
+   MAIN AREA
+══════════════════════════════════════════════════════════ */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.header-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    flex: 1;
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 7px 12px;
+    width: 220px;
+    transition: border-color .15s;
+}
+.header-search:focus-within { border-color: var(--green); background: #fff; }
+.header-search i { width: 15px; height: 15px; color: var(--muted-lite); flex-shrink: 0; }
+.header-search input {
+    border: none; background: transparent;
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    color: var(--text); outline: none; width: 100%;
+}
+.header-search input::placeholder { color: var(--muted-lite); }
+
+.header-icon-btn {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    position: relative;
+}
+.header-icon-btn:hover { background: var(--bg); color: var(--text); }
+.header-icon-btn i { width: 19px; height: 19px; }
+
+.notif-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+}
+
+.header-avatar {
+    width: 36px; height: 36px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity .15s;
+    border: 2px solid rgba(30,168,75,0.3);
+}
+.header-avatar:hover { opacity: 0.85; }
+
+/* ── Trial banner (collapsible) ──────────────────────────── */
+.trial-banner {
+    background: #fffbeb;
+    border-bottom: 1px solid #fde68a;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #92400e;
+    flex-shrink: 0;
+}
+.trial-banner i { width: 15px; height: 15px; flex-shrink: 0; }
+.trial-banner strong { font-weight: 600; }
+.trial-banner a { color: #92400e; font-weight: 600; text-decoration: underline; }
+.trial-banner-close {
+    margin-left: auto;
+    background: none; border: none;
+    cursor: pointer; color: #b45309;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    transition: background .15s;
+}
+.trial-banner-close:hover { background: #fde68a; }
+.trial-banner-close i { width: 14px; height: 14px; }
+
+/* ── Content ─────────────────────────────────────────────── */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Page heading */
+.page-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.page-head-left h1 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.4px;
+}
+
+.page-head-left p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.page-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+
+/* ── KPI cards ───────────────────────────────────────────── */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow .2s;
+}
+.kpi-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+
+.kpi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kpi-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.kpi-icon i { width: 20px; height: 20px; }
+.kpi-icon.green { background: rgba(30,168,75,0.1); color: var(--green); }
+.kpi-icon.blue  { background: var(--blue-bg); color: var(--blue); }
+.kpi-icon.amber { background: var(--amber-bg); color: var(--amber); }
+.kpi-icon.red   { background: var(--red-bg); color: var(--red); }
+
+.kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+}
+.kpi-trend i { width: 12px; height: 12px; }
+.kpi-trend.up   { background: rgba(30,168,75,0.1); color: var(--green); }
+.kpi-trend.down { background: var(--red-bg); color: var(--red); }
+.kpi-trend.flat { background: var(--bg); color: var(--muted); }
+
+.kpi-value {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.6px;
+    line-height: 1;
+}
+
+.kpi-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.kpi-sub {
+    font-size: 12px;
+    color: var(--muted-lite);
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-light);
+}
+
+/* ── Content grid ────────────────────────────────────────── */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.card-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.2px;
+}
+.card-title i { width: 16px; height: 16px; color: var(--muted); }
+
+.card-body { padding: 20px; }
+
+.card-actions { display: flex; align-items: center; gap: 8px; }
+
+/* ── Table ───────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+    background: #fafbfc;
+    white-space: nowrap;
+}
+tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text);
+    vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #fafbfc; }
+
+.td-name { font-weight: 600; font-size: 13.5px; }
+.td-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── Pills / chips ───────────────────────────────────────── */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    white-space: nowrap;
+}
+.chip-green  { background: rgba(30,168,75,0.1);  color: #0d6e2f; }
+.chip-red    { background: var(--red-bg);          color: var(--red); }
+.chip-amber  { background: var(--amber-bg);        color: var(--amber); }
+.chip-blue   { background: var(--blue-bg);         color: var(--blue); }
+.chip-gray   { background: var(--bg);              color: var(--muted); }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s, border-color .15s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn i { width: 15px; height: 15px; }
+
+.btn-primary {
+    background: var(--green);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--green-dark);
+    box-shadow: 0 4px 12px rgba(14,110,47,0.3);
+}
+
+.btn-outline {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+}
+.btn-outline:hover { background: var(--bg); border-color: #adb5bd; color: var(--text); }
+
+.btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    padding: 8px 12px;
+}
+.btn-ghost:hover { background: var(--bg); color: var(--text); }
+
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #c01717; box-shadow: 0 4px 12px rgba(224,32,32,0.3); }
+
+.btn-sm { padding: 6px 12px; font-size: 12.5px; border-radius: 8px; }
+.btn-icon { padding: 8px; border-radius: 9px; }
+
+/* ── Quick actions ───────────────────────────────────────── */
+.quick-list { display: flex; flex-direction: column; gap: 8px; }
+
+.quick-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-light);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: border-color .15s, background .15s;
+}
+.quick-item:hover { border-color: var(--green); background: rgba(30,168,75,0.03); }
+
+.quick-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.quick-icon i { width: 16px; height: 16px; }
+.quick-icon.green  { background: rgba(30,168,75,0.1);  color: var(--green); }
+.quick-icon.blue   { background: var(--blue-bg);         color: var(--blue); }
+.quick-icon.amber  { background: var(--amber-bg);        color: var(--amber); }
+.quick-icon.gray   { background: var(--bg);              color: var(--muted); }
+
+.quick-label { flex: 1; font-weight: 500; font-size: 13.5px; color: var(--text); }
+.quick-label small { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+.quick-chevron i { width: 14px; height: 14px; color: var(--muted-lite); }
+
+/* ── Alerts / notices ────────────────────────────────────── */
+.notice {
+    display: flex;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    align-items: flex-start;
+}
+.notice i { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+.notice-warning { background: var(--amber-bg); color: #7c4a00; border: 1px solid #fcd34d; }
+.notice-success { background: rgba(30,168,75,0.08); color: var(--green-dark); border: 1px solid rgba(30,168,75,0.25); }
+.notice-error   { background: var(--red-bg); color: #991b1b; border: 1px solid #fecaca; }
+.notice-info    { background: var(--blue-bg); color: #1e3a8a; border: 1px solid #bfdbfe; }
+
+/* ── Alert list (low stock) ──────────────────────────────── */
+.alert-list { display: flex; flex-direction: column; gap: 8px; }
+
+.alert-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+}
+.alert-row-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: #fde68a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.alert-row-icon i { width: 14px; height: 14px; color: var(--amber); }
+.alert-row-info { flex: 1; }
+.alert-row-name { font-size: 13px; font-weight: 600; color: #7c4a00; }
+.alert-row-qty  { font-size: 11.5px; color: #b45309; }
+.alert-row-chip { flex-shrink: 0; }
+
+/* ── Avatar rank ─────────────────────────────────────────── */
+.seller-list { display: flex; flex-direction: column; gap: 10px; }
+
+.seller-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border-light);
+    transition: background .12s;
+}
+.seller-row:hover { background: rgba(30,168,75,0.05); border-color: rgba(30,168,75,0.2); }
+
+.seller-rank {
+    width: 22px; height: 22px;
+    background: var(--ink);
+    color: var(--green);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.seller-rank.gold { background: #f59e0b; color: #fff; }
+
+.seller-av {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11.5px; font-weight: 700; flex-shrink: 0;
+}
+
+.seller-info { flex: 1; }
+.seller-name  { font-size: 13px; font-weight: 600; color: var(--text); }
+.seller-stats { font-size: 11.5px; color: var(--muted); }
+.seller-amount { font-size: 13px; font-weight: 700; color: var(--text); }
+
+/* ── Modal (example overlay) ─────────────────────────────── */
+.modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(8,13,9,0.55);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 24px;
+}
+
+.modal {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    overflow: hidden;
+}
+
+.modal-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.modal-title i { width: 18px; height: 18px; color: var(--green); }
+
+.modal-close {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: var(--bg);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    transition: background .15s;
+}
+.modal-close:hover { background: var(--border); }
+.modal-close i { width: 15px; height: 15px; }
+
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.modal-foot {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #fafbfc;
+}
+
+/* ── Form fields in modal ────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12.5px; font-weight: 600; color: var(--text); }
+.field input, .field select, .field textarea {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(30,168,75,0.1);
+}
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── Form inline buttons (filters bar) ───────────────────── */
+.filters-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: border-color .15s;
+}
+.filter-input:focus-within { border-color: var(--green); }
+.filter-input i { width: 14px; height: 14px; color: var(--muted-lite); }
+.filter-input input {
+    border: none; background: transparent; outline: none;
+    font-family: 'Inter', sans-serif; font-size: 13.5px;
+    color: var(--text); width: 160px;
+}
+.filter-input input::placeholder { color: var(--muted-lite); }
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    cursor: pointer;
+}
+
+/* ── Summary row under table ─────────────────────────────── */
+.table-foot {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    background: #fafbfc;
+}
+.table-foot strong { color: var(--text); }
+
+/* ── Design system showcase section ─────────────────────── */
+.ds-section { margin-top: 32px; }
+.ds-section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-light);
+}
+.ds-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+
+/* ── Dashboard tabs ─────────────────────────────────────── */
+.dash-tabs { display:flex; gap:3px; background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:3px; }
+.dash-tab { display:flex; align-items:center; gap:6px; padding:7px 16px; border-radius:8px; border:none; background:transparent; color:var(--muted); font-size:13px; font-weight:500; cursor:pointer; transition:all .18s; font-family:'Inter',sans-serif; white-space:nowrap; }
+.dash-tab.active { background:var(--surface); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.08); }
+.dash-tab i { width:14px; height:14px; }
+
+/* ── Charts row ─────────────────────────────────────────── */
+.charts-row { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; margin-bottom:20px; }
+@media(max-width:1100px){ .charts-row { grid-template-columns:1fr 1fr; } }
+@media(max-width:768px) { .charts-row { grid-template-columns:1fr; } }
+
+/* Mini bar chart */
+.rev-chart { display:flex; gap:5px; align-items:flex-end; height:88px; }
+.rev-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
+.rev-bar-fill { width:100%; border-radius:4px 4px 0 0; background:rgba(30,168,75,0.15); height:var(--h,30%); min-height:4px; }
+.rev-bar.today .rev-bar-fill { background:var(--green); }
+.rev-bar span { font-size:10px; color:var(--muted-lite); font-weight:500; }
+.chart-val { font-size:21px; font-weight:800; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.5px; margin-bottom:2px; }
+.chart-val span { font-size:13px; font-weight:600; color:var(--muted); }
+.chart-sub { font-size:12px; color:var(--muted); }
+
+/* Category split */
+.cat-list { display:flex; flex-direction:column; gap:9px; }
+.cat-row { display:flex; align-items:center; gap:8px; }
+.cat-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.cat-name { font-size:12.5px; flex:1; color:var(--text); }
+.cat-bar-wrap { width:50px; height:4px; background:var(--border); border-radius:99px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:99px; }
+.cat-pct { font-size:11.5px; font-weight:600; color:var(--muted); min-width:26px; text-align:right; }
+
+/* Stock health */
+.stock-scores { display:flex; flex-direction:column; gap:8px; }
+.sc-row { display:flex; align-items:center; gap:10px; font-size:13px; }
+.sc-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.sc-label { flex:1; color:var(--text); }
+.sc-val { font-weight:700; }
+
+/* ── Expiry rows ─────────────────────────────────────────── */
+.expiry-list { display:flex; flex-direction:column; }
+.expiry-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); }
+.expiry-row:last-child { border-bottom:none; }
+.exp-badge { min-width:34px; text-align:center; font-size:10.5px; font-weight:700; padding:3px 5px; border-radius:5px; }
+.exp-badge.crit { background:var(--red-bg); color:var(--red); }
+.exp-badge.warn { background:var(--amber-bg); color:var(--amber); }
+.exp-name { flex:1; font-size:13px; font-weight:500; }
+.exp-qty { font-size:12px; color:var(--muted); }
+.exp-date { font-size:11px; color:var(--muted-lite); }
+
+/* ── Top products list ───────────────────────────────────── */
+.prod-list { display:flex; flex-direction:column; }
+.prod-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); }
+.prod-row:last-child { border-bottom:none; }
+.prod-rank { width:18px; font-size:11.5px; font-weight:700; color:var(--muted-lite); text-align:center; }
+.prod-info { flex:1; min-width:0; }
+.prod-name { font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prod-cat { font-size:11px; color:var(--muted); }
+.prod-val { text-align:right; flex-shrink:0; }
+.prod-amount { font-size:12.5px; font-weight:600; }
+.prod-qty { font-size:11px; color:var(--muted); }
+
+/* ── AI Subscription ─────────────────────────────────────── */
+.ai-banner { background:linear-gradient(135deg, var(--ink-700) 0%, #0e2016 100%); border:1px solid rgba(30,168,75,0.25); border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:20px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+.ai-banner-icon { width:52px; height:52px; border-radius:14px; background:rgba(30,168,75,0.15); border:1px solid rgba(30,168,75,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ai-banner-icon i { width:26px; height:26px; color:var(--green); }
+.ai-banner-info { flex:1; min-width:180px; }
+.ai-banner-badge { font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:var(--green); margin-bottom:4px; }
+.ai-banner-title { font-size:22px; font-weight:800; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.3px; }
+.ai-banner-meta { font-size:12.5px; color:rgba(255,255,255,0.45); margin-top:4px; }
+.ai-banner-right { text-align:right; flex-shrink:0; }
+.ai-banner-price { font-size:30px; font-weight:800; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-1px; }
+.ai-banner-period { font-size:12px; color:rgba(255,255,255,0.4); }
+.ai-banner-renew { margin-top:8px; font-size:12px; color:rgba(255,255,255,0.45); }
+.ai-banner-renew strong { color:rgba(255,255,255,0.7); }
+
+.ai-roi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+@media(max-width:768px){ .ai-roi-row { grid-template-columns:1fr; } }
+.ai-roi-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:18px; text-align:center; }
+.ai-roi-ico { font-size:24px; margin-bottom:8px; }
+.ai-roi-val { font-size:26px; font-weight:800; color:var(--green); font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.5px; margin-bottom:4px; }
+.ai-roi-label { font-size:12.5px; color:var(--muted); }
+
+.ai-feat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:20px; }
+@media(max-width:768px){ .ai-feat-grid { grid-template-columns:1fr; } }
+.ai-feat-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:18px; }
+.ai-feat-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.ai-feat-ico { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ai-feat-ico i { width:18px; height:18px; }
+.ai-feat-title { font-size:13.5px; font-weight:600; }
+.ai-feat-desc { font-size:11.5px; color:var(--muted); }
+.ai-feat-number { font-size:26px; font-weight:800; color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:-0.5px; margin-bottom:8px; }
+.ai-feat-number span { font-size:13px; font-weight:500; color:var(--muted); }
+.ai-usage-bar { height:6px; background:var(--border); border-radius:99px; overflow:hidden; margin-bottom:5px; }
+.ai-usage-fill { height:100%; border-radius:99px; }
+.ai-usage-meta { font-size:11.5px; color:var(--muted); display:flex; justify-content:space-between; }
+
+.ai-bottom-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:768px){ .ai-bottom-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── Mobile overlay ── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+  <aside class="sidebar expanded" id="sidebar">
+
+    <!-- Tab bg positionné par JS (au niveau sidebar, pas dans le nav) -->
+    <div class="sidebar-active-tab" id="sidebarActiveTab"></div>
+
+    <a href="#" class="sidebar-brand">
+      <div class="brand-icon"><i data-lucide="pill" style="width:17px;height:17px;"></i></div>
+      <div class="sidebar-label" style="display:flex;flex-direction:column;">
+        <div class="brand-name">digiPharm</div>
+        <div class="brand-role">Admin</div>
+      </div>
+    </a>
+
+    <nav class="nav">
+
+      <!-- Filler: labels hidden in rail mode -->
+      <div class="nav-label sidebar-label">Principal</div>
+
+      <a href="#" class="nav-item active" data-label="Tableau de bord">
+        <i data-lucide="layout-dashboard"></i>
+        <span class="sidebar-label">Tableau de bord</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Gestion Caisses">
+        <i data-lucide="calculator"></i>
+        <span class="sidebar-label">Gestion Caisses</span>
+        <span class="sidebar-label nav-badge info" style="margin-left:auto;max-width:30px;">2</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Utilisateurs">
+        <i data-lucide="users"></i>
+        <span class="sidebar-label">Utilisateurs</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Fournisseurs">
+        <i data-lucide="truck"></i>
+        <span class="sidebar-label">Fournisseurs</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Catégories">
+        <i data-lucide="grid-2x2"></i>
+        <span class="sidebar-label">Catégories</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Produits">
+        <i data-lucide="package"></i>
+        <span class="sidebar-label">Produits</span>
+        <span class="sidebar-label nav-badge warn" style="margin-left:auto;max-width:30px;">5</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Livraisons">
+        <i data-lucide="package-open"></i>
+        <span class="sidebar-label">Livraisons</span>
+      </a>
+
+      <div class="nav-sep"></div>
+
+      <div class="nav-label sidebar-label">Rapports</div>
+      <a href="#" class="nav-item" data-label="Rapports">
+        <i data-lucide="bar-chart-2"></i>
+        <span class="sidebar-label">Rapports</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Logs">
+        <i data-lucide="file-text"></i>
+        <span class="sidebar-label">Logs</span>
+      </a>
+
+      <div class="nav-sep"></div>
+
+      <a href="#" class="nav-item" data-label="Paramètres">
+        <i data-lucide="settings"></i>
+        <span class="sidebar-label">Paramètres</span>
+      </a>
+      <a href="#" class="nav-item" data-label="Déconnexion">
+        <i data-lucide="log-out"></i>
+        <span class="sidebar-label">Déconnexion</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">A</div>
+      <div class="user-info sidebar-label" style="display:flex;flex-direction:column;">
+        <div class="user-name">Admin</div>
+        <div class="user-email">admin@pharmacie.cg</div>
+      </div>
+      <div class="user-chevron sidebar-label"><i data-lucide="chevrons-up-down"></i></div>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="header">
+      <button class="header-icon-btn" id="menuToggle" title="Ouvrir / fermer le menu" style="margin-right:4px;">
+        <i data-lucide="menu"></i>
+      </button>
+      <div class="header-title">Tableau de bord</div>
+
+      <div class="header-search">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Rechercher un produit, utilisateur…">
+      </div>
+
+      <button class="header-icon-btn">
+        <i data-lucide="bell"></i>
+        <div class="notif-dot"></div>
+      </button>
+
+      <button class="header-icon-btn">
+        <i data-lucide="help-circle"></i>
+      </button>
+
+      <div class="header-avatar">A</div>
+    </header>
+
+    <!-- Trial banner -->
+    <div class="trial-banner" id="trialBanner">
+      <i data-lucide="clock"></i>
+      <span><strong>Essai gratuit :</strong> il vous reste <strong>12 jours</strong>. Contactez <a href="#">support@digitaltechnologiescongo.com</a> pour continuer.</span>
+      <button class="trial-banner-close" onclick="document.getElementById('trialBanner').remove()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Page heading -->
+      <div class="page-head">
+        <div class="page-head-left">
+          <h1>Tableau de bord</h1>
+          <p>Pharmacie Centrale · Mercredi 2 juillet 2026 · <span style="color:var(--green);font-weight:600;">● En ligne</span></p>
+        </div>
+        <div class="page-actions">
+          <div class="dash-tabs">
+            <button class="dash-tab active" data-tab="pharma" onclick="switchTab('pharma',this)">
+              <i data-lucide="activity"></i> Vue Pharmacie
+            </button>
+            <button class="dash-tab" data-tab="ai" onclick="switchTab('ai',this)">
+              <i data-lucide="sparkles"></i> Abonnement IA
+            </button>
+          </div>
+          <button class="btn btn-outline"><i data-lucide="download"></i> Exporter</button>
+        </div>
+      </div>
+
+      <!-- ══════════ TAB: VUE PHARMACIE ══════════ -->
+      <div id="tab-pharma">
+
+        <!-- KPIs -->
+        <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon green"><i data-lucide="banknote"></i></div>
+              <div class="kpi-trend up"><i data-lucide="arrow-up-right"></i>+12%</div>
+            </div>
+            <div>
+              <div class="kpi-value">284 500 <span style="font-size:15px;font-weight:600;color:var(--muted)">F</span></div>
+              <div class="kpi-label">Chiffre d'affaires du jour</div>
+            </div>
+            <div class="kpi-sub">Ce mois : 8 420 000 F · objectif 68%</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon blue"><i data-lucide="file-text"></i></div>
+              <div class="kpi-trend up"><i data-lucide="arrow-up-right"></i>+9%</div>
+            </div>
+            <div>
+              <div class="kpi-value">47</div>
+              <div class="kpi-label">Ordonnances traitées</div>
+            </div>
+            <div class="kpi-sub">+ 23 ventes libre-service · 70 total</div>
+          </div>
+
+          <div class="kpi-card" style="border-color:#fde68a;">
+            <div class="kpi-top">
+              <div class="kpi-icon amber"><i data-lucide="calendar-x"></i></div>
+              <div class="kpi-trend down" style="color:var(--red)"><i data-lucide="alert-triangle"></i>Urgent</div>
+            </div>
+            <div>
+              <div class="kpi-value" style="color:var(--amber);">18</div>
+              <div class="kpi-label">Produits périmant bientôt</div>
+            </div>
+            <div class="kpi-sub">6 dans &lt;15 j · 12 dans &lt;30 j</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon green"><i data-lucide="percent"></i></div>
+              <div class="kpi-trend up"><i data-lucide="arrow-up-right"></i>+1.1pt</div>
+            </div>
+            <div>
+              <div class="kpi-value">32.4<span style="font-size:16px;font-weight:600;color:var(--muted)">%</span></div>
+              <div class="kpi-label">Marge brute</div>
+            </div>
+            <div class="kpi-sub">Panier moyen : 8 368 F · +3.2%</div>
+          </div>
+
+        </div>
+
+        <!-- Alert -->
+        <div class="notice notice-warning" style="margin-bottom:20px;">
+          <i data-lucide="alert-triangle"></i>
+          <span><strong>6 produits expirent dans moins de 15 jours.</strong> Pensez à les retirer ou à lancer des promotions de déstockage. <a href="#" style="color:inherit;font-weight:700;text-decoration:underline;">Voir la liste →</a></span>
+        </div>
+
+        <!-- Charts row -->
+        <div class="charts-row">
+
+          <!-- Revenue 7 days -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i data-lucide="trending-up"></i>Revenus — 7 derniers jours</div>
+              <span class="chip chip-green" style="font-size:11px;">+18% vs semaine passée</span>
+            </div>
+            <div class="card-body">
+              <div style="margin-bottom:14px;">
+                <div class="chart-val">284 500 <span>FCFA</span></div>
+                <div class="chart-sub">Aujourd'hui · meilleur mercredi du mois</div>
+              </div>
+              <div class="rev-chart">
+                <div class="rev-bar" style="--h:52%"><div class="rev-bar-fill"></div><span>L</span></div>
+                <div class="rev-bar" style="--h:68%"><div class="rev-bar-fill"></div><span>M</span></div>
+                <div class="rev-bar" style="--h:44%"><div class="rev-bar-fill"></div><span>Me</span></div>
+                <div class="rev-bar" style="--h:79%"><div class="rev-bar-fill"></div><span>J</span></div>
+                <div class="rev-bar" style="--h:91%"><div class="rev-bar-fill"></div><span>V</span></div>
+                <div class="rev-bar" style="--h:58%"><div class="rev-bar-fill"></div><span>S</span></div>
+                <div class="rev-bar today" style="--h:83%"><div class="rev-bar-fill"></div><span>Auj.</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category split -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i data-lucide="pie-chart"></i>Par catégorie</div>
+            </div>
+            <div class="card-body">
+              <div class="cat-list">
+                <div class="cat-row">
+                  <div class="cat-dot" style="background:#1ea84b"></div>
+                  <div class="cat-name">Analgésiques</div>
+                  <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:38%;background:#1ea84b"></div></div>
+                  <div class="cat-pct">38%</div>
+                </div>
+                <div class="cat-row">
+                  <div class="cat-dot" style="background:#1a73e8"></div>
+                  <div class="cat-name">Antibiotiques</div>
+                  <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:22%;background:#1a73e8"></div></div>
+                  <div class="cat-pct">22%</div>
+                </div>
+                <div class="cat-row">
+                  <div class="cat-dot" style="background:#d97706"></div>
+                  <div class="cat-name">Vitamines</div>
+                  <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:17%;background:#d97706"></div></div>
+                  <div class="cat-pct">17%</div>
+                </div>
+                <div class="cat-row">
+                  <div class="cat-dot" style="background:#7c3aed"></div>
+                  <div class="cat-name">Antifongiques</div>
+                  <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:12%;background:#7c3aed"></div></div>
+                  <div class="cat-pct">12%</div>
+                </div>
+                <div class="cat-row">
+                  <div class="cat-dot" style="background:#9ca3af"></div>
+                  <div class="cat-name">Autres</div>
+                  <div class="cat-bar-wrap"><div class="cat-bar-fill" style="width:11%;background:#9ca3af"></div></div>
+                  <div class="cat-pct">11%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stock health -->
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i data-lucide="heart-pulse"></i>Santé du stock</div>
+            </div>
+            <div class="card-body">
+              <div style="text-align:center;margin-bottom:16px;">
+                <div style="font-size:38px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-1px;color:#1ea84b;">78<span style="font-size:18px;">%</span></div>
+                <div style="font-size:12px;color:var(--muted);">Score de santé global</div>
+              </div>
+              <div class="stock-scores">
+                <div class="sc-row"><div class="sc-dot" style="background:#1ea84b"></div><div class="sc-label">Stock optimal</div><div class="sc-val" style="color:#1ea84b;">1 214</div></div>
+                <div class="sc-row"><div class="sc-dot" style="background:#d97706"></div><div class="sc-label">Stock faible</div><div class="sc-val" style="color:#d97706;">15</div></div>
+                <div class="sc-row"><div class="sc-dot" style="background:#e02020"></div><div class="sc-label">Rupture</div><div class="sc-val" style="color:#e02020;">3</div></div>
+                <div class="sc-row"><div class="sc-dot" style="background:#7c3aed"></div><div class="sc-label">Dormant (&gt;90j)</div><div class="sc-val" style="color:#7c3aed;">15</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /charts-row -->
+
+        <!-- Main grid -->
+        <div class="content-grid">
+
+          <!-- LEFT -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+
+            <!-- Recent sales -->
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i data-lucide="receipt"></i>Ventes du jour</div>
+                <div class="card-actions">
+                  <div class="filters-bar">
+                    <div class="filter-input"><i data-lucide="search"></i><input type="text" placeholder="Rechercher…"></div>
+                    <select class="filter-select">
+                      <option>Tous types</option>
+                      <option>Ordonnance</option>
+                      <option>Libre-service</option>
+                    </select>
+                  </div>
+                  <a href="#" class="btn btn-ghost btn-sm">Voir tout <i data-lucide="arrow-right"></i></a>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>#ID</th><th>Vendeur · Produits</th><th>Type</th><th>Montant</th><th>Marge</th><th>Statut</th><th>Heure</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight:700;color:var(--green)">#2041</td>
+                      <td><div class="td-name">Marie Kongo</div><div class="td-sub">Doliprane 1000mg ×2, Amoxicilline ×1</div></td>
+                      <td><span class="chip chip-blue" style="font-size:10.5px;">Ordo.</span></td>
+                      <td style="font-weight:700;">3 200 F</td>
+                      <td style="color:var(--green);font-weight:600;">34%</td>
+                      <td><span class="chip chip-green">✓ Validé</span></td>
+                      <td style="color:var(--muted-lite);font-size:12px;">4 min</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;color:var(--green)">#2040</td>
+                      <td><div class="td-name">Pierre Lodi</div><div class="td-sub">Paracétamol ×3, Vitamine C ×2</div></td>
+                      <td><span class="chip chip-gray" style="font-size:10.5px;">OTC</span></td>
+                      <td style="font-weight:700;">1 800 F</td>
+                      <td style="color:var(--green);font-weight:600;">29%</td>
+                      <td><span class="chip chip-green">✓ Validé</span></td>
+                      <td style="color:var(--muted-lite);font-size:12px;">12 min</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;color:var(--green)">#2039</td>
+                      <td><div class="td-name">Marie Kongo</div><div class="td-sub">Ibuprofène 400mg ×1</div></td>
+                      <td><span class="chip chip-gray" style="font-size:10.5px;">OTC</span></td>
+                      <td style="font-weight:700;">650 F</td>
+                      <td style="color:var(--amber);font-weight:600;">22%</td>
+                      <td><span class="chip chip-amber">⏳ Attente</span></td>
+                      <td style="color:var(--muted-lite);font-size:12px;">18 min</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;color:var(--green)">#2038</td>
+                      <td><div class="td-name">Jean Mbemba</div><div class="td-sub">Amoxicilline 500mg ×2, Fluconazole ×1</div></td>
+                      <td><span class="chip chip-blue" style="font-size:10.5px;">Ordo.</span></td>
+                      <td style="font-weight:700;">5 400 F</td>
+                      <td style="color:var(--green);font-weight:600;">38%</td>
+                      <td><span class="chip chip-green">✓ Validé</span></td>
+                      <td style="color:var(--muted-lite);font-size:12px;">31 min</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:700;color:var(--green)">#2037</td>
+                      <td><div class="td-name">Pierre Lodi</div><div class="td-sub">Sérum physiologique ×5</div></td>
+                      <td><span class="chip chip-gray" style="font-size:10.5px;">OTC</span></td>
+                      <td style="font-weight:700;">2 100 F</td>
+                      <td style="color:var(--red);font-weight:600;">18%</td>
+                      <td><span class="chip chip-red">✗ Remboursé</span></td>
+                      <td style="color:var(--muted-lite);font-size:12px;">45 min</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-foot">
+                <span>Affichage <strong>5</strong> sur <strong>70</strong> ventes aujourd'hui</span>
+                <div style="display:flex;gap:6px;">
+                  <button class="btn btn-outline btn-sm"><i data-lucide="chevron-left"></i></button>
+                  <button class="btn btn-outline btn-sm"><i data-lucide="chevron-right"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top products + expiry side by side -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+              <div class="card">
+                <div class="card-head">
+                  <div class="card-title"><i data-lucide="bar-chart-3"></i>Top produits</div>
+                  <span class="chip chip-gray" style="font-size:11px;">7 jours</span>
+                </div>
+                <div class="card-body">
+                  <div class="prod-list">
+                    <div class="prod-row"><div class="prod-rank">1</div><div class="prod-info"><div class="prod-name">Doliprane 1000mg</div><div class="prod-cat">Analgésiques</div></div><div class="prod-val"><div class="prod-amount">48 200 F</div><div class="prod-qty">312 unités</div></div></div>
+                    <div class="prod-row"><div class="prod-rank">2</div><div class="prod-info"><div class="prod-name">Amoxicilline 500mg</div><div class="prod-cat">Antibiotiques</div></div><div class="prod-val"><div class="prod-amount">36 800 F</div><div class="prod-qty">184 unités</div></div></div>
+                    <div class="prod-row"><div class="prod-rank">3</div><div class="prod-info"><div class="prod-name">Paracétamol 500mg</div><div class="prod-cat">Analgésiques</div></div><div class="prod-val"><div class="prod-amount">28 400 F</div><div class="prod-qty">420 unités</div></div></div>
+                    <div class="prod-row"><div class="prod-rank">4</div><div class="prod-info"><div class="prod-name">Vitamine C 500mg</div><div class="prod-cat">Vitamines</div></div><div class="prod-val"><div class="prod-amount">19 600 F</div><div class="prod-qty">245 unités</div></div></div>
+                    <div class="prod-row"><div class="prod-rank">5</div><div class="prod-info"><div class="prod-name">Ibuprofène 400mg</div><div class="prod-cat">Anti-inflam.</div></div><div class="prod-val"><div class="prod-amount">14 300 F</div><div class="prod-qty">156 unités</div></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <div class="card-title"><i data-lucide="calendar-x-2"></i>Péremptions urgentes</div>
+                  <span class="chip chip-amber">18 produits</span>
+                </div>
+                <div class="card-body">
+                  <div class="expiry-list">
+                    <div class="expiry-row"><div class="exp-badge crit">3j</div><div class="exp-name">Insuline Glargine</div><div class="exp-qty">×4</div><div class="exp-date">05 jul.</div></div>
+                    <div class="expiry-row"><div class="exp-badge crit">7j</div><div class="exp-name">Métronidazole 250mg</div><div class="exp-qty">×12</div><div class="exp-date">09 jul.</div></div>
+                    <div class="expiry-row"><div class="exp-badge crit">10j</div><div class="exp-name">Amoxicilline 250mg</div><div class="exp-qty">×5</div><div class="exp-date">12 jul.</div></div>
+                    <div class="expiry-row"><div class="exp-badge warn">18j</div><div class="exp-name">Sérum physiologique</div><div class="exp-qty">×28</div><div class="exp-date">20 jul.</div></div>
+                    <div class="expiry-row"><div class="exp-badge warn">25j</div><div class="exp-name">Paracétamol 500mg</div><div class="exp-qty">×46</div><div class="exp-date">27 jul.</div></div>
+                  </div>
+                  <a href="#" class="btn btn-outline" style="width:100%;margin-top:12px;justify-content:center;font-size:13px;">Voir les 18 produits</a>
+                </div>
+              </div>
+
+            </div>
+
+          </div><!-- /left -->
+
+          <!-- RIGHT -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div class="card">
+              <div class="card-head"><div class="card-title"><i data-lucide="zap"></i>Actions rapides</div></div>
+              <div class="card-body">
+                <div class="quick-list">
+                  <a href="#" class="quick-item" onclick="event.preventDefault();document.getElementById('modalDemo').style.display='flex'"><div class="quick-icon green"><i data-lucide="package-plus"></i></div><div class="quick-label">Ajouter un produit<small>Enregistrer en stock</small></div><div class="quick-chevron"><i data-lucide="chevron-right"></i></div></a>
+                  <a href="#" class="quick-item"><div class="quick-icon amber"><i data-lucide="truck"></i></div><div class="quick-label">Livraison fournisseur<small>Entrée de stock</small></div><div class="quick-chevron"><i data-lucide="chevron-right"></i></div></a>
+                  <a href="#" class="quick-item"><div class="quick-icon blue"><i data-lucide="user-plus"></i></div><div class="quick-label">Nouvel utilisateur<small>Vendeur, caissier…</small></div><div class="quick-chevron"><i data-lucide="chevron-right"></i></div></a>
+                  <a href="#" class="quick-item"><div class="quick-icon gray"><i data-lucide="file-bar-chart"></i></div><div class="quick-label">Rapport journalier<small>Export PDF / Excel</small></div><div class="quick-chevron"><i data-lucide="chevron-right"></i></div></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i data-lucide="trophy"></i>Performance équipe</div>
+                <span class="chip chip-gray" style="font-size:11px;">Aujourd'hui</span>
+              </div>
+              <div class="card-body">
+                <div class="seller-list">
+                  <div class="seller-row"><div class="seller-rank gold">1</div><div class="seller-av">M</div><div class="seller-info"><div class="seller-name">Marie Kongo</div><div class="seller-stats">28 ventes · marge 32.8%</div></div><div class="seller-amount">82 400 F</div></div>
+                  <div class="seller-row"><div class="seller-rank">2</div><div class="seller-av" style="background:var(--blue)">P</div><div class="seller-info"><div class="seller-name">Pierre Lodi</div><div class="seller-stats">19 ventes · marge 29.1%</div></div><div class="seller-amount">54 200 F</div></div>
+                  <div class="seller-row"><div class="seller-rank">3</div><div class="seller-av" style="background:#f59e0b">J</div><div class="seller-info"><div class="seller-name">Jean Mbemba</div><div class="seller-stats">14 ventes · marge 35.4%</div></div><div class="seller-amount">47 900 F</div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title"><i data-lucide="truck"></i>Commandes en cours</div>
+                <span class="chip chip-blue">3</span>
+              </div>
+              <div class="card-body">
+                <div class="alert-list">
+                  <div class="alert-row">
+                    <div class="alert-row-icon" style="color:var(--green)"><i data-lucide="package-check"></i></div>
+                    <div class="alert-row-info"><div class="alert-row-name">CERP Rhin · 48 références</div><div class="alert-row-qty">Livraison prévue demain</div></div>
+                    <div class="alert-row-chip"><span class="chip chip-green">En route</span></div>
+                  </div>
+                  <div class="alert-row">
+                    <div class="alert-row-icon" style="color:var(--amber)"><i data-lucide="clock"></i></div>
+                    <div class="alert-row-info"><div class="alert-row-name">OCP Répartition · 12 réf.</div><div class="alert-row-qty">Confirmée · 5 juillet</div></div>
+                    <div class="alert-row-chip"><span class="chip chip-amber">Confirmée</span></div>
+                  </div>
+                  <div class="alert-row">
+                    <div class="alert-row-icon" style="color:var(--muted)"><i data-lucide="file-clock"></i></div>
+                    <div class="alert-row-info"><div class="alert-row-name">Phoenix Pharma · 31 réf.</div><div class="alert-row-qty">Bon de commande envoyé</div></div>
+                    <div class="alert-row-chip"><span class="chip chip-gray">En attente</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /right -->
+
+        </div><!-- /content-grid -->
+
+      </div><!-- /tab-pharma -->
+
+      <!-- ══════════ TAB: ABONNEMENT IA ══════════ -->
+      <div id="tab-ai" style="display:none;">
+
+        <!-- Plan banner -->
+        <div class="ai-banner">
+          <div class="ai-banner-icon"><i data-lucide="sparkles"></i></div>
+          <div class="ai-banner-info">
+            <div class="ai-banner-badge">Plan actif</div>
+            <div class="ai-banner-title">digiPharm Pro — IA Pharmacie</div>
+            <div class="ai-banner-meta">Accès complet à tous les modules IA · Support prioritaire 24h · Mises à jour incluses</div>
+          </div>
+          <div class="ai-banner-right">
+            <div class="ai-banner-price">45 000 <span style="font-size:14px;color:rgba(255,255,255,0.35)">FCFA</span></div>
+            <div class="ai-banner-period">par mois</div>
+            <div class="ai-banner-renew">Prochain renouvellement : <strong>1er août 2026</strong></div>
+          </div>
+        </div>
+
+        <!-- ROI -->
+        <div class="ai-roi-row">
+          <div class="ai-roi-card">
+            <div class="ai-roi-ico">⏱️</div>
+            <div class="ai-roi-val">42 h</div>
+            <div class="ai-roi-label">Temps économisé ce mois</div>
+          </div>
+          <div class="ai-roi-card">
+            <div class="ai-roi-ico">🛡️</div>
+            <div class="ai-roi-val">8</div>
+            <div class="ai-roi-label">Interactions médicamenteuses détectées & évitées</div>
+          </div>
+          <div class="ai-roi-card">
+            <div class="ai-roi-ico">📦</div>
+            <div class="ai-roi-val">320 000 F</div>
+            <div class="ai-roi-label">Pertes stock évitées grâce aux prédictions IA</div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="ai-feat-grid">
+
+          <div class="ai-feat-card">
+            <div class="ai-feat-header">
+              <div class="ai-feat-ico" style="background:rgba(224,32,32,0.1)"><i data-lucide="shield-alert" style="color:#e02020"></i></div>
+              <div><div class="ai-feat-title">Vérification d'interactions médicamenteuses</div><div class="ai-feat-desc">Détection automatique au moment de la vente</div></div>
+            </div>
+            <div class="ai-feat-number">234 <span>vérifications</span></div>
+            <div class="ai-usage-bar"><div class="ai-usage-fill" style="width:23.4%;background:#e02020"></div></div>
+            <div class="ai-usage-meta"><span>234 utilisées</span><span>1 000 / mois</span></div>
+          </div>
+
+          <div class="ai-feat-card">
+            <div class="ai-feat-header">
+              <div class="ai-feat-ico" style="background:rgba(30,168,75,0.1)"><i data-lucide="brain" style="color:var(--green)"></i></div>
+              <div><div class="ai-feat-title">Prédiction de réapprovisionnement</div><div class="ai-feat-desc">IA anticipe les ruptures avant qu'elles arrivent</div></div>
+            </div>
+            <div class="ai-feat-number">12 <span>prédictions</span></div>
+            <div class="ai-usage-bar"><div class="ai-usage-fill" style="width:24%;background:var(--green)"></div></div>
+            <div class="ai-usage-meta"><span>12 utilisées</span><span>50 / mois</span></div>
+          </div>
+
+          <div class="ai-feat-card">
+            <div class="ai-feat-header">
+              <div class="ai-feat-ico" style="background:rgba(26,115,232,0.1)"><i data-lucide="scan-text" style="color:var(--blue)"></i></div>
+              <div><div class="ai-feat-title">Lecture d'ordonnances IA (OCR)</div><div class="ai-feat-desc">Extraction et vérification automatique des médicaments</div></div>
+            </div>
+            <div class="ai-feat-number">89 <span>ordonnances</span></div>
+            <div class="ai-usage-bar"><div class="ai-usage-fill" style="width:44.5%;background:var(--blue)"></div></div>
+            <div class="ai-usage-meta"><span>89 traitées</span><span>200 / mois</span></div>
+          </div>
+
+          <div class="ai-feat-card">
+            <div class="ai-feat-header">
+              <div class="ai-feat-ico" style="background:rgba(124,58,237,0.1)"><i data-lucide="message-circle" style="color:#7c3aed"></i></div>
+              <div><div class="ai-feat-title">Assistant client IA</div><div class="ai-feat-desc">Conseils posologie, indications, contre-indications</div></div>
+            </div>
+            <div class="ai-feat-number">156 <span>conversations</span></div>
+            <div class="ai-usage-bar"><div class="ai-usage-fill" style="width:31.2%;background:#7c3aed"></div></div>
+            <div class="ai-usage-meta"><span>156 conversations</span><span>500 / mois</span></div>
+          </div>
+
+        </div>
+
+        <!-- Billing + history -->
+        <div class="ai-bottom-grid">
+
+          <div class="card">
+            <div class="card-head"><div class="card-title"><i data-lucide="credit-card"></i>Facturation</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:var(--muted)">Plan mensuel</span><span style="font-weight:600;">45 000 FCFA</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:var(--muted)">Prochain paiement</span><span style="font-weight:600;">1er août 2026</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:var(--muted)">Moyen de paiement</span><span style="font-weight:600;">Mobile Money MTN</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13.5px;"><span style="color:var(--muted)">Statut</span><span class="chip chip-green">✓ À jour</span></div>
+                <div style="border-top:1px solid var(--border-light);padding-top:12px;display:flex;gap:8px;">
+                  <button class="btn btn-outline btn-sm" style="flex:1;">Changer de plan</button>
+                  <button class="btn btn-ghost btn-sm" style="flex:1;">Factures</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i data-lucide="history"></i>Historique d'usage</div>
+              <span class="chip chip-gray" style="font-size:11px;">30 derniers jours</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Fonctionnalité</th><th>Requêtes</th><th>Statut</th></tr></thead>
+                <tbody>
+                  <tr><td style="font-size:12px;color:var(--muted)">Auj.</td><td style="font-size:13px;">Vérification interactions</td><td style="font-weight:600;">12</td><td><span class="chip chip-green" style="font-size:10px;">OK</span></td></tr>
+                  <tr><td style="font-size:12px;color:var(--muted)">Hier</td><td style="font-size:13px;">Lecture ordonnances OCR</td><td style="font-weight:600;">8</td><td><span class="chip chip-green" style="font-size:10px;">OK</span></td></tr>
+                  <tr><td style="font-size:12px;color:var(--muted)">30 jun</td><td style="font-size:13px;">Prédiction stock</td><td style="font-weight:600;">3</td><td><span class="chip chip-green" style="font-size:10px;">OK</span></td></tr>
+                  <tr><td style="font-size:12px;color:var(--muted)">29 jun</td><td style="font-size:13px;">Assistant client IA</td><td style="font-weight:600;">22</td><td><span class="chip chip-green" style="font-size:10px;">OK</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /tab-ai -->
+
+    </div><!-- /content -->
+  </main><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ══════════ MODAL EXAMPLE (visible for preview) ══════════ -->
+<div class="modal-backdrop" id="modalDemo" style="display:none;">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">
+        <i data-lucide="package-plus"></i>
+        Ajouter un produit
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modalDemo').style.display='none'">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label>Nom du produit <span style="color:var(--red)">*</span></label>
+          <input type="text" placeholder="ex. Paracétamol 500mg">
+        </div>
+        <div class="field">
+          <label>Catégorie</label>
+          <select><option>Analgésiques</option><option>Antibiotiques</option><option>Vitamines</option></select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Prix de vente (FCFA)</label>
+          <input type="number" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Quantité en stock</label>
+          <input type="number" placeholder="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Description (optionnel)</label>
+        <textarea rows="2" placeholder="Indications, posologie…" style="resize:vertical;"></textarea>
+      </div>
+      <div class="notice notice-info" style="font-size:12.5px;">
+        <i data-lucide="info"></i>
+        Le code-barres sera généré automatiquement après l'enregistrement.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="document.getElementById('modalDemo').style.display='none'">Annuler</button>
+      <button class="btn btn-primary"><i data-lucide="check"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  lucide.createIcons();
+
+  // ── Sidebar toggle ──────────────────────────────────────
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const menuBtn = document.getElementById('menuToggle');
+
+  const isMobile = () => window.innerWidth <= 768;
+
+  // ── Pill-tab actif ──────────────────────────────────────
+  const pillTab = document.getElementById('sidebarActiveTab');
+
+  /** Positionne le pill exactement sur l'item donné */
+  function movePill(item) {
+    const sRect = sidebar.getBoundingClientRect();
+    const iRect = item.getBoundingClientRect();
+    pillTab.style.top    = (iRect.top  - sRect.top)  + 'px';
+    pillTab.style.height = iRect.height + 'px';
+  }
+
+  function openSidebar() {
+    sidebar.classList.add('expanded');
+    if (isMobile()) overlay.classList.add('show');
+    // re-positionner après que la transition de largeur démarre
+    const cur = document.querySelector('.nav-item.active');
+    if (cur) requestAnimationFrame(() => movePill(cur));
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('expanded');
+    overlay.classList.remove('show');
+  }
+
+  menuBtn.addEventListener('click', () => {
+    sidebar.classList.contains('expanded') ? closeSidebar() : openSidebar();
+  });
+
+  overlay.addEventListener('click', closeSidebar);
+
+  window.addEventListener('resize', () => {
+    if (!isMobile()) overlay.classList.remove('show');
+    const cur = document.querySelector('.nav-item.active');
+    if (cur) movePill(cur);
+  });
+
+  // ── Clic sur un item nav ────────────────────────────────
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (this.classList.contains('active')) return;
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      movePill(this);   // le pill glisse vers le nouvel item (transition CSS)
+    });
+  });
+
+  // ── Initialisation au chargement ────────────────────────
+  const initActive = document.querySelector('.nav-item.active');
+  if (initActive) movePill(initActive);
+
+  // ── Dashboard tab switcher ───────────────────────────────
+  function switchTab(tab, btn) {
+    document.getElementById('tab-pharma').style.display = tab === 'pharma' ? '' : 'none';
+    document.getElementById('tab-ai').style.display     = tab === 'ai'     ? '' : 'none';
+    document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    lucide.createIcons();
+  }
+</script>
+</body>
+</html>

@@ -1,323 +1,121 @@
-<!-- Admin Sidebar Component -->
 <?php
-
 require_once '../config/app_settings.php';
 AppSettings::init($db);
 
-?>
+$currentPage = basename($_SERVER['PHP_SELF']);
 
+$_navAlerts = 0;
+try {
+    $__thresh = AppSettings::getLowStockThreshold();
+    $__r = $db->fetch("SELECT COUNT(*) as c FROM product WHERE stock <= ? AND pharmacy_id = ?", [$__thresh, $pharmacyId]);
+    $_navAlerts = $__r ? (int)$__r['c'] : 0;
+} catch (Exception $_e) {}
+?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
 <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <div class="flex items-center justify-between">
-            <a href="/" class="sidebar-brand">
-                <div class="brand-logo">
-                 
-                  <?php echo getAppIcon('icon-class'); ?>
 
-                </div>
-                <div>
-                    <div class="brand-text"><?php echo appName() ?></div>
-                    <div class="brand-subtitle"><?php echo $_SESSION["role"]?></div>
-                </div>
-            </a>
-            <button id="sidebarClose" class="sidebar-close">
-                <i data-lucide="x"></i>
-            </button>
+    <!-- Brand -->
+    <a href="index.php" class="sidebar-brand">
+        <div class="brand-icon"><?php echo getAppIcon('icon-class'); ?></div>
+        <div class="sidebar-label">
+            <div class="brand-name"><?php echo htmlspecialchars(appName()); ?></div>
+            <div class="brand-role">Administration</div>
         </div>
-    </div>
+    </a>
 
-    <!-- Cash Register Status Section -->
-<?php 
- $cashierId = $_SESSION["user_id"];
-?>
+    <!-- Mobile close -->
+    <button id="sidebarClose" style="display:none;position:absolute;top:14px;right:14px;background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+    </button>
 
-    <div class="sidebar-content">
-        <!-- Main Navigation -->
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="index.php" class="sidebar-menu-link active" data-page="dashboard">
-                        <i data-lucide="home" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Tableau de bord</div>
-                            <div class="menu-description">Vue d'ensemble</div>
-                        </div>
-                    </a>
-                </div>
+    <!-- Nav -->
+    <nav class="nav">
 
-                <!-- NEW: Cash Register Management -->
-                <div class="sidebar-menu-item">
-                    <a href="cash-register.php" class="sidebar-menu-link" data-page="cash-register">
-                        <i data-lucide="calculator" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Gestion Caisses</div>
-                           
-                        </div>
-                       
-                    </a>
-                </div>
-                
-                <div class="sidebar-menu-item">
-                    <a href="users.php" class="sidebar-menu-link" data-page="users">
-                        <i data-lucide="users" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Utilisateurs</div>
-                            <div class="menu-description">Gestion utilisateurs</div>    
-                        </div>
-                      
-                    </a>
-                </div>
+        <!-- OVERVIEW -->
+        <span class="nav-label sidebar-label">Vue d'ensemble</span>
 
-                <div class="sidebar-menu-item">
-                    <a href="suppliers.php" class="sidebar-menu-link" data-page="suppliers">
-                        <i data-lucide="truck" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Fournisseurs</div>
-                            <div class="menu-description">Gestion des fournisseurs</div>        
-                        </div>
-                    </a>    
-                </div>
-                 <div class="sidebar-menu-item">
-                    <a href="category.php" class="sidebar-menu-link" data-page="suppliers">
-                        <i data-lucide="grid-2x2" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Categories</div>
-                            <div class="menu-description">Gestion des categories</div>        
-                        </div>
-                    </a>    
-                </div>
+        <a href="index.php" class="nav-item <?php echo $currentPage === 'index.php' ? 'active' : ''; ?>" data-label="Tableau de bord">
+            <i data-lucide="layout-dashboard"></i>
+            <span class="nav-text sidebar-label">Tableau de bord</span>
+        </a>
 
+        <!-- INVENTAIRE -->
+        <span class="nav-label sidebar-label">Inventaire</span>
 
-                <div class="sidebar-menu-item">
-                    <a href="products.php" class="sidebar-menu-link" data-page="products">
-                        <i data-lucide="package" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Produits</div>
-                            <div class="menu-description">Gestion des produits</div>        
-                        </div>  
-                   </a>
-                </div>
+        <a href="products.php" class="nav-item <?php echo $currentPage === 'products.php' ? 'active' : ''; ?>" data-label="Produits">
+            <i data-lucide="package"></i>
+            <span class="nav-text sidebar-label">Produits</span>
+            <?php if ($_navAlerts > 0): ?>
+            <span class="nav-badge sidebar-label"><?php echo $_navAlerts > 9 ? '9+' : $_navAlerts; ?></span>
+            <?php endif; ?>
+        </a>
 
-                <div class="sidebar-menu-item">
-                    <a href="stock-deliveries.php" class="sidebar-menu-link" data-page="deliveries">
-                        <i data-lucide="package-open" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Livraisons</div>
-                            <div class="menu-description">Gestion des livraisons</div>        
-                        </div>
-                        <div class="menu-badge success">Stock</div>
-                    </a>
-                </div>
+        <a href="category.php" class="nav-item <?php echo $currentPage === 'category.php' ? 'active' : ''; ?>" data-label="Catégories">
+            <i data-lucide="grid-2x2"></i>
+            <span class="nav-text sidebar-label">Catégories</span>
+        </a>
 
-                <div class="sidebar-menu-item">
-                    <a href="logs.php" class="sidebar-menu-link" data-page="logs">
-                        <i data-lucide="file-text" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Logs</div>
-                            <div class="menu-description">Activité système</div>
-                        </div>
-                    </a>
-                </div>
+        <a href="suppliers.php" class="nav-item <?php echo $currentPage === 'suppliers.php' ? 'active' : ''; ?>" data-label="Fournisseurs">
+            <i data-lucide="truck"></i>
+            <span class="nav-text sidebar-label">Fournisseurs</span>
+        </a>
 
-            </div>
+        <a href="stock-deliveries.php" class="nav-item <?php echo $currentPage === 'stock-deliveries.php' ? 'active' : ''; ?>" data-label="Livraisons">
+            <i data-lucide="package-open"></i>
+            <span class="nav-text sidebar-label">Livraisons</span>
+        </a>
+
+        <!-- VENTES & CAISSE -->
+        <span class="nav-label sidebar-label">Ventes & Caisse</span>
+
+        <a href="cash-register.php" class="nav-item <?php echo $currentPage === 'cash-register.php' ? 'active' : ''; ?>" data-label="Gestion Caisses">
+            <i data-lucide="calculator"></i>
+            <span class="nav-text sidebar-label">Gestion Caisses</span>
+        </a>
+
+        <!-- RAPPORTS -->
+        <span class="nav-label sidebar-label">Rapports</span>
+
+        <a href="reports.php" class="nav-item <?php echo $currentPage === 'reports.php' ? 'active' : ''; ?>" data-label="Rapports">
+            <i data-lucide="bar-chart-2"></i>
+            <span class="nav-text sidebar-label">Rapports</span>
+        </a>
+
+        <a href="logs.php" class="nav-item <?php echo $currentPage === 'logs.php' ? 'active' : ''; ?>" data-label="Logs système">
+            <i data-lucide="file-text"></i>
+            <span class="nav-text sidebar-label">Logs système</span>
+        </a>
+
+        <!-- ÉQUIPE -->
+        <span class="nav-label sidebar-label">Équipe</span>
+
+        <a href="users.php" class="nav-item <?php echo $currentPage === 'users.php' ? 'active' : ''; ?>" data-label="Utilisateurs">
+            <i data-lucide="users"></i>
+            <span class="nav-text sidebar-label">Utilisateurs</span>
+        </a>
+
+        <!-- SYSTÈME -->
+        <span class="nav-label sidebar-label">Système</span>
+
+        <a href="settings.php" class="nav-item <?php echo $currentPage === 'settings.php' ? 'active' : ''; ?>" data-label="Paramètres">
+            <i data-lucide="settings"></i>
+            <span class="nav-text sidebar-label">Paramètres</span>
+        </a>
+
+    </nav>
+
+    <!-- User strip -->
+    <a href="../logout.php" class="sidebar-user" title="Déconnexion">
+        <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1)); ?></div>
+        <div class="user-info sidebar-label">
+            <div class="user-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+            <div class="user-role-lbl">Administrateur</div>
         </div>
+        <div class="user-chevron sidebar-label"><i data-lucide="log-out"></i></div>
+    </a>
 
-        <div class="sidebar-separator"></div>
-
-        <!-- Settings -->
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="../logout.php" class="sidebar-menu-link" data-page="logout">
-                        <i data-lucide="log-out" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Déconnexion</div>
-                            <div class="menu-description">Fermer session</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 </aside>
-
-<style>
-/* Cash Register Status Styles */
-.cash-register-status {
-    margin: 1rem;
-    margin-bottom: 0;
-}
-
-.cash-status {
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    text-align: center;
-    border: 2px solid;
-    transition: all 0.3s ease;
-}
-
-.cash-status.open {
-    background: rgba(24, 128, 56, 0.08);
-    border-color: var(--ds-green);
-    color: #065f46;
-}
-
-.cash-status.closed {
-    background: rgba(217, 48, 37, 0.08);
-    border-color: #ef4444;
-    color: #7f1d1d;
-}
-
-.cash-status.not-opened {
-    background: rgba(245, 158, 11, 0.10);
-    border-color: #f59e0b;
-    color: #78350f;
-}
-
-.cash-status.error {
-    background: rgba(107, 114, 128, 0.08);
-    border-color: var(--ds-text-400);
-    color: var(--ds-text-900);
-}
-
-.cash-status-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.cash-amount {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.cash-details {
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-}
-
-.cash-detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.25rem;
-}
-
-.cash-label {
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-.cash-value {
-    font-weight: 600;
-}
-
-.cash-message {
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-    opacity: 0.9;
-    line-height: 1.4;
-}
-
-.cash-actions {
-    margin-top: 1rem;
-}
-
-.btn-open-cash, .btn-close-cash {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-}
-
-.btn-open-cash {
-    background: var(--ds-green);
-    color: white;
-}
-
-.btn-open-cash:hover {
-    background: var(--ds-green);
-    transform: translateY(-1px);
-}
-
-.btn-close-cash {
-    background: #ef4444;
-    color: white;
-}
-
-.btn-close-cash:hover {
-    background: #dc2626;
-    transform: translateY(-1px);
-}
-
-/* Existing styles */
-.sidebar-footer {
-    margin-top: auto;
-    padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.menu-badge.warning {
-    background: #f59e0b;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-}
-
-.menu-badge.success {
-    background: var(--ds-green);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-}
-
-/* NEW: Info badge style for cash register */
-.menu-badge.info {
-    background: #3b82f6;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .cash-status {
-        margin: 0.5rem;
-        padding: 1rem;
-    }
-    
-    .cash-amount {
-        font-size: 1.5rem;
-    }
-    
-    .cash-status-header {
-        font-size: 0.8rem;
-    }
-}
-</style>
