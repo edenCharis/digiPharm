@@ -3,3 +3,4 @@ config/env.php
 .env
 ai/.env
 ai/venv/
+__pycache__/
