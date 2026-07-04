@@ -3,19 +3,22 @@ require_once '../config/app_settings.php';
 AppSettings::init($db);
 
 $notifications = [];
-$notifCount = 0;
+$notifCount    = 0;
 try {
-    $pending = $db->fetch("SELECT COUNT(*) as c FROM carts WHERE status='pending'");
+    $pending = $db->fetch("SELECT COUNT(*) as c FROM carts WHERE status='pending' AND pharmacy_id=?", [$pharmacyId]);
     if ($pending && $pending['c'] > 0) {
         $notifications[] = ['type'=>'info','icon'=>'shopping-cart','title'=>$pending['c'].' panier(s) en attente','sub'=>'À traiter en caisse','link'=>'pending-carts.php'];
         $notifCount++;
     }
-    $lowStock = $db->fetchAll("SELECT name, stock FROM product WHERE stock <= 5 AND stock > 0 ORDER BY stock ASC LIMIT 5");
+    $lowStock = $db->fetchAll("SELECT name, stock FROM product WHERE stock <= 5 AND stock > 0 AND pharmacy_id=? ORDER BY stock ASC LIMIT 5", [$pharmacyId]);
     foreach ($lowStock as $p) {
         $notifications[] = ['type'=>'warning','icon'=>'package','title'=>$p['name'],'sub'=>'Stock faible : '.$p['stock'].' restant(s)','link'=>'../admin/products.php'];
         $notifCount++;
     }
 } catch (Exception $e) {}
+
+$dayNames   = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+$headerDate = $dayNames[(int)date('w')] . ' ' . date('j M Y');
 ?>
 <header class="header">
     <div class="header-content">
@@ -23,13 +26,20 @@ try {
             <button id="menuToggle" class="menu-toggle" title="Menu">
                 <i data-lucide="menu"></i>
             </button>
-            <div class="header-page-title">
-                <span id="pageTitle">Traitement des ventes et paiements</span>
-            </div>
+        </div>
+
+        <div class="header-search">
+            <span class="header-search-icon"><i data-lucide="search"></i></span>
+            <input type="text" placeholder="Rechercher paniers, ventes…" autocomplete="off">
         </div>
 
         <div class="header-right">
-            <div class="notif-wrapper">
+            <div class="header-date">
+                <i data-lucide="calendar"></i>
+                <?php echo $headerDate; ?>
+            </div>
+
+            <div class="notif-wrapper" id="notifWrapper">
                 <button class="header-btn" id="notifBtn" title="Notifications">
                     <i data-lucide="bell"></i>
                     <?php if ($notifCount > 0): ?>
@@ -57,21 +67,26 @@ try {
                 </div>
             </div>
 
-            <div class="user-wrapper">
+            <a href="process-payment.php" class="btn-cta">
+                <i data-lucide="credit-card"></i>
+                Encaisser
+            </a>
+
+            <div class="user-wrapper" id="userWrapper">
                 <button class="user-btn" id="userMenuToggle">
-                    <div class="avatar"><?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?></div>
-                    <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--ds-text-400)"></i>
+                    <div class="avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'C', 0, 1)); ?></div>
+                    <i data-lucide="chevron-down" style="width:13px;height:13px;color:var(--ps-muted)"></i>
                 </button>
                 <div class="user-panel" id="userDropdown">
                     <div class="user-panel-head">
-                        <div class="avatar lg"><?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?></div>
+                        <div class="avatar lg"><?php echo strtoupper(substr($_SESSION['username'] ?? 'C', 0, 1)); ?></div>
                         <div>
-                            <div class="up-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></div>
+                            <div class="up-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
                             <div class="up-role">Caissier</div>
                         </div>
                     </div>
                     <div class="user-panel-menu">
-                        <a href="profile.php" class="up-item"><i data-lucide="user"></i> Mon profil</a>
+                        <a href="profile.php"         class="up-item"><i data-lucide="user"></i> Mon profil</a>
                         <a href="completed-sales.php" class="up-item"><i data-lucide="receipt"></i> Ventes du jour</a>
                         <div class="up-sep"></div>
                         <a href="../logout.php" class="up-item danger"><i data-lucide="log-out"></i> Déconnexion</a>

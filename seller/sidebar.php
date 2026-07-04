@@ -1,103 +1,81 @@
-<!-- Sidebar Component -->
-
-
-
 <?php
-
 require_once '../config/app_settings.php';
 AppSettings::init($db);
 
+$currentPage = basename($_SERVER['PHP_SELF']);
+
+$_stockCount = 0;
+try {
+    $r = $db->fetch("SELECT COUNT(*) as n FROM product WHERE stock > 0 AND pharmacy_id=?", [$pharmacyId]);
+    $_stockCount = $r ? (int)$r['n'] : 0;
+} catch (Exception $_e) {}
 ?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
 <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <div class="flex items-center justify-between">
-            <a href="/" class="sidebar-brand">
-                <div class="brand-logo">
-                   
-                    <?php  echo getAppIcon('icon-class')?>
-                </div>
-                <div>
-                    <div class="brand-text"><?php echo appName()?></div>
-                   
-                </div>
-            </a>
-            <button id="sidebarClose" class="sidebar-close">
-                <i data-lucide="x"></i>
-            </button>
-        </div>
-    </div>
 
-    <div class="sidebar-content">
-        <!-- Main Navigation -->
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="index.php" class="sidebar-menu-link active" data-page="dashboard">
-                        <i data-lucide="home" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Tableau de bord</div>
-                            <div class="menu-description">Vue d'ensemble</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="sidebar-menu-item">
-                    <a href="sales.php" class="sidebar-menu-link" data-page="new-sale">
-                        <i data-lucide="shopping-cart" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Nouvelle vente</div>
-                            <div class="menu-description">Créer une vente</div>
-                        </div>
-                        <div class="menu-badge info">Rapide</div>
-                    </a>
-                </div>
-                <div class="sidebar-menu-item">
-                    <a href="historique.php" class="sidebar-menu-link" data-page="sales-history">
-                        <i data-lucide="history" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Historique des ventes</div>
-                            <div class="menu-description">Toutes les ventes</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="sidebar-menu-item">
-                    <a href="products.php" class="sidebar-menu-link" data-page="products">
-                        <i data-lucide="package" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Produits</div>
-                            <div class="menu-description">Gestion stock</div>
-                        </div>
-                        <div class="menu-badge"><?php
-                            require_once('../config/database.php');
-                            $query = "SELECT COUNT(*) as count FROM product WHERE stock > 0";
-                            $result = $db->fetch($query);
-                           if (!$result) {
-                                 echo '0';
-                            } else {
-                                 echo $result['count'];
-                            }
-                        ?></div>
-                    </a>
-                </div>
-            </div>
+    <a href="index.php" class="sidebar-brand">
+        <div class="brand-icon"><?php echo getAppIcon('icon-class'); ?></div>
+        <div class="sidebar-label">
+            <div class="brand-name"><?php echo htmlspecialchars(appName()); ?></div>
+            <div class="brand-role">Vendeur</div>
         </div>
+    </a>
 
-      
+    <button id="sidebarClose" style="display:none;position:absolute;top:14px;right:14px;background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+    </button>
 
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="../logout.php" class="sidebar-menu-link" data-page="logout">
-                        <i data-lucide="log-out" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Déconnexion</div>
-                            <div class="menu-description">Fermer session</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
+    <nav class="nav">
+
+        <span class="nav-label sidebar-label">Vue d'ensemble</span>
+
+        <a href="index.php" class="nav-item <?php echo in_array($currentPage,['index.php','dashboard.php'])?'active':''; ?>" data-label="Tableau de bord">
+            <i data-lucide="layout-dashboard"></i>
+            <span class="nav-text sidebar-label">Tableau de bord</span>
+        </a>
+
+        <span class="nav-label sidebar-label">Ventes</span>
+
+        <a href="sales.php" class="nav-item <?php echo $currentPage==='sales.php'?'active':''; ?>" data-label="Nouvelle vente">
+            <i data-lucide="shopping-cart"></i>
+            <span class="nav-text sidebar-label">Nouvelle vente</span>
+        </a>
+
+        <a href="historique.php" class="nav-item <?php echo $currentPage==='historique.php'?'active':''; ?>" data-label="Historique">
+            <i data-lucide="history"></i>
+            <span class="nav-text sidebar-label">Historique des ventes</span>
+        </a>
+
+        <span class="nav-label sidebar-label">Inventaire</span>
+
+        <a href="products.php" class="nav-item <?php echo $currentPage==='products.php'?'active':''; ?>" data-label="Produits">
+            <i data-lucide="package"></i>
+            <span class="nav-text sidebar-label">Produits</span>
+            <?php if ($_stockCount > 0): ?>
+            <span class="nav-badge sidebar-label"><?php echo $_stockCount > 99 ? '99+' : $_stockCount; ?></span>
+            <?php endif; ?>
+        </a>
+
+        <span class="nav-label sidebar-label">Compte</span>
+
+        <a href="profile.php" class="nav-item <?php echo $currentPage==='profile.php'?'active':''; ?>" data-label="Mon profil">
+            <i data-lucide="user"></i>
+            <span class="nav-text sidebar-label">Mon profil</span>
+        </a>
+
+    </nav>
+
+    <a href="../logout.php" class="sidebar-user" title="Déconnexion">
+        <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'V', 0, 1)); ?></div>
+        <div class="user-info sidebar-label">
+            <div class="user-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+            <div class="user-role-lbl">Vendeur</div>
         </div>
-    
-       
-    </div>
+        <div class="user-chevron sidebar-label"><i data-lucide="log-out"></i></div>
+    </a>
+
 </aside>

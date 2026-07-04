@@ -1,385 +1,86 @@
-
 <?php
-
 require_once '../config/app_settings.php';
 AppSettings::init($db);
 
-?>
+$currentPage = basename($_SERVER['PHP_SELF']);
+$cashierId   = (int)($_SESSION['user_id'] ?? 0);
 
-<!-- Cashier Sidebar Component -->
+$_pendingCount = 0;
+$_salesCount   = 0;
+try {
+    $r = $db->fetch("SELECT COUNT(c.id) as n FROM carts c JOIN cash_register cr ON c.cash_register_id=cr.id WHERE c.status='PENDING' AND cr.cashier_id=? AND cr.status='OPEN'", [$cashierId]);
+    $_pendingCount = $r ? (int)$r['n'] : 0;
+    $r2 = $db->fetch("SELECT COUNT(s.id) as n FROM sale s JOIN cash_register cr ON s.cash_register_id=cr.id WHERE DATE(s.createdAt)=CURDATE() AND cr.cashier_id=?", [$cashierId]);
+    $_salesCount = $r2 ? (int)$r2['n'] : 0;
+} catch (Exception $_e) {}
+?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
 <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <div class="flex items-center justify-between">
-            <a href="/" class="sidebar-brand">
-                <div class="brand-logo">
-                    <?php echo getAppIcon('w-6 h-6');?>
-                </div>
-                <div>
-                    <div class="brand-text"><?php echo appName()?></div>
-                    <div class="brand-subtitle">Caisse</div>
-                </div>
-            </a>
-            <button id="sidebarClose" class="sidebar-close">
-                <i data-lucide="x"></i>
-            </button>
+
+    <a href="index.php" class="sidebar-brand">
+        <div class="brand-icon"><?php echo getAppIcon('icon-class'); ?></div>
+        <div class="sidebar-label">
+            <div class="brand-name"><?php echo htmlspecialchars(appName()); ?></div>
+            <div class="brand-role">Caisse</div>
         </div>
-    </div>
+    </a>
 
-    <!-- Cash Register Status Section -->
-  
-<?php 
+    <button id="sidebarClose" style="display:none;position:absolute;top:14px;right:14px;background:transparent;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+    </button>
 
- $cashierId = $_SESSION["user_id"];
+    <nav class="nav">
 
+        <span class="nav-label sidebar-label">Vue d'ensemble</span>
 
-?>
+        <a href="index.php" class="nav-item <?php echo $currentPage==='index.php'?'active':''; ?>" data-label="Tableau de bord">
+            <i data-lucide="layout-dashboard"></i>
+            <span class="nav-text sidebar-label">Tableau de bord</span>
+        </a>
 
-    <div class="sidebar-content">
-        <!-- Main Navigation -->
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="index.php" class="sidebar-menu-link active" data-page="dashboard">
-                        <i data-lucide="home" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Tableau de bord</div>
-                            <div class="menu-description">Vue d'ensemble</div>
-                        </div>
-                    </a>
-                </div>
-                
-                <div class="sidebar-menu-item">
-                    <a href="pending-carts.php" class="sidebar-menu-link" data-page="pending-carts">
-                        <i data-lucide="shopping-cart" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Paniers en attente</div>
-                            <div class="menu-description">Finaliser les ventes</div>
-                        </div>
-                        <div class="menu-badge warning"><?php
-                            try {
-                                // Get pending carts for this cashier's open register
-                                $pendingQuery = "SELECT COUNT(c.id) as count 
-                                               FROM carts c 
-                                               JOIN cash_register cr ON c.cash_register_id = cr.id 
-                                               WHERE c.status = 'PENDING' 
-                                               AND cr.cashier_id = ? 
-                                               AND cr.status = 'OPEN'";
-                                $result = $db->fetch($pendingQuery, [$cashierId]);
-                                echo $result ? $result['count'] : '0';
-                            } catch (Exception $e) {
-                                echo '0';
-                            }
-                        ?></div>
-                    </a>
-                </div>
+        <span class="nav-label sidebar-label">Ventes</span>
 
-                <div class="sidebar-menu-item">
-                    <a href="process-payment.php" class="sidebar-menu-link" data-page="payment">
-                        <i data-lucide="credit-card" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Traitement paiement</div>
-                            <div class="menu-description">Encaisser</div>
-                        </div>
-                        <div class="menu-badge success">Rapide</div>
-                    </a>
-                </div>
+        <a href="pending-carts.php" class="nav-item <?php echo $currentPage==='pending-carts.php'?'active':''; ?>" data-label="Paniers en attente">
+            <i data-lucide="shopping-cart"></i>
+            <span class="nav-text sidebar-label">Paniers en attente</span>
+            <?php if ($_pendingCount > 0): ?>
+            <span class="nav-badge sidebar-label"><?php echo $_pendingCount > 9 ? '9+' : $_pendingCount; ?></span>
+            <?php endif; ?>
+        </a>
 
-                <div class="sidebar-menu-item">
-                    <a href="completed-sales.php" class="sidebar-menu-link" data-page="completed-sales">
-                        <i data-lucide="check-circle" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Ventes terminées</div>
-                            <div class="menu-description">Historique du jour</div>
-                        </div>
-                        <div class="menu-badge"><?php
-                            try {
-                                $salesQuery = "SELECT COUNT(s.id) as count 
-                                             FROM sale s 
-                                             JOIN cash_register cr ON s.cash_register_id = cr.id 
-                                             WHERE DATE(s.createdAt) = CURDATE() 
-                                             AND cr.cashier_id = ?";
-                                $result = $db->fetch($salesQuery, [$cashierId]);
-                                echo $result ? $result['count'] : '0';
-                            } catch (Exception $e) {
-                                echo '0';
-                            }
-                        ?></div>
-                    </a>
-                </div>
-            </div>
+        <a href="process-payment.php" class="nav-item <?php echo $currentPage==='process-payment.php'?'active':''; ?>" data-label="Traitement paiement">
+            <i data-lucide="credit-card"></i>
+            <span class="nav-text sidebar-label">Traitement paiement</span>
+        </a>
+
+        <a href="completed-sales.php" class="nav-item <?php echo $currentPage==='completed-sales.php'?'active':''; ?>" data-label="Ventes terminées">
+            <i data-lucide="check-circle"></i>
+            <span class="nav-text sidebar-label">Ventes terminées</span>
+            <?php if ($_salesCount > 0): ?>
+            <span class="nav-badge sidebar-label" style="background:var(--ps-green)"><?php echo $_salesCount; ?></span>
+            <?php endif; ?>
+        </a>
+
+        <span class="nav-label sidebar-label">Compte</span>
+
+        <a href="profile.php" class="nav-item <?php echo $currentPage==='profile.php'?'active':''; ?>" data-label="Mon profil">
+            <i data-lucide="user"></i>
+            <span class="nav-text sidebar-label">Mon profil</span>
+        </a>
+
+    </nav>
+
+    <a href="../logout.php" class="sidebar-user" title="Déconnexion">
+        <div class="user-avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'C', 0, 1)); ?></div>
+        <div class="user-info sidebar-label">
+            <div class="user-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+            <div class="user-role-lbl">Caissier</div>
         </div>
+        <div class="user-chevron sidebar-label"><i data-lucide="log-out"></i></div>
+    </a>
 
-        <div class="sidebar-separator"></div>
-
-        <!-- Settings -->
-        <div class="sidebar-group">
-            <div class="sidebar-menu">
-                <div class="sidebar-menu-item">
-                    <a href="../logout.php" class="sidebar-menu-link" data-page="logout">
-                        <i data-lucide="log-out" class="menu-icon"></i>
-                        <div class="menu-content">
-                            <div class="menu-title">Déconnexion</div>
-                            <div class="menu-description">Fermer session</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 </aside>
-
-<style>
-/* Cash Register Status Styles */
-.cash-register-status {
-    margin: 1rem;
-    margin-bottom: 0;
-}
-
-.cash-status {
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    text-align: center;
-    border: 2px solid;
-    transition: all 0.3s ease;
-}
-
-.cash-status.open {
-    background: rgba(24, 128, 56, 0.08);
-    border-color: var(--ds-green);
-    color: #065f46;
-}
-
-.cash-status.closed {
-    background: rgba(217, 48, 37, 0.08);
-    border-color: #ef4444;
-    color: #7f1d1d;
-}
-
-.cash-status.not-opened {
-    background: rgba(245, 158, 11, 0.10);
-    border-color: #f59e0b;
-    color: #78350f;
-}
-
-.cash-status.error {
-    background: rgba(107, 114, 128, 0.08);
-    border-color: var(--ds-text-400);
-    color: var(--ds-text-900);
-}
-
-.cash-status-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.cash-amount {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.cash-details {
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-}
-
-.cash-detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.25rem;
-}
-
-.cash-label {
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-.cash-value {
-    font-weight: 600;
-}
-
-.cash-message {
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-    opacity: 0.9;
-    line-height: 1.4;
-}
-
-.cash-actions {
-    margin-top: 1rem;
-}
-
-.btn-open-cash, .btn-close-cash {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-}
-
-.btn-open-cash {
-    background: var(--ds-green);
-    color: white;
-}
-
-.btn-open-cash:hover {
-    background: var(--ds-green);
-    transform: translateY(-1px);
-}
-
-.btn-close-cash {
-    background: #ef4444;
-    color: white;
-}
-
-.btn-close-cash:hover {
-    background: #dc2626;
-    transform: translateY(-1px);
-}
-
-/* Existing styles */
-.sidebar-footer {
-    margin-top: auto;
-    padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.menu-badge.warning {
-    background: #f59e0b;
-    color: white;
-}
-
-.menu-badge.success {
-    background: var(--ds-green);
-    color: white;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .cash-status {
-        margin: 0.5rem;
-        padding: 1rem;
-    }
-    
-    .cash-amount {
-        font-size: 1.5rem;
-    }
-    
-    .cash-status-header {
-        font-size: 0.8rem;
-    }
-}
-</style>
-
-<script>
-function openCashRegister() {
-    // Show modal to enter initial amount
-    const modalHTML = `
-        <div class="modal" style="display:block; position:fixed; z-index:1100; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
-            <div class="modal-content" style="background-color:white; margin:15% auto; padding:20px; border-radius:8px; width:80%; max-width:400px;">
-                <h3 style="margin-bottom:20px; text-align:center;">Ouvrir la Caisse</h3>
-                <form onsubmit="return submitOpenCash(event)">
-                    <div style="margin-bottom:15px;">
-                        <label for="initialAmount" style="display:block; margin-bottom:5px; font-weight:600;">Montant initial:</label>
-                        <input type="number" id="initialAmount" required min="0" step="0.01" 
-                               style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;" 
-                               placeholder="0.00">
-                    </div>
-                    <div style="display:flex; justify-content:space-between; gap:10px;">
-                        <button type="button" onclick="this.closest('.modal').remove()" 
-                                style="flex:1; padding:10px; background:var(--ds-text-400); color:white; border:none; border-radius:4px; cursor:pointer;">
-                            Annuler
-                        </button>
-                        <button type="submit" 
-                                style="flex:1; padding:10px; background:var(--ds-green); color:white; border:none; border-radius:4px; cursor:pointer;">
-                            Ouvrir
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    document.getElementById('initialAmount').focus();
-}
-
-function closeCashRegister() {
-    if (confirm('Êtes-vous sûr de vouloir fermer la caisse? Cette action est irréversible.')) {
-        // Send request to close cash register
-        fetch('close-cash-register.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Erreur lors de la fermeture: ' + (data.message || 'Erreur inconnue'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Erreur lors de la fermeture de la caisse');
-        });
-    }
-}
-
-function submitOpenCash(event) {
-    event.preventDefault();
-    const initialAmount = parseFloat(document.getElementById('initialAmount').value);
-    
-    if (isNaN(initialAmount) || initialAmount < 0) {
-        alert('Veuillez entrer un montant valide');
-        return false;
-    }
-    
-    // Send request to open cash register
-    fetch('open-cash-register.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            initialAmount: initialAmount
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert('Erreur lors de l\'ouverture: ' + (data.message || 'Erreur inconnue'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Erreur lors de l\'ouverture de la caisse');
-    });
-    
-    // Close modal
-    event.target.closest('.modal').remove();
-    return false;
-}
-</script>

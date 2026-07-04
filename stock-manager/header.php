@@ -3,19 +3,22 @@ require_once '../config/app_settings.php';
 AppSettings::init($db);
 
 $notifications = [];
-$notifCount = 0;
+$notifCount    = 0;
 try {
-    $lowStock = $db->fetchAll("SELECT name, stock FROM product WHERE stock <= 10 AND stock > 0 ORDER BY stock ASC LIMIT 8");
+    $lowStock = $db->fetchAll("SELECT name, stock FROM product WHERE stock <= 10 AND stock > 0 AND pharmacy_id=? ORDER BY stock ASC LIMIT 8", [$pharmacyId]);
     foreach ($lowStock as $p) {
         $notifications[] = ['type'=>'warning','icon'=>'package','title'=>$p['name'],'sub'=>'Stock faible : '.$p['stock'].' restant(s)','link'=>'products.php'];
         $notifCount++;
     }
-    $outOfStock = $db->fetchAll("SELECT name FROM product WHERE stock = 0 LIMIT 5");
+    $outOfStock = $db->fetchAll("SELECT name FROM product WHERE stock = 0 AND pharmacy_id=? LIMIT 5", [$pharmacyId]);
     foreach ($outOfStock as $p) {
         $notifications[] = ['type'=>'danger','icon'=>'package-x','title'=>$p['name'],'sub'=>'Rupture de stock','link'=>'products.php'];
         $notifCount++;
     }
 } catch (Exception $e) {}
+
+$dayNames   = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+$headerDate = $dayNames[(int)date('w')] . ' ' . date('j M Y');
 ?>
 <header class="header">
     <div class="header-content">
@@ -23,13 +26,20 @@ try {
             <button id="menuToggle" class="menu-toggle" title="Menu">
                 <i data-lucide="menu"></i>
             </button>
-            <div class="header-page-title">
-                <span id="pageTitle">Gestion du stock</span>
-            </div>
+        </div>
+
+        <div class="header-search">
+            <span class="header-search-icon"><i data-lucide="search"></i></span>
+            <input type="text" placeholder="Rechercher produits, fournisseurs…" autocomplete="off">
         </div>
 
         <div class="header-right">
-            <div class="notif-wrapper">
+            <div class="header-date">
+                <i data-lucide="calendar"></i>
+                <?php echo $headerDate; ?>
+            </div>
+
+            <div class="notif-wrapper" id="notifWrapper">
                 <button class="header-btn" id="notifBtn" title="Notifications">
                     <i data-lucide="bell"></i>
                     <?php if ($notifCount > 0): ?>
@@ -57,21 +67,26 @@ try {
                 </div>
             </div>
 
-            <div class="user-wrapper">
+            <a href="products.php" class="btn-cta">
+                <i data-lucide="plus"></i>
+                Ajouter
+            </a>
+
+            <div class="user-wrapper" id="userWrapper">
                 <button class="user-btn" id="userMenuToggle">
-                    <div class="avatar"><?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?></div>
-                    <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--ds-text-400)"></i>
+                    <div class="avatar"><?php echo strtoupper(substr($_SESSION['username'] ?? 'S', 0, 1)); ?></div>
+                    <i data-lucide="chevron-down" style="width:13px;height:13px;color:var(--ps-muted)"></i>
                 </button>
                 <div class="user-panel" id="userDropdown">
                     <div class="user-panel-head">
-                        <div class="avatar lg"><?php echo strtoupper(substr($_SESSION["username"], 0, 1)); ?></div>
+                        <div class="avatar lg"><?php echo strtoupper(substr($_SESSION['username'] ?? 'S', 0, 1)); ?></div>
                         <div>
-                            <div class="up-name"><?php echo htmlspecialchars($_SESSION["username"]); ?></div>
-                            <div class="up-role">Gestionnaire de Stock</div>
+                            <div class="up-name"><?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?></div>
+                            <div class="up-role">Gestionnaire Stock</div>
                         </div>
                     </div>
                     <div class="user-panel-menu">
-                        <a href="profile.php" class="up-item"><i data-lucide="user"></i> Mon profil</a>
+                        <a href="profile.php"  class="up-item"><i data-lucide="user"></i> Mon profil</a>
                         <a href="products.php" class="up-item"><i data-lucide="package"></i> Produits</a>
                         <a href="suppliers.php" class="up-item"><i data-lucide="truck"></i> Fournisseurs</a>
                         <div class="up-sep"></div>
