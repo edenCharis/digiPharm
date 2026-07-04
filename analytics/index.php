@@ -3,7 +3,9 @@ require_once __DIR__ . '/config/auth.php';
 ai_check_auth();
 $user     = ai_user();
 $initials = strtoupper(substr($user['display_name'], 0, 1));
-$today    = strftime('%A %e %B %Y');
+$jours = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+$mois  = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+$today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] . ' ' . date('Y');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -176,7 +178,7 @@ nav { flex: 1; padding: 8px 0; }
 .refresh-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ── Content ──────────────────────────────────────────────── */
-.content { padding: 24px 28px; flex: 1; max-width: 960px; }
+.content { padding: 24px 28px; flex: 1; }
 
 /* ── Greeting banner ──────────────────────────────────────── */
 .brief-greeting {
@@ -243,7 +245,7 @@ nav { flex: 1; padding: 8px 0; }
 
 .section-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
   gap: 14px;
 }
 
@@ -394,10 +396,12 @@ nav { flex: 1; padding: 8px 0; }
   font-size: 13.5px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  .section-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
   .brief-greeting { flex-direction: column; }
   .brief-time { text-align: left; }
-  .section-cards { grid-template-columns: 1fr; }
 }
 </style>
 </head>
