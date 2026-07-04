@@ -226,16 +226,18 @@ body {
 .table-card {
     background: var(--surface); border-radius: var(--radius);
     box-shadow: var(--shadow); border: 1px solid var(--border);
-    overflow: hidden; margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    /* No overflow:hidden — it clips the horizontal scroll inside table-scroll */
 }
 .table-header {
     padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--border-lt);
     display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    border-radius: var(--radius) var(--radius) 0 0;
 }
 .table-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
 
-.table-scroll { overflow-x: auto; }
+.table-scroll { overflow-x: auto; border-radius: 0 0 var(--radius) var(--radius); }
 .table-scroll::-webkit-scrollbar { height: 4px; }
 .table-scroll::-webkit-scrollbar-track { background: var(--border-lt); }
 .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -455,6 +457,14 @@ tbody tr:hover td { background: #FAFBFC; }
             SuperAdmins
         </a>
 
+        <div class="nav-section">Configuration</div>
+        <a href="/superadmin/plans.php" class="nav-item <?= $current_page === 'plans' ? 'active' : '' ?>">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            Forfaits & Prix
+        </a>
+
         <div class="nav-section">Monitoring</div>
         <a href="/superadmin/pharmacies/logs.php" class="nav-item <?= $current_page === 'logs' ? 'active' : '' ?>">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -499,6 +509,7 @@ tbody tr:hover td { background: #FAFBFC; }
                     'create'        => 'Nouvelle pharmacie',
                     'users'         => 'Comptes admin',
                     'admins'        => 'SuperAdmins',
+                    'plans'         => 'Forfaits & Prix',
                     'logs'          => 'Logs système',
                     'view'          => 'Détail pharmacie',
                     'edit'          => 'Modifier pharmacie',

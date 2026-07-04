@@ -16,7 +16,21 @@ try {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 } catch (Exception $e) {}
 
-$plan     = $_GET['plan'] ?? 'basic';
+// Load plans from DB (falls back to hardcoded defaults if table doesn't exist yet)
+$dbPlans = [];
+try {
+    $dbPlans = $db->fetchAll("SELECT * FROM plans WHERE is_active = 1 ORDER BY sort_order, id", []);
+} catch (Exception $e) {}
+if (empty($dbPlans)) {
+    $dbPlans = [
+        ['slug'=>'starter','name'=>'Basique', 'price_usd'=>10,'price_xaf'=>6000,'features'=>'Caisse · Stock · Rapports','max_users'=>3],
+        ['slug'=>'pro',    'name'=>'Pro + IA','price_usd'=>25,'price_xaf'=>15000,'features'=>'Tout Basique · IA · SFEC Congo','max_users'=>15],
+    ];
+}
+$validSlugs = array_column($dbPlans, 'slug');
+$plansBySlug = array_column($dbPlans, null, 'slug');
+
+$plan     = in_array($_GET['plan'] ?? '', $validSlugs) ? $_GET['plan'] : $validSlugs[0];
 $errors   = [];
 $success  = false;
 $formData = [
@@ -30,7 +44,7 @@ $formData = [
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formData = [
-        'plan'             => in_array($_POST['plan'] ?? '', ['basic', 'pro']) ? $_POST['plan'] : 'basic',
+        'plan'             => in_array($_POST['plan'] ?? '', $validSlugs) ? $_POST['plan'] : $validSlugs[0],
         'pharmacy_name'    => trim($_POST['pharmacy_name'] ?? ''),
         'responsible_name' => trim($_POST['responsible_name'] ?? ''),
         'email'            => trim($_POST['email'] ?? ''),
@@ -68,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+$selectedPlan = $plansBySlug[$formData['plan']] ?? $dbPlans[0];
 $isPro = $formData['plan'] === 'pro';
 ?><!DOCTYPE html>
 <html lang="fr">
@@ -205,6 +220,7 @@ html, body {
 }
 .plan-price { font-size: 18px; font-weight: 800; color: #fff; line-height: 1; margin-top: 2px; }
 .plan-price span { font-size: 11px; font-weight: 400; color: var(--ink-mute); }
+.plan-price-xaf { font-size: 11px; font-weight: 600; color: rgba(74,222,128,.7); margin-top: 2px; font-variant-numeric: tabular-nums; }
 .plan-feats { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 3px; }
 
 /* trust */
@@ -363,33 +379,31 @@ html, body {
     <div>
       <div class="plan-label">Choisissez votre forfait</div>
       <div class="plan-opts">
-        <label class="plan-opt" id="lbl-basic">
-          <input type="radio" name="plan_ui" value="basic" <?= !$isPro ? 'checked' : '' ?>>
+        <?php foreach ($dbPlans as $i => $pl): ?>
+        <label class="plan-opt" id="lbl-<?= htmlspecialchars($pl['slug']) ?>">
+          <input type="radio" name="plan_ui" value="<?= htmlspecialchars($pl['slug']) ?>"
+                 <?= $formData['plan'] === $pl['slug'] ? 'checked' : '' ?>>
           <div class="plan-card">
             <div class="plan-radio"></div>
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-                <span class="plan-name">Basique</span>
+                <span class="plan-name"><?= htmlspecialchars($pl['name']) ?></span>
+                <?php if ($i === 1): ?><span class="plan-rec">★ Recommandé</span><?php endif; ?>
               </div>
-              <div class="plan-price">$10 <span>HT / mois</span></div>
-              <div class="plan-feats">Caisse · Stock · Rapports · 3 utilisateurs</div>
+              <div class="plan-price">
+                $<?= number_format((float)$pl['price_usd'], 2) ?>
+                <span>HT / mois</span>
+              </div>
+              <div class="plan-price-xaf">
+                <?= number_format((int)$pl['price_xaf'], 0, ',', ' ') ?> XAF HT/mois
+              </div>
+              <?php if ($pl['features']): ?>
+              <div class="plan-feats"><?= htmlspecialchars($pl['features']) ?></div>
+              <?php endif; ?>
             </div>
           </div>
         </label>
-        <label class="plan-opt" id="lbl-pro">
-          <input type="radio" name="plan_ui" value="pro" <?= $isPro ? 'checked' : '' ?>>
-          <div class="plan-card">
-            <div class="plan-radio"></div>
-            <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-                <span class="plan-name">Pro + IA</span>
-                <span class="plan-rec">★ Recommandé</span>
-              </div>
-              <div class="plan-price">$25 <span>HT / mois</span></div>
-              <div class="plan-feats">Tout Basique + IA + SFEC · 15 utilisateurs</div>
-            </div>
-          </div>
-        </label>
+        <?php endforeach; ?>
       </div>
     </div>
 
@@ -416,7 +430,8 @@ html, body {
     <div class="card">
 
       <?php if ($success):
-        $planLabel = $formData['plan'] === 'pro' ? 'Pro + IA — $25 HT/mois' : 'Basique — $10 HT/mois';
+        $sp = $plansBySlug[$formData['plan']] ?? $dbPlans[0];
+        $planLabel = htmlspecialchars($sp['name']) . ' — $' . number_format((float)$sp['price_usd'], 2) . ' / ' . number_format((int)$sp['price_xaf'], 0, ',', ' ') . ' XAF HT/mois';
       ?>
 
       <div class="success-wrap">
