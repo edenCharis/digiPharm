@@ -197,7 +197,6 @@ if ($forfait && $forfait['status'] === 'trial' && $forfait['trial_ends_at']) {
 /* ── Pharmacy info ───────────────────────────────────────── */
 $pharmacyInfo = AppSettings::getPharmacyInfo();
 ?>
-?>
 <!DOCTYPE html>
 <html lang="<?php echo appSetting('language', 'fr'); ?>">
 <head>
