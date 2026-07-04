@@ -25,6 +25,7 @@ $full = isset($_GET['full']) ? '&full=true' : '';
 // GET routes → standard analytics data
 $getRoutes = [
     'dashboard' => '/analytics/dashboard',
+    'brief'     => '/analytics/brief',
     'trends'    => "/analytics/trends?days=$days",
     'alerts'    => '/analytics/alerts',
     'inventory' => '/analytics/inventory',

@@ -20,7 +20,7 @@ def _clean(records: list[dict]) -> list[dict]:
     return [{k: _conv(v) for k, v in r.items()} for r in records]
 
 from models.analytics import (
-    dashboard_summary, revenue_trends, generate_alerts, get_inventory
+    dashboard_summary, revenue_trends, generate_alerts, get_inventory, generate_brief
 )
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -86,6 +86,15 @@ def analytics_alerts(request: Request):
     pid = _resolve_pharmacy(request)
     try:
         return {"pharmacy_id": pid, "alerts": generate_alerts(pid)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/brief")
+def analytics_brief(request: Request):
+    pid = _resolve_pharmacy(request)
+    try:
+        return generate_brief(pid)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -1,15 +1,16 @@
 <?php
 require_once __DIR__ . '/config/auth.php';
 ai_check_auth();
-$user = ai_user();
+$user     = ai_user();
 $initials = strtoupper(substr($user['display_name'], 0, 1));
+$today    = strftime('%A %e %B %Y');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — <?= htmlspecialchars($user['pharmacy_name']) ?></title>
+<title>DigiPharm AI — Briefing quotidien</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -20,10 +21,13 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
   --green-bg:    #f0faf4;
   --amber:       #d97706;
   --amber-lt:    #fef3c7;
+  --amber-dk:    #92400e;
   --red:         #dc2626;
   --red-lt:      #fee2e2;
+  --red-dk:      #7f1d1d;
   --blue:        #2563eb;
   --blue-lt:     #dbeafe;
+  --blue-dk:     #1e3a8a;
   --border:      #dadce0;
   --border-lt:   #f0f0f0;
   --text:        #111827;
@@ -46,7 +50,7 @@ body {
   display: flex;
 }
 
-/* ── Sidebar ─────────────────────────────────────────────── */
+/* ── Sidebar ──────────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-w);
   min-height: 100vh;
@@ -58,7 +62,6 @@ body {
   top: 0; left: 0; bottom: 0;
   z-index: 100;
 }
-
 .sidebar-logo {
   padding: 18px 20px;
   display: flex;
@@ -75,7 +78,6 @@ body {
 .logo-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .logo-text { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -.3px; }
 .logo-text span { color: var(--green); }
-
 .sidebar-pharmacy {
   padding: 12px 20px;
   font-size: 11px;
@@ -85,7 +87,6 @@ body {
   letter-spacing: .6px;
   border-bottom: 1px solid var(--border-lt);
 }
-
 nav { flex: 1; padding: 8px 0; }
 .nav-section { padding: 16px 20px 4px; font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .6px; }
 .nav-link {
@@ -101,9 +102,8 @@ nav { flex: 1; padding: 8px 0; }
   transition: background .12s, color .12s;
 }
 .nav-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.nav-link:hover { background: var(--surface-alt); color: var(--text); }
+.nav-link:hover  { background: var(--surface-alt); color: var(--text); }
 .nav-link.active { background: var(--green-lt); color: var(--green-dk); font-weight: 600; }
-
 .sidebar-footer {
   padding: 14px 16px;
   border-top: 1px solid var(--border-lt);
@@ -121,11 +121,11 @@ nav { flex: 1; padding: 8px 0; }
 }
 .avatar-info { flex: 1; min-width: 0; }
 .avatar-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.avatar-role { font-size: 11px; color: var(--text-3); }
-.logout-btn { color: var(--text-3); text-decoration: none; font-size: 11px; }
+.avatar-role  { font-size: 11px; color: var(--text-3); }
+.logout-btn   { color: var(--text-3); text-decoration: none; font-size: 11px; }
 .logout-btn:hover { color: var(--red); }
 
-/* ── Main ────────────────────────────────────────────────── */
+/* ── Main ─────────────────────────────────────────────────── */
 .main {
   margin-left: var(--sidebar-w);
   flex: 1;
@@ -134,6 +134,7 @@ nav { flex: 1; padding: 8px 0; }
   flex-direction: column;
 }
 
+/* ── Topbar ───────────────────────────────────────────────── */
 .topbar {
   height: var(--header-h);
   background: var(--surface);
@@ -146,21 +147,20 @@ nav { flex: 1; padding: 8px 0; }
   top: 0;
   z-index: 50;
 }
+.topbar-left { display: flex; flex-direction: column; gap: 2px; }
 .topbar-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.topbar-meta { font-size: 12px; color: var(--text-3); }
-
-.topbar-right { display: flex; align-items: center; gap: 12px; }
-.period-select {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
-  color: var(--text);
-  background: var(--surface);
-  cursor: pointer;
+.topbar-meta  { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 5px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.status-dot {
+  display: inline-block; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--text-3);
+  animation: pulse 2s infinite;
 }
+.status-dot.online { background: var(--green); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
 .refresh-btn {
-  padding: 6px 10px;
+  padding: 6px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
@@ -170,143 +170,234 @@ nav { flex: 1; padding: 8px 0; }
   display: flex;
   align-items: center;
   gap: 5px;
+  transition: background .12s;
 }
+.refresh-btn:hover { background: var(--surface-alt); }
 .refresh-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ── Content ─────────────────────────────────────────────── */
-.content { padding: 24px 28px; flex: 1; }
+/* ── Content ──────────────────────────────────────────────── */
+.content { padding: 24px 28px; flex: 1; max-width: 960px; }
 
-/* Insight banner */
-.insight-banner {
+/* ── Greeting banner ──────────────────────────────────────── */
+.brief-greeting {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 20px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.brief-brain {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.brief-greeting-body { flex: 1; }
+.brief-hello {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.brief-summary {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.brief-summary strong { color: var(--text); }
+.brief-time {
+  flex-shrink: 0;
+  text-align: right;
+}
+.brief-date    { font-size: 12px; font-weight: 600; color: var(--text-3); text-transform: capitalize; margin-bottom: 4px; }
+.brief-quality { font-size: 11px; color: var(--text-3); }
+
+/* ── Sections ─────────────────────────────────────────────── */
+.brief-section { margin-bottom: 28px; }
+
+.section-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
-.insight-icon {
-  width: 36px; height: 36px;
+.section-icon {
+  width: 32px; height: 32px;
   border-radius: 8px;
   display: grid; place-items: center;
   flex-shrink: 0;
 }
-.insight-icon.ok   { background: var(--green-lt); }
-.insight-icon.warn { background: var(--amber-lt); }
-.insight-icon.crit { background: var(--red-lt); }
-.insight-icon svg { width: 18px; height: 18px; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-.insight-icon.ok   svg { stroke: var(--green); }
-.insight-icon.warn svg { stroke: var(--amber); }
-.insight-icon.crit svg { stroke: var(--red); }
-.insight-text { font-size: 14px; font-weight: 500; color: var(--text); }
-.insight-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.section-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.section-icon.s-risks   { background: var(--red-lt);   color: var(--red); }
+.section-icon.s-opp     { background: var(--green-lt); color: var(--green); }
+.section-icon.s-actions { background: var(--amber-lt); color: var(--amber); }
+.section-icon.s-fcast   { background: var(--blue-lt);  color: var(--blue); }
+.section-icon.s-insight { background: #ede9fe;          color: #7c3aed; }
 
-/* KPI row */
-.kpi-row {
+.section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.section-count { font-size: 12px; color: var(--text-3); margin-left: auto; }
+
+.section-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
   gap: 14px;
-  margin-bottom: 20px;
 }
-.kpi {
+
+/* ── Decision card ────────────────────────────────────────── */
+.brief-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px;
+  border-left: 4px solid var(--border);
+  padding: 18px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow .15s;
 }
-.kpi-label { font-size: 11.5px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
-.kpi-value { font-size: 26px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1; }
-.kpi-value.red  { color: var(--red); }
-.kpi-value.amber { color: var(--amber); }
-.kpi-value.green { color: var(--green); }
-.kpi-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; }
-.kpi-badge {
-  display: inline-block;
-  padding: 2px 7px;
-  border-radius: 99px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-top: 6px;
-}
-.kpi-badge.up   { background: var(--green-lt); color: var(--green-dk); }
-.kpi-badge.down { background: var(--red-lt);   color: var(--red); }
-.kpi-badge.flat { background: var(--border-lt); color: var(--text-3); }
+.brief-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.09); }
 
-/* Two-column layout */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 16px;
-  margin-bottom: 16px;
-}
+.brief-card.sev-critical { border-left-color: var(--red); }
+.brief-card.sev-warning  { border-left-color: var(--amber); }
+.brief-card.sev-info     { border-left-color: var(--blue); }
+.brief-card.sev-ok       { border-left-color: var(--green); }
 
-/* Card */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-.card-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border-lt);
+.card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
-.card-title { font-size: 14px; font-weight: 700; color: var(--text); }
-.card-meta  { font-size: 12px; color: var(--text-3); }
-.card-body  { padding: 18px; }
+.sev-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.sev-badge.sev-critical { background: var(--red-lt);   color: var(--red-dk); }
+.sev-badge.sev-warning  { background: var(--amber-lt); color: var(--amber-dk); }
+.sev-badge.sev-info     { background: var(--blue-lt);  color: var(--blue-dk); }
+.sev-badge.sev-ok       { background: var(--green-lt); color: var(--green-dk); }
 
-/* Chart area */
-.chart-area { height: 220px; position: relative; }
-.chart-canvas { width: 100%; height: 100%; }
+.conf-chip {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
 
-/* Alerts list */
-.alert-item {
+.card-headline {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.card-explanation {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+.card-impact {
+  background: var(--surface-alt);
+  border: 1px solid var(--border-lt);
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  color: var(--text-2);
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-lt);
+  gap: 7px;
+  line-height: 1.45;
 }
-.alert-item:last-child { border-bottom: none; }
-.alert-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  margin-top: 5px;
+.card-impact svg { width: 14px; height: 14px; stroke: var(--amber); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 1px; }
+
+.card-rec {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.card-rec::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--text-3);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+.conf-bar-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--border-lt);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.conf-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .4s ease;
+}
+.conf-bar.sev-critical { background: var(--red); }
+.conf-bar.sev-warning  { background: var(--amber); }
+.conf-bar.sev-info     { background: var(--blue); }
+.conf-bar.sev-ok       { background: var(--green); }
+
+.card-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  background: var(--surface);
+  white-space: nowrap;
+  transition: all .12s;
   flex-shrink: 0;
 }
-.alert-dot.critical { background: var(--red); }
-.alert-dot.warning  { background: var(--amber); }
-.alert-dot.info     { background: var(--blue); }
-.alert-name { font-size: 13px; font-weight: 500; color: var(--text); }
-.alert-msg  { font-size: 12px; color: var(--text-2); }
+.card-action:hover { background: var(--surface-alt); border-color: var(--text-3); color: var(--text); }
+.card-action svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Top products table */
-.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tbl th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; border-bottom: 1px solid var(--border); }
-.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border-lt); color: var(--text-2); }
-.tbl tr:last-child td { border-bottom: none; }
-.tbl td:first-child { font-weight: 500; color: var(--text); }
-.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
-
-/* Loading state */
-.skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; height: 20px; }
-@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
-
-.status-dot {
-  display: inline-block; width: 7px; height: 7px;
-  border-radius: 50%; background: var(--text-3); margin-right: 5px;
-  animation: pulse 2s infinite;
+/* ── Skeleton / loading ───────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+  display: block;
 }
-.status-dot.online { background: var(--green); }
-@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.4 } }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-@media (max-width: 1100px) {
-  .kpi-row { grid-template-columns: repeat(2,1fr); }
-  .grid-2  { grid-template-columns: 1fr; }
+.error-banner {
+  background: var(--red-lt);
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  color: var(--red-dk);
+  font-size: 13.5px;
+}
+
+@media (max-width: 900px) {
+  .brief-greeting { flex-direction: column; }
+  .brief-time { text-align: left; }
+  .section-cards { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -366,21 +457,15 @@ nav { flex: 1; padding: 8px 0; }
 <!-- ── Main ─────────────────────────────────────────────────────────────── -->
 <div class="main">
   <div class="topbar">
-    <div>
-      <div class="topbar-title">Vue d'ensemble</div>
+    <div class="topbar-left">
+      <div class="topbar-title">Briefing quotidien</div>
       <div class="topbar-meta">
         <span class="status-dot" id="aiDot"></span>
         <span id="aiStatus">Chargement…</span>
       </div>
     </div>
     <div class="topbar-right">
-      <select class="period-select" id="periodSelect" onchange="loadAll()">
-        <option value="7">7 jours</option>
-        <option value="30" selected>30 jours</option>
-        <option value="90">90 jours</option>
-        <option value="180">6 mois</option>
-      </select>
-      <button class="refresh-btn" onclick="loadAll()">
+      <button class="refresh-btn" onclick="loadBrief()">
         <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
         Actualiser
       </button>
@@ -389,298 +474,156 @@ nav { flex: 1; padding: 8px 0; }
 
   <div class="content">
 
-    <!-- Insight banner -->
-    <div class="insight-banner" id="insightBanner">
-      <div class="insight-icon ok" id="insightIconWrap">
-        <svg viewBox="0 0 24 24" id="insightIcon"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div>
-        <div class="insight-text" id="insightText"><span class="skeleton" style="width:340px;display:block"></span></div>
-        <div class="insight-meta" id="insightMeta"></div>
-      </div>
-    </div>
-
-    <!-- KPIs -->
-    <div class="kpi-row">
-      <div class="kpi">
-        <div class="kpi-label">Chiffre d'affaires</div>
-        <div class="kpi-value" id="kpiRevenue"><span class="skeleton" style="width:100px"></span></div>
-        <div class="kpi-sub" id="kpiRevSub"></div>
-        <div id="kpiRevBadge"></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Transactions</div>
-        <div class="kpi-value" id="kpiTx"><span class="skeleton" style="width:60px"></span></div>
-        <div class="kpi-sub" id="kpiTxSub"></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Panier moyen</div>
-        <div class="kpi-value" id="kpiBasket"><span class="skeleton" style="width:80px"></span></div>
-        <div class="kpi-sub">XAF / vente</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Alertes actives</div>
-        <div class="kpi-value" id="kpiAlerts"><span class="skeleton" style="width:40px"></span></div>
-        <div class="kpi-sub" id="kpiAlertSub"></div>
-      </div>
-    </div>
-
-    <!-- Chart + Alerts -->
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Évolution du chiffre d'affaires</span>
-          <span class="card-meta" id="chartMeta"></span>
+    <!-- Greeting -->
+    <div class="brief-greeting" id="briefGreeting">
+      <div class="brief-brain">🧠</div>
+      <div class="brief-greeting-body">
+        <div class="brief-hello">Bonjour, <strong><?= htmlspecialchars($user['pharmacy_name']) ?></strong></div>
+        <div class="brief-summary" id="briefSummary">
+          <span class="skeleton" style="width:480px;height:16px;margin-bottom:6px"></span>
+          <span class="skeleton" style="width:320px;height:14px"></span>
         </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas id="revenueChart" class="chart-canvas"></canvas>
+      </div>
+      <div class="brief-time">
+        <div class="brief-date"><?= $today ?></div>
+        <div class="brief-quality" id="briefQuality"></div>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div id="briefSections">
+      <!-- Skeleton sections while loading -->
+      <?php for ($s = 0; $s < 3; $s++): ?>
+      <div class="brief-section">
+        <div class="section-header">
+          <span class="skeleton" style="width:32px;height:32px;border-radius:8px"></span>
+          <span class="skeleton" style="width:140px;height:18px"></span>
+        </div>
+        <div class="section-cards">
+          <?php for ($c = 0; $c < 2; $c++): ?>
+          <div class="brief-card" style="border-left-color:var(--border-lt)">
+            <span class="skeleton" style="width:80px;height:18px;border-radius:99px"></span>
+            <span class="skeleton" style="width:90%;height:20px"></span>
+            <span class="skeleton" style="width:100%;height:40px"></span>
+            <span class="skeleton" style="width:100%;height:36px;border-radius:7px"></span>
           </div>
+          <?php endfor; ?>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Alertes</span>
-          <span class="card-meta" id="alertCount"></span>
-        </div>
-        <div class="card-body" id="alertsList" style="padding:0 18px">
-          <div style="padding:18px 0"><span class="skeleton" style="display:block;margin-bottom:10px"></span><span class="skeleton" style="display:block;margin-bottom:10px"></span><span class="skeleton" style="display:block;width:60%"></span></div>
-        </div>
-      </div>
+      <?php endfor; ?>
     </div>
 
-    <!-- Top products -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Top produits</span>
-        <span class="card-meta" id="topMeta"></span>
-      </div>
-      <div class="card-body" style="padding:0">
-        <div style="overflow-x:auto">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Produit</th>
-                <th>Catégorie</th>
-                <th class="num">Qté vendue</th>
-                <th class="num">Chiffre d'affaires (XAF)</th>
-              </tr>
-            </thead>
-            <tbody id="topTable">
-              <tr><td colspan="5"><span class="skeleton" style="display:block;margin:12px 0"></span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
 <script>
-// ── Mini chart (no external lib dependency) ───────────────────────────────
-function drawLineChart(canvasId, labels, values, color) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width  = canvas.offsetWidth  * dpr;
-  canvas.height = canvas.offsetHeight * dpr;
-  ctx.scale(dpr, dpr);
+const SECTION_META = {
+  risks:         { label: 'Risques',          cls: 's-risks',   icon: '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' },
+  opportunities: { label: 'Opportunités',     cls: 's-opp',     icon: '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>' },
+  actions:       { label: 'Actions du jour',  cls: 's-actions', icon: '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
+  forecasts:     { label: 'Prévisions',       cls: 's-fcast',   icon: '<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' },
+  insights:      { label: 'Découvertes IA',   cls: 's-insight', icon: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg>' },
+};
 
-  const W = canvas.offsetWidth, H = canvas.offsetHeight;
-  const pad = { t: 12, r: 12, b: 28, l: 64 };
-  const cW = W - pad.l - pad.r;
-  const cH = H - pad.t - pad.b;
+const SEV_LABELS = { critical:'CRITIQUE', warning:'ATTENTION', info:'INFO', ok:'INFO' };
+const ARROW_SVG  = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+const ZAP_SVG    = '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
 
-  const max = Math.max(...values) * 1.1 || 1;
-  const min = 0;
+function renderCard(card) {
+  const sevClass = card.severity === 'ok' ? 'ok' : card.severity;
+  const badgeLabel = SEV_LABELS[card.severity] || 'INFO';
 
-  // Grid lines
-  ctx.strokeStyle = '#f0f0f0';
-  ctx.lineWidth = 1;
-  [0.25, 0.5, 0.75, 1].forEach(pct => {
-    const y = pad.t + cH * (1 - pct);
-    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '10px system-ui';
-    ctx.textAlign = 'right';
-    ctx.fillText(fmt(max * pct), pad.l - 6, y + 3);
-  });
+  const actionHtml = card.action_label && card.action_target
+    ? `<a href="${card.action_target}" class="card-action">${card.action_label} ${ARROW_SVG}</a>`
+    : '';
 
-  // X labels — show every N-th
-  const step = Math.ceil(labels.length / 6);
-  ctx.fillStyle = '#9ca3af';
-  ctx.font = '10px system-ui';
-  ctx.textAlign = 'center';
-  labels.forEach((lbl, i) => {
-    if (i % step !== 0) return;
-    const x = pad.l + (i / (labels.length - 1 || 1)) * cW;
-    const d = new Date(lbl);
-    ctx.fillText(`${d.getDate()}/${d.getMonth()+1}`, x, H - pad.b + 14);
-  });
-
-  // Area fill
-  const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + cH);
-  grad.addColorStop(0, color + '33');
-  grad.addColorStop(1, color + '00');
-  ctx.beginPath();
-  values.forEach((v, i) => {
-    const x = pad.l + (i / (values.length - 1 || 1)) * cW;
-    const y = pad.t + cH * (1 - (v - min) / (max - min));
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.lineTo(pad.l + cW, pad.t + cH);
-  ctx.lineTo(pad.l, pad.t + cH);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2.5;
-  ctx.lineJoin = 'round';
-  values.forEach((v, i) => {
-    const x = pad.l + (i / (values.length - 1 || 1)) * cW;
-    const y = pad.t + cH * (1 - (v - min) / (max - min));
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-
-  // Last point dot
-  if (values.length > 0) {
-    const li = values.length - 1;
-    const lx = pad.l + cW;
-    const ly = pad.t + cH * (1 - (values[li] - min) / (max - min));
-    ctx.beginPath();
-    ctx.arc(lx, ly, 4, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-}
-
-function fmt(n) {
-  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
-  if (n >= 1e3) return (n/1e3).toFixed(0)+'k';
-  return Math.round(n).toLocaleString('fr');
-}
-
-// ── Data loading ──────────────────────────────────────────────────────────
-const base = '/analytics/api.php';
-
-async function fetchJSON(type, extra='') {
-  const days = document.getElementById('periodSelect').value;
-  const res = await fetch(`${base}?type=${type}&days=${days}${extra}`);
-  return res.json();
-}
-
-async function loadDashboard() {
-  const d = await fetchJSON('dashboard');
-  if (!d.available && d.available !== undefined) {
-    document.getElementById('aiStatus').textContent = 'Service IA indisponible';
-    return;
-  }
-  document.getElementById('aiDot').classList.add('online');
-  document.getElementById('aiStatus').textContent = 'DigiPharm AI · en ligne';
-
-  // Insight
-  const iconWrap = document.getElementById('insightIconWrap');
-  const iconEl   = document.getElementById('insightIcon');
-  iconWrap.className = 'insight-icon ' + (d.alerts_critical > 0 ? 'crit' : d.alerts_warning > 0 ? 'warn' : 'ok');
-  if (d.alerts_critical > 0) {
-    iconEl.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
-  } else if (d.alerts_warning > 0) {
-    iconEl.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
-  }
-  document.getElementById('insightText').textContent = d.insight_text || '—';
-  document.getElementById('insightMeta').textContent =
-    `Qualité des données : ${d.model_quality} · ${d.data_rows?.toLocaleString('fr') || '?'} lignes`;
-
-  // KPIs
-  document.getElementById('kpiRevenue').textContent = fmt(d.total_revenue || 0) + ' XAF';
-  document.getElementById('kpiRevSub').textContent  = `${document.getElementById('periodSelect').options[document.getElementById('periodSelect').selectedIndex].text}`;
-  const gr = d.revenue_trend || 0;
-  const badge = document.getElementById('kpiRevBadge');
-  badge.innerHTML = `<span class="kpi-badge ${gr>0?'up':gr<0?'down':'flat'}">${gr>0?'▲':'▼'} ${Math.abs(gr)}%</span>`;
-
-  document.getElementById('kpiTx').textContent  = (d.total_tx || 0).toLocaleString('fr');
-  document.getElementById('kpiTxSub').textContent = 'transactions';
-
-  document.getElementById('kpiBasket').textContent  = fmt(d.avg_basket || 0);
-
-  const alertTotal = (d.alerts_critical||0) + (d.alerts_warning||0);
-  const kpiAl = document.getElementById('kpiAlerts');
-  kpiAl.textContent = alertTotal;
-  kpiAl.className   = 'kpi-value ' + (d.alerts_critical>0?'red':d.alerts_warning>0?'amber':'green');
-  document.getElementById('kpiAlertSub').textContent =
-    `${d.alerts_critical||0} critique(s) · ${d.alerts_warning||0} avertissement(s)`;
-
-  // Top products
-  const body = document.getElementById('topTable');
-  const days  = document.getElementById('periodSelect').value;
-  document.getElementById('topMeta').textContent = `${days} derniers jours`;
-  if (d.top_products && d.top_products.length) {
-    body.innerHTML = d.top_products.map((p,i) => `
-      <tr>
-        <td>${i+1}</td>
-        <td>${p.name||p.product_name}</td>
-        <td>${p.category||'—'}</td>
-        <td class="num">${(p.qty||0).toLocaleString('fr')}</td>
-        <td class="num">${fmt(p.revenue||0)} XAF</td>
-      </tr>
-    `).join('');
-  } else {
-    body.innerHTML = '<tr><td colspan="5" style="color:#9ca3af;padding:16px 12px">Aucune donnée</td></tr>';
-  }
-}
-
-async function loadTrends() {
-  const d = await fetchJSON('trends');
-  if (!d.series || !d.series.length) {
-    document.getElementById('chartMeta').textContent = 'Aucune donnée';
-    return;
-  }
-  const days = document.getElementById('periodSelect').value;
-  document.getElementById('chartMeta').textContent = `${days} derniers jours`;
-  drawLineChart(
-    'revenueChart',
-    d.series.map(r => r.date),
-    d.series.map(r => r.revenue),
-    '#1a7f4b'
-  );
-}
-
-async function loadAlerts() {
-  const d = await fetchJSON('alerts');
-  const list = d.alerts || [];
-  document.getElementById('alertCount').textContent = `${list.length} alerte(s)`;
-  const container = document.getElementById('alertsList');
-  if (!list.length) {
-    container.innerHTML = '<p style="padding:14px 0;color:#9ca3af;font-size:13px">Aucune alerte active</p>';
-    return;
-  }
-  container.innerHTML = list.slice(0,8).map(a => `
-    <div class="alert-item">
-      <div class="alert-dot ${a.severity}"></div>
-      <div>
-        <div class="alert-name">${a.product_name}</div>
-        <div class="alert-msg">${a.message}</div>
+  return `
+    <div class="brief-card sev-${sevClass}">
+      <div class="card-top">
+        <span class="sev-badge sev-${sevClass}">${badgeLabel}</span>
+        <span class="conf-chip">${card.confidence}% confiance</span>
       </div>
-    </div>
-  `).join('');
+      <div class="card-headline">${card.headline}</div>
+      <div class="card-explanation">${card.explanation}</div>
+      <div class="card-impact">
+        ${ZAP_SVG}
+        <span>${card.impact}</span>
+      </div>
+      <div class="card-rec">${card.recommendation}</div>
+      <div class="card-footer">
+        <div class="conf-bar-wrap">
+          <div class="conf-bar sev-${sevClass}" style="width:${card.confidence}%"></div>
+        </div>
+        ${actionHtml}
+      </div>
+    </div>`;
 }
 
-async function loadAll() {
-  await Promise.all([loadDashboard(), loadTrends(), loadAlerts()]);
+function renderSection(section) {
+  const meta = SECTION_META[section.id] || { label: section.title, cls: 's-insight', icon: '' };
+  const topSev = section.cards.length > 0 ? section.cards[0].severity : 'ok';
+  const cards  = section.cards.map(renderCard).join('');
+  const count  = section.cards.length > 1 ? `${section.cards.length} analyses` : `${section.cards.length} analyse`;
+
+  return `
+    <div class="brief-section" id="s-${section.id}">
+      <div class="section-header">
+        <div class="section-icon ${meta.cls}">${meta.icon}</div>
+        <div class="section-title">${section.title}</div>
+        <div class="section-count">${count}</div>
+      </div>
+      <div class="section-cards">${cards}</div>
+    </div>`;
 }
 
-loadAll();
+async function loadBrief() {
+  const aiDot    = document.getElementById('aiDot');
+  const aiStatus = document.getElementById('aiStatus');
+  aiStatus.textContent = 'Analyse en cours…';
+  aiDot.classList.remove('online');
+
+  let data;
+  try {
+    const r = await fetch('/analytics/api.php?type=brief');
+    data = await r.json();
+  } catch (e) {
+    document.getElementById('briefSections').innerHTML =
+      '<div class="error-banner">Service IA indisponible — vérifiez que le serveur Python est en ligne.</div>';
+    aiStatus.textContent = 'Service indisponible';
+    return;
+  }
+
+  if (!data || data.available === false) {
+    document.getElementById('briefSections').innerHTML =
+      `<div class="error-banner">${data?.error || 'Erreur inconnue'}</div>`;
+    aiStatus.textContent = 'Erreur';
+    return;
+  }
+
+  aiDot.classList.add('online');
+  aiStatus.textContent = 'DigiPharm AI · en ligne';
+
+  // Greeting
+  const rows = (data.data_rows || 0).toLocaleString('fr');
+  const inv  = (data.inventory_count || 0).toLocaleString('fr');
+  const genAt = data.generated_at
+    ? new Date(data.generated_at).toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
+    : '';
+  document.getElementById('briefSummary').innerHTML =
+    `Cette nuit, j'ai analysé <strong>${rows} transactions</strong> et <strong>${inv} articles</strong> en stock. Voici ce qui requiert votre attention aujourd'hui.`;
+  document.getElementById('briefQuality').textContent = genAt ? `Généré à ${genAt}` : '';
+
+  // Sections
+  if (data.sections && data.sections.length) {
+    document.getElementById('briefSections').innerHTML =
+      data.sections.map(renderSection).join('');
+  } else {
+    document.getElementById('briefSections').innerHTML =
+      '<div class="error-banner">Aucune donnée disponible — lancez une synchronisation depuis la page Sync.</div>';
+  }
+}
+
+loadBrief();
 </script>
 </body>
 </html>
