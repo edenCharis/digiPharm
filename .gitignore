@@ -1,3 +1,5 @@
 env.php
 config/env.php
 .env
+ai/.env
+ai/venv/

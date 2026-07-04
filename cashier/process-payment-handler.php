@@ -21,6 +21,7 @@ try {
     include '../config/sfec.php';
     include '../includes/SfecClient.php';
     include '../includes/SfecInvoiceMapper.php';
+    include '../includes/EventLogger.php';
 
     if (!isset($db)) {
         throw new Exception('Database connection not found');
@@ -217,6 +218,26 @@ try {
 
     // Commit transaction
     $db->commit();
+
+    // ── AI event pipeline ─────────────────────────────────────────────────
+    $pharmacyId = (int) ($cart['pharmacy_id'] ?? $_SESSION['pharmacy_id'] ?? 0);
+    if ($pharmacyId > 0) {
+        $eventItems = array_map(fn($i) => [
+            'product_id' => $i['product_id'],
+            'name'       => $i['name'],
+            'quantity'   => $i['quantity'] ?? $i['quantity'],
+            'unit_price' => $i['sellingPrice'],
+        ], $cartItems);
+        EventLogger::log($db, $pharmacyId, EventLogger::SALE_CREATED, [
+            'sale_id'       => $saleId,
+            'total_amount'  => $totalAmount,
+            'total_vat'     => $totalVAT,
+            'discount'      => $discountAmount,
+            'items'         => $eventItems,
+            'seller_id'     => $cart['seller_id'],
+            'invoice'       => $invoiceNumber,
+        ]);
+    }
 
     // Certify the invoice with SFEC, if configured. Runs after commit so a
     // certification failure (or SFEC being unreachable) never blocks a paid sale.

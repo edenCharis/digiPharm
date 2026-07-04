@@ -427,38 +427,77 @@ $pharmacyInfo = AppSettings::getPharmacyInfo();
                 </div>
             </div>
 
-            <!-- ── AI Banner ───────────────────────────────── -->
-            <div class="dash-row">
-                <div class="ai-banner">
-                    <div class="ai-banner-left">
-                        <div class="ai-icon"><i data-lucide="sparkles"></i></div>
+            <!-- ── DigiPharm AI Insights ───────────────────── -->
+            <div class="dash-row" id="ai-section">
+
+                <!-- AI Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="width:32px;height:32px;background:linear-gradient(135deg,#16a34a,#0d7a32);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(22,163,74,.3)">
+                            <i data-lucide="sparkles" style="width:15px;height:15px;color:#fff"></i>
+                        </div>
                         <div>
-                            <div class="ai-title">Optimisez votre pharmacie</div>
-                            <div class="ai-sub">Suggestions intelligentes basées sur vos données</div>
-                            <div class="ai-chips">
-                                <?php if ($expiringCount > 0): ?>
-                                <span class="ai-chip"><i data-lucide="alert-triangle"></i><?php echo $expiringCount; ?> produit(s) expirent bientôt</span>
-                                <?php endif; ?>
-                                <?php if ((int)$inv['low_stock'] > 0): ?>
-                                <span class="ai-chip"><i data-lucide="package"></i><?php echo (int)$inv['low_stock']; ?> produit(s) à stock faible</span>
-                                <?php endif; ?>
-                                <?php if ($revenueGrowth < 0): ?>
-                                <span class="ai-chip"><i data-lucide="trending-down"></i>CA en baisse de <?php echo abs($revenueGrowth); ?>%</span>
-                                <?php else: ?>
-                                <span class="ai-chip"><i data-lucide="trending-up"></i>CA en hausse de <?php echo $revenueGrowth; ?>%</span>
-                                <?php endif; ?>
-                                <?php if ($todayOrders === 0): ?>
-                                <span class="ai-chip"><i data-lucide="shopping-cart"></i>Aucune vente aujourd'hui</span>
-                                <?php else: ?>
-                                <span class="ai-chip"><i data-lucide="check-circle"></i><?php echo $todayOrders; ?> vente(s) aujourd'hui</span>
-                                <?php endif; ?>
-                            </div>
+                            <div style="font-size:.9rem;font-weight:700;color:var(--ds-text-900,#111)">digiPharm AI</div>
+                            <div style="font-size:.72rem;color:var(--ds-text-400,#9CA3AF)" id="ai-status-text">Chargement des insights...</div>
                         </div>
                     </div>
-                    <a href="reports.php" class="ai-cta">
-                        <i data-lucide="bar-chart-2"></i> Voir Analytics
-                    </a>
+                    <div id="ai-model-badge" style="display:none">
+                        <span style="font-size:.65rem;background:#DCFCE7;color:#15803D;padding:2px 9px;border-radius:99px;font-weight:600"></span>
+                    </div>
                 </div>
+
+                <!-- Main insight -->
+                <div id="ai-insight-card" style="background:linear-gradient(135deg,#f0fdf4,#fff);border:1px solid #BBF7D0;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:.87rem;color:#166534;font-weight:500;min-height:44px;display:flex;align-items:center">
+                    <span id="ai-insight-text" style="opacity:.4">Analyse en cours...</span>
+                </div>
+
+                <!-- Alert + Inventory KPIs -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1rem">
+                    <div class="ai-kpi-card" id="ai-kpi-critical">
+                        <div class="ai-kpi-icon" style="background:#FEE2E2;color:#DC2626">
+                            <i data-lucide="alert-circle"></i>
+                        </div>
+                        <div>
+                            <div class="ai-kpi-val" id="val-critical">—</div>
+                            <div class="ai-kpi-lbl">Alertes critiques</div>
+                        </div>
+                    </div>
+                    <div class="ai-kpi-card" id="ai-kpi-warning">
+                        <div class="ai-kpi-icon" style="background:#FEF9C3;color:#CA8A04">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div>
+                            <div class="ai-kpi-val" id="val-warning">—</div>
+                            <div class="ai-kpi-lbl">Avertissements</div>
+                        </div>
+                    </div>
+                    <div class="ai-kpi-card" id="ai-kpi-reorder">
+                        <div class="ai-kpi-icon" style="background:#DBEAFE;color:#1D4ED8">
+                            <i data-lucide="package"></i>
+                        </div>
+                        <div>
+                            <div class="ai-kpi-val" id="val-reorder">—</div>
+                            <div class="ai-kpi-lbl">Réappro. recommandés</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top products forecast -->
+                <div style="background:#FAFAFA;border:1px solid var(--ds-border,#E5E7EB);border-radius:9px;overflow:hidden">
+                    <div style="padding:.65rem 1rem;font-size:.75rem;font-weight:600;color:var(--ds-text-400,#6B7280);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--ds-border,#E5E7EB);background:#fff">
+                        Top produits · 30 derniers jours
+                    </div>
+                    <div id="ai-top-products" style="padding:.5rem 0">
+                        <div style="padding:.75rem 1rem;font-size:.8rem;color:#9CA3AF">Chargement...</div>
+                    </div>
+                </div>
+
+                <!-- Unavailable state -->
+                <div id="ai-unavailable" style="display:none;text-align:center;padding:1.5rem;color:#9CA3AF;font-size:.82rem">
+                    <i data-lucide="cpu" style="width:28px;height:28px;margin:0 auto 8px;display:block;opacity:.35"></i>
+                    Service IA hors ligne — les insights seront disponibles après démarrage du service FastAPI.
+                </div>
+
             </div>
 
         </div><!-- /.content-area -->
@@ -574,6 +613,90 @@ makeSparkline('spark3', <?php echo $expiringCount > 0 ? "'#DC2626'" : "'#7C3AED'
             animation: { duration: 800 }
         }
     });
+}());
+
+// ── DigiPharm AI Insights ────────────────────────────────
+(function () {
+    var fmt = new Intl.NumberFormat('fr-FR');
+
+    function setKpi(id, val) {
+        var el = document.getElementById('val-' + id);
+        if (el) el.textContent = val !== null && val !== undefined ? val : '—';
+    }
+
+    function loadAI() {
+        fetch('ai-insights.php?type=dashboard')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (!d.available) { showUnavailable(); return; }
+
+                // Status text
+                var statusEl = document.getElementById('ai-status-text');
+                var qualityMap = {
+                    insufficient_data: 'Données insuffisantes — mode heuristique',
+                    learning:          'En apprentissage · Heuristique',
+                    good:              'Modèle opérationnel',
+                    excellent:         'Modèle haute précision',
+                };
+                if (statusEl) statusEl.textContent = qualityMap[d.model_quality] || 'Actif';
+
+                // Model badge
+                var badge = document.getElementById('ai-model-badge');
+                if (badge && d.model_quality) {
+                    badge.style.display = '';
+                    badge.querySelector('span').textContent = qualityMap[d.model_quality] || d.model_quality;
+                }
+
+                // Insight text
+                var txt = document.getElementById('ai-insight-text');
+                if (txt) { txt.textContent = d.insight_text || ''; txt.style.opacity = '1'; }
+
+                // KPIs
+                setKpi('critical', d.alerts_critical);
+                setKpi('warning',  d.alerts_warning);
+                setKpi('reorder',  d.reorder_needed);
+
+                // Color critical card red if > 0
+                if (d.alerts_critical > 0) {
+                    var c = document.getElementById('ai-kpi-critical');
+                    if (c) c.style.borderColor = '#FECACA';
+                }
+
+                // Top products
+                var topEl = document.getElementById('ai-top-products');
+                if (topEl && d.top_forecast && d.top_forecast.length > 0) {
+                    topEl.innerHTML = d.top_forecast.map(function(p, i) {
+                        return '<div class="ai-top-row">' +
+                            '<span style="color:#9CA3AF;font-size:.72rem;font-weight:700;width:18px;flex-shrink:0">' + (i+1) + '</span>' +
+                            '<span class="ai-top-name">' + escHtml(p.name) + '</span>' +
+                            '<span class="ai-top-qty">' + fmt.format(p.qty) + ' u.</span>' +
+                            '<span class="ai-top-rev">' + fmt.format(p.revenue) + ' XAF</span>' +
+                        '</div>';
+                    }).join('');
+                } else if (topEl) {
+                    topEl.innerHTML = '<div style="padding:.75rem 1rem;font-size:.8rem;color:#9CA3AF">Pas encore de données de ventes.</div>';
+                }
+
+                lucide.createIcons();
+            })
+            .catch(function() { showUnavailable(); });
+    }
+
+    function showUnavailable() {
+        var unavail = document.getElementById('ai-unavailable');
+        if (unavail) unavail.style.display = '';
+        var insight = document.getElementById('ai-insight-card');
+        if (insight) insight.style.display = 'none';
+        var statusEl = document.getElementById('ai-status-text');
+        if (statusEl) statusEl.textContent = 'Service IA hors ligne';
+        lucide.createIcons();
+    }
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    loadAI();
 }());
 </script>
 </body>

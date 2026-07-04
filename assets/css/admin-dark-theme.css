@@ -1045,3 +1045,32 @@ body:not(:has(.app-layout)) {
 .products-container,
 .categories-container,
 .suppliers-container { max-width:100% !important; margin:0 !important; padding:0 !important; }
+
+/* ── DigiPharm AI Insights cards ──────────────────────────────────────── */
+.ai-kpi-card {
+    background: #fff;
+    border: 1px solid var(--ds-border, #E5E7EB);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.ai-kpi-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ai-kpi-icon i { width: 16px; height: 16px; }
+.ai-kpi-val  { font-size: 1.45rem; font-weight: 700; color: #111827; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.ai-kpi-lbl  { font-size: .72rem; color: #6B7280; margin-top: 2px; font-weight: 500; }
+
+#ai-top-products .ai-top-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .5rem 1rem; gap: 1rem;
+    border-bottom: 1px solid #F3F4F6; font-size: .83rem;
+}
+#ai-top-products .ai-top-row:last-child { border-bottom: none; }
+#ai-top-products .ai-top-name { color: #111827; font-weight: 500; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ai-top-products .ai-top-rev  { color: #16A34A; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+#ai-top-products .ai-top-qty  { color: #9CA3AF; font-size: .75rem; white-space: nowrap; }

@@ -12,7 +12,8 @@ ini_set('display_errors', 1);
 try {
     // Include database connection
     include '../config/database.php';
-    
+    include '../includes/EventLogger.php';
+
     if (!isset($pdo)) {
         throw new Exception('Database connection not found');
     }
@@ -148,6 +149,16 @@ if (empty($date) || !strtotime($date)) {
 
                         $pdo->commit();
                         $success_message = "Article ajouté à la livraison avec succès.";
+
+                        // AI event pipeline
+                        EventLogger::log($pdo, (int)$pharmacyId, EventLogger::STOCK_DELIVERY, [
+                            'delivery_id' => $deliveryId,
+                            'product_id'  => $productId,
+                            'quantity'    => $quantity,
+                            'new_stock'   => $newStock,
+                            'purchase_price' => $priceCession,
+                            'selling_price'  => $publicPrice,
+                        ]);
                         
                     } catch (Exception $e) {
                         $pdo->rollback();
