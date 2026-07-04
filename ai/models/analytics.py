@@ -54,7 +54,7 @@ def get_inventory(pharmacy_id: int) -> pd.DataFrame:
     return aquery("""
         SELECT i.product_id, i.product_name, i.category,
                i.stock_quantity, i.unit_cost, i.unit_price,
-               DATE_FORMAT(i.expiry_date, '%%Y-%%m-%%d') AS expiry_date,
+               i.expiry_date,
                CASE
                  WHEN COALESCE(s.avg_daily_qty, 0) > 0
                  THEN ROUND(i.stock_quantity / s.avg_daily_qty, 1)

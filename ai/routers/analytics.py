@@ -9,11 +9,15 @@ import os
 
 
 def _clean(records: list[dict]) -> list[dict]:
-    """Replace float NaN with None so records are JSON-serializable."""
-    return [
-        {k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in r.items()}
-        for r in records
-    ]
+    """Replace float NaN with None and date objects with ISO strings for JSON."""
+    import datetime
+    def _conv(v):
+        if isinstance(v, float) and math.isnan(v):
+            return None
+        if isinstance(v, (datetime.date, datetime.datetime)):
+            return v.isoformat()
+        return v
+    return [{k: _conv(v) for k, v in r.items()} for r in records]
 
 from models.analytics import (
     dashboard_summary, revenue_trends, generate_alerts, get_inventory
