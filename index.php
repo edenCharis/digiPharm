@@ -567,18 +567,6 @@ html, body {
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stat"><span class="stat-v">500+</span><span class="stat-l">Pharmacies actives</span></div>
-      <div class="stat"><span class="stat-v">300K+</span><span class="stat-l">Ventes enregistrées</span></div>
-      <div class="stat"><span class="stat-v">99.98%</span><span class="stat-l">Uptime</span></div>
-      <div class="stat"><span class="stat-v">100%</span><span class="stat-l">Cloud sécurisé</span></div>
-    </div>
-
-    <div class="l-foot">
-      <a href="register" class="l-reg-link">
-        Pas encore client ? <span>Créer un compte gratuit →</span>
-      </a>
-    </div>
 
   </div>
 </div>
