@@ -10,9 +10,6 @@ try {
     $_stockCount = $r ? (int)$r['n'] : 0;
 } catch (Exception $_e) {}
 ?>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
 <aside id="sidebar" class="sidebar">

@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 /* ══════════════════════════════════════════════════════════
    PharmaSys — Premium Design System v3
    Admin role. Inspired by Stripe · Linear · Vercel · Ramp.
 ══════════════════════════════════════════════════════════ */
+
+/* Hide stray <link> tags that end up in body (e.g. from PHP includes) */
+body link { display: none !important; width: 0 !important; height: 0 !important; }
 
 /* ── Tokens ─────────────────────────────────────────────── */
 :root {
