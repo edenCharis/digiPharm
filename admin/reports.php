@@ -487,7 +487,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
             <?php include 'header.php'; ?>
             
             <!-- Content Area -->
-              <main class="main-content">
+              <main class="content-area">
        
 
             <!-- Filters -->
