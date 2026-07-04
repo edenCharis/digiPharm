@@ -205,7 +205,7 @@ require_once __DIR__ . '/config/layout_header.php';
         <p style="font-size:.8rem;margin-top:4px">Les inscriptions via la page d'accueil apparaîtront ici.</p>
     </div>
     <?php else: ?>
-    <div style="overflow-x:auto">
+    <div class="table-scroll">
     <table>
         <thead>
             <tr>

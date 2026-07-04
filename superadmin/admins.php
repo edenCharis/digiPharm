@@ -100,7 +100,7 @@ require_once __DIR__ . '/config/layout_header.php';
         <div class="table-header">
             <span class="table-title">Comptes SuperAdmin (<?= count($admins) ?>)</span>
         </div>
-        <table>
+        <div class="table-scroll"><table>
             <thead>
                 <tr>
                     <th>Identifiant</th>
@@ -148,7 +148,7 @@ require_once __DIR__ . '/config/layout_header.php';
             </tr>
             <?php endforeach; ?>
             </tbody>
-        </table>
+        </table></div>
     </div>
 
     <!-- Side forms -->

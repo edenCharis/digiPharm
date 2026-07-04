@@ -50,13 +50,14 @@ require_once dirname(__DIR__) . '/config/layout_header.php';
 <?php if ($msg === 'created'): ?><div class="alert alert-success">✅ Compte créé.</div><?php endif; ?>
 <?php if ($msg === 'deleted'): ?><div class="alert alert-success">✅ Compte supprimé.</div><?php endif; ?>
 
-<div style="display:grid;grid-template-columns:1fr 360px;gap:1.5rem;align-items:start;">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.5rem;align-items:start;">
 
     <!-- Table users -->
     <div class="table-card">
         <div class="table-header">
             <div class="table-title">Comptes admin (<?= count($users) ?>)</div>
         </div>
+        <div class="table-scroll">
         <table>
             <thead>
                 <tr>
@@ -96,6 +97,7 @@ require_once dirname(__DIR__) . '/config/layout_header.php';
             <?php endif; ?>
             </tbody>
         </table>
+        </div>
     </div>
 
     <!-- Formulaire ajout -->
