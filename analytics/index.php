@@ -17,397 +17,284 @@ $today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --green:       #1a7f4b;
-  --green-dk:    #155e38;
-  --green-lt:    #e8f5ee;
-  --green-bg:    #f0faf4;
-  --amber:       #d97706;
-  --amber-lt:    #fef3c7;
-  --amber-dk:    #92400e;
-  --red:         #dc2626;
-  --red-lt:      #fee2e2;
-  --red-dk:      #7f1d1d;
-  --blue:        #2563eb;
-  --blue-lt:     #dbeafe;
-  --blue-dk:     #1e3a8a;
-  --border:      #dadce0;
-  --border-lt:   #f0f0f0;
-  --text:        #111827;
-  --text-2:      #4b5563;
-  --text-3:      #9ca3af;
-  --surface:     #ffffff;
-  --surface-alt: #f8f9fa;
-  --bg:          #f3f4f6;
-  --sidebar-w:   240px;
-  --header-h:    56px;
-  --radius:      10px;
-  --shadow:      0 1px 4px rgba(0,0,0,.08);
+  --green:    #1a7f4b; --green-dk: #155e38; --green-lt: #e8f5ee;
+  --amber:    #d97706; --amber-dk: #92400e; --amber-lt: #fef3c7;
+  --red:      #dc2626; --red-dk:   #7f1d1d; --red-lt:   #fee2e2;
+  --blue:     #2563eb; --blue-dk:  #1e3a8a; --blue-lt:  #dbeafe;
+  --purple:   #7c3aed; --purple-lt:#ede9fe;
+  --border:   #dadce0; --border-lt:#f0f0f0;
+  --text:     #111827; --text-2:   #4b5563; --text-3: #9ca3af;
+  --surface:  #ffffff; --surface-alt: #f8f9fa; --bg: #f3f4f6;
+  --sidebar-w:240px;   --header-h: 56px;
+  --radius:   10px;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-}
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; }
 
-/* ── Sidebar ──────────────────────────────────────────────── */
-.sidebar {
-  width: var(--sidebar-w);
-  min-height: 100vh;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 100;
-}
-.sidebar-logo {
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid var(--border-lt);
-}
-.logo-icon {
-  width: 32px; height: 32px;
-  background: var(--green);
-  border-radius: 7px;
-  display: grid; place-items: center;
-}
-.logo-icon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.logo-text { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -.3px; }
-.logo-text span { color: var(--green); }
-.sidebar-pharmacy {
-  padding: 12px 20px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: .6px;
-  border-bottom: 1px solid var(--border-lt);
-}
-nav { flex: 1; padding: 8px 0; }
-.nav-section { padding: 16px 20px 4px; font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .6px; }
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  margin: 1px 8px;
-  border-radius: 8px;
-  font-size: 13.5px;
-  color: var(--text-2);
-  text-decoration: none;
-  transition: background .12s, color .12s;
-}
-.nav-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.nav-link:hover  { background: var(--surface-alt); color: var(--text); }
-.nav-link.active { background: var(--green-lt); color: var(--green-dk); font-weight: 600; }
-.sidebar-footer {
-  padding: 14px 16px;
-  border-top: 1px solid var(--border-lt);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.avatar {
-  width: 32px; height: 32px;
-  background: var(--green);
-  border-radius: 50%;
-  display: grid; place-items: center;
-  font-size: 13px; font-weight: 700; color: #fff;
-  flex-shrink: 0;
-}
-.avatar-info { flex: 1; min-width: 0; }
-.avatar-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.avatar-role  { font-size: 11px; color: var(--text-3); }
-.logout-btn   { color: var(--text-3); text-decoration: none; font-size: 11px; }
-.logout-btn:hover { color: var(--red); }
+/* ── Sidebar ── */
+.sidebar { width:var(--sidebar-w); min-height:100vh; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; }
+.sidebar-logo { padding:18px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-lt); }
+.logo-icon { width:32px; height:32px; background:var(--green); border-radius:7px; display:grid; place-items:center; }
+.logo-icon svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+.logo-text { font-size:15px; font-weight:700; color:var(--text); letter-spacing:-.3px; }
+.logo-text span { color:var(--green); }
+.sidebar-pharmacy { padding:12px 20px; font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.6px; border-bottom:1px solid var(--border-lt); }
+nav { flex:1; padding:8px 0; }
+.nav-section { padding:16px 20px 4px; font-size:10px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:.6px; }
+.nav-link { display:flex; align-items:center; gap:10px; padding:8px 14px; margin:1px 8px; border-radius:8px; font-size:13.5px; color:var(--text-2); text-decoration:none; transition:background .12s,color .12s; }
+.nav-link svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.nav-link:hover  { background:var(--surface-alt); color:var(--text); }
+.nav-link.active { background:var(--green-lt); color:var(--green-dk); font-weight:600; }
+.sidebar-footer { padding:14px 16px; border-top:1px solid var(--border-lt); display:flex; align-items:center; gap:10px; }
+.avatar { width:32px; height:32px; background:var(--green); border-radius:50%; display:grid; place-items:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
+.avatar-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.avatar-role { font-size:11px; color:var(--text-3); }
+.logout-btn { color:var(--text-3); text-decoration:none; font-size:11px; margin-left:auto; }
+.logout-btn:hover { color:var(--red); }
 
-/* ── Main ─────────────────────────────────────────────────── */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+/* ── Main ── */
+.main { margin-left:var(--sidebar-w); flex:1; min-height:100vh; display:flex; flex-direction:column; }
 
-/* ── Topbar ───────────────────────────────────────────────── */
-.topbar {
-  height: var(--header-h);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-.topbar-left { display: flex; flex-direction: column; gap: 2px; }
-.topbar-title { font-size: 16px; font-weight: 700; color: var(--text); }
-.topbar-meta  { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 5px; }
-.topbar-right { display: flex; align-items: center; gap: 10px; }
-.status-dot {
-  display: inline-block; width: 7px; height: 7px;
-  border-radius: 50%; background: var(--text-3);
-  animation: pulse 2s infinite;
-}
-.status-dot.online { background: var(--green); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+/* ── Topbar ── */
+.topbar { height:var(--header-h); background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.topbar-left { display:flex; flex-direction:column; gap:2px; }
+.topbar-title { font-size:16px; font-weight:700; }
+.topbar-meta { font-size:12px; color:var(--text-3); display:flex; align-items:center; gap:5px; }
+.status-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--text-3); animation:pulse 2s infinite; }
+.status-dot.online { background:var(--green); }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+.refresh-btn { padding:6px 12px; border:1px solid var(--border); border-radius:8px; background:var(--surface); cursor:pointer; color:var(--text-2); font-size:13px; display:flex; align-items:center; gap:5px; transition:background .12s; }
+.refresh-btn:hover { background:var(--surface-alt); }
+.refresh-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-.refresh-btn {
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  cursor: pointer;
-  color: var(--text-2);
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: background .12s;
-}
-.refresh-btn:hover { background: var(--surface-alt); }
-.refresh-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* ── Content ── */
+.content { padding:20px 28px 32px; flex:1; display:flex; flex-direction:column; gap:20px; }
 
-/* ── Content ──────────────────────────────────────────────── */
-.content { padding: 24px 28px; flex: 1; }
+/* ── Greeting ── */
+.greeting {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.greeting-brain { font-size:26px; flex-shrink:0; }
+.greeting-body { flex:1; }
+.greeting-hello { font-size:17px; font-weight:700; margin-bottom:4px; }
+.greeting-summary { font-size:13px; color:var(--text-2); line-height:1.6; }
+.greeting-summary strong { color:var(--text); }
+.greeting-meta { flex-shrink:0; text-align:right; }
+.greeting-date { font-size:12px; font-weight:600; color:var(--text-3); margin-bottom:2px; }
+.greeting-gen  { font-size:11px; color:var(--text-3); }
 
-/* ── Greeting banner ──────────────────────────────────────── */
-.brief-greeting {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 24px;
-  margin-bottom: 28px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
+/* ── Tab bar ── */
+.tab-wrap {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  flex:1;
+  display:flex;
+  flex-direction:column;
 }
-.brief-brain {
-  font-size: 28px;
-  line-height: 1;
-  flex-shrink: 0;
-  margin-top: 2px;
+.tab-bar {
+  display:flex;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;
+  scrollbar-width:none;
 }
-.brief-greeting-body { flex: 1; }
-.brief-hello {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 6px;
-  line-height: 1.3;
-}
-.brief-summary {
-  font-size: 13.5px;
-  color: var(--text-2);
-  line-height: 1.6;
-}
-.brief-summary strong { color: var(--text); }
-.brief-time {
-  flex-shrink: 0;
-  text-align: right;
-}
-.brief-date    { font-size: 12px; font-weight: 600; color: var(--text-3); text-transform: capitalize; margin-bottom: 4px; }
-.brief-quality { font-size: 11px; color: var(--text-3); }
+.tab-bar::-webkit-scrollbar { display:none; }
 
-/* ── Sections ─────────────────────────────────────────────── */
-.brief-section { margin-bottom: 28px; }
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+.tab-btn {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:13px 18px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-3);
+  border:none;
+  background:none;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:color .12s, border-color .12s;
+  flex-shrink:0;
 }
-.section-icon {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  display: grid; place-items: center;
-  flex-shrink: 0;
+.tab-btn:hover { color:var(--text-2); background:var(--surface-alt); }
+.tab-btn.active { color:var(--text); font-weight:600; }
+.tab-btn.active.t-risks   { border-bottom-color:var(--red);    color:var(--red); }
+.tab-btn.active.t-opp     { border-bottom-color:var(--green);  color:var(--green-dk); }
+.tab-btn.active.t-actions { border-bottom-color:var(--amber);  color:var(--amber-dk); }
+.tab-btn.active.t-fcast   { border-bottom-color:var(--blue);   color:var(--blue-dk); }
+.tab-btn.active.t-insight { border-bottom-color:var(--purple); color:var(--purple); }
+
+.tab-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+.tab-badge {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:18px;
+  height:18px;
+  padding:0 5px;
+  border-radius:99px;
+  font-size:10.5px;
+  font-weight:700;
+  background:var(--border-lt);
+  color:var(--text-3);
 }
-.section-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.section-icon.s-risks   { background: var(--red-lt);   color: var(--red); }
-.section-icon.s-opp     { background: var(--green-lt); color: var(--green); }
-.section-icon.s-actions { background: var(--amber-lt); color: var(--amber); }
-.section-icon.s-fcast   { background: var(--blue-lt);  color: var(--blue); }
-.section-icon.s-insight { background: #ede9fe;          color: #7c3aed; }
-
-.section-title { font-size: 15px; font-weight: 700; color: var(--text); }
-.section-count { font-size: 12px; color: var(--text-3); margin-left: auto; }
-
-.section-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-  gap: 14px;
+.tab-btn.active .tab-badge { background:currentColor; color:#fff; filter:brightness(1.2); }
+.tab-dot {
+  width:6px; height:6px; border-radius:50%; flex-shrink:0;
 }
+.tab-dot.critical { background:var(--red); }
+.tab-dot.warning  { background:var(--amber); }
 
-/* ── Decision card ────────────────────────────────────────── */
+/* ── Tab panels ── */
+.tab-panels { flex:1; }
+.tab-panel { display:none; padding:20px 24px; }
+.tab-panel.active { display:block; }
+
+/* ── Section intro ── */
+.section-intro {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  background:var(--surface-alt);
+  border:1px solid var(--border-lt);
+  border-radius:8px;
+  margin-bottom:16px;
+  font-size:13px;
+  color:var(--text-2);
+}
+.section-intro svg { width:15px; height:15px; stroke:var(--text-3); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+
+/* ── Brief cards ── */
+.brief-cards { display:flex; flex-direction:column; gap:14px; }
+
 .brief-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  border-left: 4px solid var(--border);
-  padding: 18px 18px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: box-shadow .15s;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:4px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
 }
-.brief-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.09); }
+.brief-card.sev-critical { border-left-color:var(--red); }
+.brief-card.sev-warning  { border-left-color:var(--amber); }
+.brief-card.sev-info     { border-left-color:var(--blue); }
+.brief-card.sev-ok       { border-left-color:var(--green); }
 
-.brief-card.sev-critical { border-left-color: var(--red); }
-.brief-card.sev-warning  { border-left-color: var(--amber); }
-.brief-card.sev-info     { border-left-color: var(--blue); }
-.brief-card.sev-ok       { border-left-color: var(--green); }
-
-.card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+/* Card header row */
+.card-head {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 18px 0;
 }
 .sev-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 99px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: .5px;
-  text-transform: uppercase;
+  padding:2px 9px;
+  border-radius:99px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  flex-shrink:0;
 }
-.sev-badge.sev-critical { background: var(--red-lt);   color: var(--red-dk); }
-.sev-badge.sev-warning  { background: var(--amber-lt); color: var(--amber-dk); }
-.sev-badge.sev-info     { background: var(--blue-lt);  color: var(--blue-dk); }
-.sev-badge.sev-ok       { background: var(--green-lt); color: var(--green-dk); }
+.sev-badge.sev-critical { background:var(--red-lt);    color:var(--red-dk); }
+.sev-badge.sev-warning  { background:var(--amber-lt);  color:var(--amber-dk); }
+.sev-badge.sev-info     { background:var(--blue-lt);   color:var(--blue-dk); }
+.sev-badge.sev-ok       { background:var(--green-lt);  color:var(--green-dk); }
+.conf-label { font-size:11.5px; color:var(--text-3); margin-left:auto; flex-shrink:0; }
 
-.conf-chip {
-  font-size: 11px;
-  color: var(--text-3);
-  white-space: nowrap;
-}
-
+/* Headline */
 .card-headline {
-  font-size: 14.5px;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.35;
+  padding:10px 18px 0;
+  font-size:15.5px;
+  font-weight:700;
+  line-height:1.3;
 }
 
-.card-explanation {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.55;
+/* Body — 3 labeled sections */
+.card-body { padding:14px 18px; display:flex; flex-direction:column; gap:12px; }
+
+.card-section-label {
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  color:var(--text-3);
+  margin-bottom:4px;
+}
+.card-section-text {
+  font-size:13px;
+  color:var(--text-2);
+  line-height:1.6;
 }
 
-.card-impact {
-  background: var(--surface-alt);
-  border: 1px solid var(--border-lt);
-  border-radius: 7px;
-  padding: 9px 12px;
-  font-size: 12.5px;
-  color: var(--text-2);
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  line-height: 1.45;
+.card-impact-box {
+  background:var(--surface-alt);
+  border:1px solid var(--border-lt);
+  border-radius:7px;
+  padding:10px 14px;
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
 }
-.card-impact svg { width: 14px; height: 14px; stroke: var(--amber); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 1px; }
+.card-impact-box svg { width:14px; height:14px; stroke:var(--amber); fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; margin-top:2px; }
+.card-impact-box .card-section-text { margin:0; }
 
-.card-rec {
-  font-size: 12.5px;
-  color: var(--text-2);
-  line-height: 1.5;
-  padding-left: 14px;
-  position: relative;
+.card-rec-text {
+  font-size:13px;
+  color:var(--text-2);
+  line-height:1.6;
+  padding-left:16px;
+  position:relative;
 }
-.card-rec::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--text-3);
-}
+.card-rec-text::before { content:'→'; position:absolute; left:0; color:var(--text-3); }
 
-.card-footer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 2px;
+/* Card footer */
+.card-foot {
+  padding:0 18px 14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
-.conf-bar-wrap {
-  flex: 1;
-  height: 4px;
-  background: var(--border-lt);
-  border-radius: 2px;
-  overflow: hidden;
+.conf-bar-wrap { flex:1; height:4px; background:var(--border-lt); border-radius:2px; overflow:hidden; }
+.conf-bar { height:100%; border-radius:2px; }
+.conf-bar.sev-critical { background:var(--red); }
+.conf-bar.sev-warning  { background:var(--amber); }
+.conf-bar.sev-info     { background:var(--blue); }
+.conf-bar.sev-ok       { background:var(--green); }
+.conf-pct { font-size:11px; color:var(--text-3); white-space:nowrap; }
+.card-action-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 12px; border:1px solid var(--border); border-radius:7px;
+  font-size:12px; font-weight:500; color:var(--text-2);
+  text-decoration:none; background:var(--surface); white-space:nowrap;
+  transition:all .12s; flex-shrink:0;
 }
-.conf-bar {
-  height: 100%;
-  border-radius: 2px;
-  transition: width .4s ease;
-}
-.conf-bar.sev-critical { background: var(--red); }
-.conf-bar.sev-warning  { background: var(--amber); }
-.conf-bar.sev-info     { background: var(--blue); }
-.conf-bar.sev-ok       { background: var(--green); }
+.card-action-btn:hover { background:var(--surface-alt); border-color:var(--text-3); color:var(--text); }
+.card-action-btn svg { width:11px; height:11px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 
-.card-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-2);
-  text-decoration: none;
-  background: var(--surface);
-  white-space: nowrap;
-  transition: all .12s;
-  flex-shrink: 0;
-}
-.card-action:hover { background: var(--surface-alt); border-color: var(--text-3); color: var(--text); }
-.card-action svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* ── Skeleton ── */
+.skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:6px; display:block; }
+@keyframes shimmer { 0%{background-position:200% 0}100%{background-position:-200% 0} }
 
-/* ── Skeleton / loading ───────────────────────────────────── */
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 6px;
-  display: block;
-}
-@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.err-banner { background:var(--red-lt); border:1px solid #fca5a5; border-radius:var(--radius); padding:14px 18px; color:var(--red-dk); font-size:13px; }
 
-.error-banner {
-  background: var(--red-lt);
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  color: var(--red-dk);
-  font-size: 13.5px;
-}
-
-@media (max-width: 1100px) {
-  .section-cards { grid-template-columns: 1fr; }
-}
-@media (max-width: 700px) {
-  .brief-greeting { flex-direction: column; }
-  .brief-time { text-align: left; }
+@media (max-width:700px) {
+  .greeting { flex-direction:column; }
+  .greeting-meta { text-align:left; }
 }
 </style>
 </head>
 <body>
 
-<!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+<!-- ── Sidebar ── -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">
@@ -415,9 +302,7 @@ nav { flex: 1; padding: 8px 0; }
     </div>
     <div class="logo-text">DigiPharm<span> AI</span></div>
   </div>
-
   <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
-
   <nav>
     <div class="nav-section">Analyse</div>
     <a href="/analytics/" class="nav-link active">
@@ -436,7 +321,6 @@ nav { flex: 1; padding: 8px 0; }
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       Alertes
     </a>
-
     <div class="nav-section" style="margin-top:8px">Données</div>
     <a href="/analytics/sync.php" class="nav-link">
       <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
@@ -447,10 +331,9 @@ nav { flex: 1; padding: 8px 0; }
       Paramètres
     </a>
   </nav>
-
   <div class="sidebar-footer">
     <div class="avatar"><?= $initials ?></div>
-    <div class="avatar-info">
+    <div>
       <div class="avatar-name"><?= htmlspecialchars($user['display_name']) ?></div>
       <div class="avatar-role"><?= $user['role'] === 'admin' ? 'Administrateur' : 'Lecteur' ?></div>
     </div>
@@ -458,7 +341,7 @@ nav { flex: 1; padding: 8px 0; }
   </div>
 </aside>
 
-<!-- ── Main ─────────────────────────────────────────────────────────────── -->
+<!-- ── Main ── -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -468,162 +351,236 @@ nav { flex: 1; padding: 8px 0; }
         <span id="aiStatus">Chargement…</span>
       </div>
     </div>
-    <div class="topbar-right">
-      <button class="refresh-btn" onclick="loadBrief()">
-        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
-        Actualiser
-      </button>
-    </div>
+    <button class="refresh-btn" onclick="loadBrief()">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
+      Actualiser
+    </button>
   </div>
 
   <div class="content">
 
     <!-- Greeting -->
-    <div class="brief-greeting" id="briefGreeting">
-      <div class="brief-brain">🧠</div>
-      <div class="brief-greeting-body">
-        <div class="brief-hello">Bonjour, <strong><?= htmlspecialchars($user['pharmacy_name']) ?></strong></div>
-        <div class="brief-summary" id="briefSummary">
-          <span class="skeleton" style="width:480px;height:16px;margin-bottom:6px"></span>
-          <span class="skeleton" style="width:320px;height:14px"></span>
+    <div class="greeting">
+      <div class="greeting-brain">🧠</div>
+      <div class="greeting-body">
+        <div class="greeting-hello">Bonjour, <strong><?= htmlspecialchars($user['pharmacy_name']) ?></strong></div>
+        <div class="greeting-summary" id="greetingSummary">
+          <span class="skeleton" style="width:480px;max-width:100%;height:14px;display:block;margin-bottom:6px"></span>
+          <span class="skeleton" style="width:320px;max-width:100%;height:13px;display:block"></span>
         </div>
       </div>
-      <div class="brief-time">
-        <div class="brief-date"><?= $today ?></div>
-        <div class="brief-quality" id="briefQuality"></div>
+      <div class="greeting-meta">
+        <div class="greeting-date"><?= $today ?></div>
+        <div class="greeting-gen" id="greetingGen"></div>
       </div>
     </div>
 
-    <!-- Sections -->
-    <div id="briefSections">
-      <!-- Skeleton sections while loading -->
-      <?php for ($s = 0; $s < 3; $s++): ?>
-      <div class="brief-section">
-        <div class="section-header">
-          <span class="skeleton" style="width:32px;height:32px;border-radius:8px"></span>
-          <span class="skeleton" style="width:140px;height:18px"></span>
+    <!-- Tab interface -->
+    <div class="tab-wrap">
+      <div class="tab-bar" id="tabBar">
+        <!-- Populated by JS -->
+        <div style="padding:13px 18px;display:flex;gap:10px">
+          <?php for ($i = 0; $i < 5; $i++): ?>
+          <span class="skeleton" style="width:100px;height:16px;border-radius:4px"></span>
+          <?php endfor; ?>
         </div>
-        <div class="section-cards">
-          <?php for ($c = 0; $c < 2; $c++): ?>
-          <div class="brief-card" style="border-left-color:var(--border-lt)">
-            <span class="skeleton" style="width:80px;height:18px;border-radius:99px"></span>
-            <span class="skeleton" style="width:90%;height:20px"></span>
-            <span class="skeleton" style="width:100%;height:40px"></span>
-            <span class="skeleton" style="width:100%;height:36px;border-radius:7px"></span>
+      </div>
+      <div class="tab-panels" id="tabPanels">
+        <div class="tab-panel active" style="padding:20px 24px">
+          <?php for ($i = 0; $i < 2; $i++): ?>
+          <div class="brief-card sev-ok" style="margin-bottom:14px">
+            <div class="card-head"><span class="skeleton" style="width:70px;height:18px;border-radius:99px"></span></div>
+            <div style="padding:10px 18px 0"><span class="skeleton" style="width:75%;height:20px"></span></div>
+            <div class="card-body" style="gap:10px">
+              <span class="skeleton" style="width:40px;height:10px"></span>
+              <span class="skeleton" style="width:100%;height:36px"></span>
+              <span class="skeleton" style="width:100%;height:50px;border-radius:7px"></span>
+            </div>
           </div>
           <?php endfor; ?>
         </div>
       </div>
-      <?php endfor; ?>
     </div>
 
-  </div>
+  </div><!-- /content -->
 </div>
 
 <script>
-const SECTION_META = {
-  risks:         { label: 'Risques',          cls: 's-risks',   icon: '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' },
-  opportunities: { label: 'Opportunités',     cls: 's-opp',     icon: '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>' },
-  actions:       { label: 'Actions du jour',  cls: 's-actions', icon: '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
-  forecasts:     { label: 'Prévisions',       cls: 's-fcast',   icon: '<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' },
-  insights:      { label: 'Découvertes IA',   cls: 's-insight', icon: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="14" x2="22" y2="14"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="14" x2="4" y2="14"/></svg>' },
-};
+const TABS = [
+  { id:'risks',         label:'Risques',       cls:'t-risks',   icon:'<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' },
+  { id:'opportunities', label:'Opportunités',  cls:'t-opp',     icon:'<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>' },
+  { id:'actions',       label:'Actions',       cls:'t-actions', icon:'<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
+  { id:'forecasts',     label:'Prévisions',    cls:'t-fcast',   icon:'<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' },
+  { id:'insights',      label:'Découvertes',   cls:'t-insight', icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' },
+];
 
 const SEV_LABELS = { critical:'CRITIQUE', warning:'ATTENTION', info:'INFO', ok:'INFO' };
-const ARROW_SVG  = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-const ZAP_SVG    = '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+const ARROW = '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+const ZAP   = '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+const INFO  = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>';
+
+let briefData = null;
+let activeTab = 'risks';
+
+function sectionIntro(section) {
+  const cards = section.cards || [];
+  const crit  = cards.filter(c => c.severity === 'critical').length;
+  const warn  = cards.filter(c => c.severity === 'warning').length;
+  if (section.id === 'risks') {
+    if (crit > 0) return `${crit} situation${crit>1?'s':''} critique${crit>1?'s':''} nécessite${crit>1?'nt':''} une action immédiate. Examinez chaque point ci-dessous avant d'ouvrir la pharmacie.`;
+    if (warn > 0) return `${warn} point${warn>1?'s':''} de vigilance détecté${warn>1?'s':''}. Aucune urgence immédiate, mais une attention dans la journée est recommandée.`;
+    return 'Situation opérationnelle normale. Aucun risque critique détecté ce matin.';
+  }
+  if (section.id === 'opportunities') return `${cards.length} opportunité${cards.length>1?'s':''} de croissance identifiée${cards.length>1?'s':''} sur vos données des 30 derniers jours.`;
+  if (section.id === 'actions') {
+    const urgent = cards.filter(c => ['critical','warning'].includes(c.severity)).length;
+    return urgent > 0
+      ? `${urgent} action${urgent>1?'s':''} urgente${urgent>1?'s':''} à mener aujourd'hui, ${cards.length - urgent} recommandation${cards.length-urgent>1?'s':''} complémentaire${cards.length-urgent>1?'s':''}.`
+      : `${cards.length} recommandation${cards.length>1?'s':''} pour optimiser vos opérations aujourd'hui.`;
+  }
+  if (section.id === 'forecasts') return 'Prévisions calculées sur la base de vos données historiques. Niveau de confiance indicatif — réévalué à chaque synchronisation.';
+  if (section.id === 'insights') return `${cards.length} découverte${cards.length>1?'s':''} identifiée${cards.length>1?'s':''} par l'IA en analysant vos patterns de vente.`;
+  return '';
+}
 
 function renderCard(card) {
-  const sevClass = card.severity === 'ok' ? 'ok' : card.severity;
-  const badgeLabel = SEV_LABELS[card.severity] || 'INFO';
-
+  const sev      = card.severity === 'ok' ? 'ok' : card.severity;
+  const badge    = SEV_LABELS[card.severity] || 'INFO';
   const actionHtml = card.action_label && card.action_target
-    ? `<a href="${card.action_target}" class="card-action">${card.action_label} ${ARROW_SVG}</a>`
+    ? `<a href="${card.action_target}" class="card-action-btn">${card.action_label} ${ARROW}</a>`
     : '';
 
   return `
-    <div class="brief-card sev-${sevClass}">
-      <div class="card-top">
-        <span class="sev-badge sev-${sevClass}">${badgeLabel}</span>
-        <span class="conf-chip">${card.confidence}% confiance</span>
+  <div class="brief-card sev-${sev}">
+    <div class="card-head">
+      <span class="sev-badge sev-${sev}">${badge}</span>
+      <span class="conf-label">Confiance : ${card.confidence}%</span>
+    </div>
+    <div class="card-headline">${card.headline}</div>
+    <div class="card-body">
+      <div>
+        <div class="card-section-label">Pourquoi</div>
+        <div class="card-section-text">${card.explanation}</div>
       </div>
-      <div class="card-headline">${card.headline}</div>
-      <div class="card-explanation">${card.explanation}</div>
-      <div class="card-impact">
-        ${ZAP_SVG}
-        <span>${card.impact}</span>
-      </div>
-      <div class="card-rec">${card.recommendation}</div>
-      <div class="card-footer">
-        <div class="conf-bar-wrap">
-          <div class="conf-bar sev-${sevClass}" style="width:${card.confidence}%"></div>
+      <div class="card-impact-box">
+        ${ZAP}
+        <div>
+          <div class="card-section-label" style="margin-bottom:3px">Impact business</div>
+          <div class="card-section-text">${card.impact}</div>
         </div>
-        ${actionHtml}
       </div>
+      <div>
+        <div class="card-section-label">Action recommandée</div>
+        <div class="card-rec-text">${card.recommendation}</div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div class="conf-bar-wrap">
+        <div class="conf-bar sev-${sev}" style="width:${card.confidence}%"></div>
+      </div>
+      <span class="conf-pct">${card.confidence}%</span>
+      ${actionHtml}
+    </div>
+  </div>`;
+}
+
+function renderPanel(section) {
+  const intro = sectionIntro(section);
+  const cards = (section.cards || []).map(renderCard).join('');
+  return `
+    <div class="tab-panel${section.id === activeTab ? ' active' : ''}" id="panel-${section.id}">
+      <div class="section-intro">
+        ${INFO}
+        ${intro}
+      </div>
+      <div class="brief-cards">${cards}</div>
     </div>`;
 }
 
-function renderSection(section) {
-  const meta = SECTION_META[section.id] || { label: section.title, cls: 's-insight', icon: '' };
-  const topSev = section.cards.length > 0 ? section.cards[0].severity : 'ok';
-  const cards  = section.cards.map(renderCard).join('');
-  const count  = section.cards.length > 1 ? `${section.cards.length} analyses` : `${section.cards.length} analyse`;
+function buildTabBar(sections) {
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = sections.map(sec => {
+    const tabMeta = TABS.find(t => t.id === sec.id) || {};
+    const cards   = sec.cards || [];
+    const crit    = cards.filter(c => c.severity === 'critical').length;
+    const warn    = cards.filter(c => c.severity === 'warning').length;
+    const dotHtml = crit > 0 ? '<span class="tab-dot critical"></span>'
+                  : warn > 0 ? '<span class="tab-dot warning"></span>' : '';
+    const isActive = sec.id === activeTab;
+    return `
+      <button class="tab-btn ${tabMeta.cls || ''}${isActive ? ' active' : ''}"
+              onclick="switchTab('${sec.id}')">
+        ${tabMeta.icon || ''}
+        ${tabMeta.label || sec.title}
+        <span class="tab-badge">${cards.length}</span>
+        ${dotHtml}
+      </button>`;
+  }).join('');
+}
 
-  return `
-    <div class="brief-section" id="s-${section.id}">
-      <div class="section-header">
-        <div class="section-icon ${meta.cls}">${meta.icon}</div>
-        <div class="section-title">${section.title}</div>
-        <div class="section-count">${count}</div>
-      </div>
-      <div class="section-cards">${cards}</div>
-    </div>`;
+function switchTab(id) {
+  if (!briefData) return;
+  activeTab = id;
+  // Update tab buttons
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('onclick') === `switchTab('${id}')`) btn.classList.add('active');
+  });
+  // Update panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`panel-${id}`);
+  if (target) target.classList.add('active');
 }
 
 async function loadBrief() {
-  const aiDot    = document.getElementById('aiDot');
-  const aiStatus = document.getElementById('aiStatus');
-  aiStatus.textContent = 'Analyse en cours…';
-  aiDot.classList.remove('online');
+  document.getElementById('aiDot').classList.remove('online');
+  document.getElementById('aiStatus').textContent = 'Analyse en cours…';
 
   let data;
   try {
     const r = await fetch('/analytics/api.php?type=brief');
     data = await r.json();
-  } catch (e) {
-    document.getElementById('briefSections').innerHTML =
-      '<div class="error-banner">Service IA indisponible — vérifiez que le serveur Python est en ligne.</div>';
-    aiStatus.textContent = 'Service indisponible';
+  } catch(e) {
+    document.getElementById('tabPanels').innerHTML =
+      '<div class="tab-panel active"><div class="err-banner">Service IA indisponible. Vérifiez que le serveur Python est en ligne.</div></div>';
+    document.getElementById('aiStatus').textContent = 'Service indisponible';
     return;
   }
 
   if (!data || data.available === false) {
-    document.getElementById('briefSections').innerHTML =
-      `<div class="error-banner">${data?.error || 'Erreur inconnue'}</div>`;
-    aiStatus.textContent = 'Erreur';
+    document.getElementById('tabPanels').innerHTML =
+      `<div class="tab-panel active"><div class="err-banner">${data?.error || 'Erreur inconnue du service IA.'}</div></div>`;
+    document.getElementById('aiStatus').textContent = 'Erreur';
     return;
   }
 
-  aiDot.classList.add('online');
-  aiStatus.textContent = 'DigiPharm AI · en ligne';
+  briefData = data;
+  document.getElementById('aiDot').classList.add('online');
+  document.getElementById('aiStatus').textContent = 'DigiPharm AI · en ligne';
 
   // Greeting
   const rows = (data.data_rows || 0).toLocaleString('fr');
   const inv  = (data.inventory_count || 0).toLocaleString('fr');
   const genAt = data.generated_at
-    ? new Date(data.generated_at).toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
+    ? new Date(data.generated_at).toLocaleTimeString('fr', { hour:'2-digit', minute:'2-digit' })
     : '';
-  document.getElementById('briefSummary').innerHTML =
-    `Cette nuit, j'ai analysé <strong>${rows} transactions</strong> et <strong>${inv} articles</strong> en stock. Voici ce qui requiert votre attention aujourd'hui.`;
-  document.getElementById('briefQuality').textContent = genAt ? `Généré à ${genAt}` : '';
+  document.getElementById('greetingSummary').innerHTML =
+    `Cette nuit, j'ai analysé <strong>${rows} transactions</strong> et <strong>${inv} articles</strong> en stock.
+     Voici votre briefing du jour — naviguez par onglet.`;
+  document.getElementById('greetingGen').textContent = genAt ? `Généré à ${genAt}` : '';
 
-  // Sections
-  if (data.sections && data.sections.length) {
-    document.getElementById('briefSections').innerHTML =
-      data.sections.map(renderSection).join('');
+  // Pick active tab: first section with a critical card, else first section
+  const sections = data.sections || [];
+  const critSection = sections.find(s => (s.cards||[]).some(c => c.severity === 'critical'));
+  activeTab = critSection ? critSection.id : (sections[0]?.id || 'risks');
+
+  // Render tabs + panels
+  if (sections.length) {
+    buildTabBar(sections);
+    document.getElementById('tabPanels').innerHTML = sections.map(renderPanel).join('');
   } else {
-    document.getElementById('briefSections').innerHTML =
-      '<div class="error-banner">Aucune donnée disponible — lancez une synchronisation depuis la page Sync.</div>';
+    document.getElementById('tabPanels').innerHTML =
+      '<div class="tab-panel active"><div class="err-banner">Aucune donnée disponible. Lancez une synchronisation.</div></div>';
   }
 }
 
