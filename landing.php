@@ -514,7 +514,7 @@ h2.sec-title {
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="landing" class="logo">
-      <div class="logo-mark">✚</div>
+      <div class="logo-mark"><svg width="17" height="17" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2H9v7H2v2h7v7h2v-7h7V9h-7V2z"/></svg></div>
       <span class="logo-name">digiPharm</span>
     </a>
     <div class="nav-links">
@@ -587,7 +587,7 @@ h2.sec-title {
         <div class="app-shell">
           <!-- mini sidebar -->
           <div class="ms">
-            <div class="ms-logo">✚</div>
+            <div class="ms-logo"><svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2H9v7H2v2h7v7h2v-7h7V9h-7V2z"/></svg></div>
             <div class="ms-item on">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10h4v-6h6v6h4V10"/></svg>
             </div>
@@ -861,7 +861,7 @@ h2.sec-title {
   <footer class="footer">
     <div class="footer-brand">
       <a href="landing" class="logo">
-        <div class="logo-mark">✚</div>
+        <div class="logo-mark"><svg width="17" height="17" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2H9v7H2v2h7v7h2v-7h7V9h-7V2z"/></svg></div>
         <span class="logo-name">digiPharm</span>
       </a>
       <p>La solution de gestion de pharmacie nouvelle génération pour le Congo.</p>

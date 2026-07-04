@@ -101,16 +101,14 @@ ini_set('display_errors', 0);
         }
         .brand-icon {
             width: 44px; height: 44px;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.18);
+            background: var(--green);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--green);
+            color: #fff;
             font-size: 22px;
             font-weight: 900;
-            backdrop-filter: blur(4px);
         }
         .brand-name {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -178,8 +176,9 @@ ini_set('display_errors', 0);
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 16px;
+            color: var(--green);
         }
+        .feature-dot svg { width: 17px; height: 17px; }
         .feature-text {
             font-size: 13.5px;
             color: rgba(255,255,255,0.75);
@@ -401,7 +400,9 @@ ini_set('display_errors', 0);
         <div class="left-inner">
 
             <a href="landing" class="brand-link">
-                <div class="brand-icon">✚</div>
+                <div class="brand-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2H9v7H2v2h7v7h2v-7h7V9h-7V2z"/></svg>
+                </div>
                 <div>
                     <div class="brand-name">digiPharm</div>
                     <div class="brand-by">by Digitech Congo</div>
@@ -414,15 +415,28 @@ ini_set('display_errors', 0);
 
                 <div class="feature-list">
                     <div class="feature-item">
-                        <div class="feature-dot">📊</div>
+                        <div class="feature-dot">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
                         <div class="feature-text">Ventes & chiffre d'affaires en temps réel</div>
                     </div>
                     <div class="feature-item">
-                        <div class="feature-dot">📦</div>
+                        <div class="feature-dot">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
+                            </svg>
+                        </div>
                         <div class="feature-text">Gestion de stock intelligente avec alertes</div>
                     </div>
                     <div class="feature-item">
-                        <div class="feature-dot">🔒</div>
+                        <div class="feature-dot">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </div>
                         <div class="feature-text">Connexion sécurisée par code OTP par email</div>
                     </div>
                 </div>

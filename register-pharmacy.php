@@ -338,7 +338,9 @@ input[name=plan] { display: none; }
   <div class="left">
     <div class="left-content">
       <a href="landing" class="logo">
-        <div class="logo-mark">✚</div>
+        <div class="logo-mark">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path d="M11 2H9v7H2v2h7v7h2v-7h7V9h-7V2z"/></svg>
+          </div>
         <span class="logo-name">digiPharm</span>
       </a>
 
