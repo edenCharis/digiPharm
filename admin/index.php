@@ -203,11 +203,7 @@ $pharmacyInfo = AppSettings::getPharmacyInfo();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo getPageTitle('Administration'); ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">
-    <link rel="stylesheet" href="../assets/css/header.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <?php echo AppSettings::getCSSVariables(); ?>
 </head>
