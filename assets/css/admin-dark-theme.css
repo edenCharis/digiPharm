@@ -111,7 +111,7 @@ body {
 .sidebar .nav-label {
     display:block !important; font-size:10px !important; font-weight:700 !important;
     letter-spacing:0.1em !important; text-transform:uppercase !important;
-    color:var(--ps-sb-label) !important; padding:14px 18px 4px !important;
+    color:var(--ps-sb-label) !important; padding:6px 18px 2px !important;
     white-space:nowrap !important; overflow:hidden !important;
     transition:opacity var(--ps-dur), max-width var(--ps-dur) !important;
 }
@@ -120,7 +120,7 @@ body {
 /* Nav items */
 .sidebar .nav-item {
     display:flex !important; align-items:center !important;
-    gap:10px !important; margin:1px 8px !important; padding:8px 10px !important;
+    gap:10px !important; margin:1px 6px !important; padding:7px 10px !important;
     border-left:3px solid transparent !important;
     border-radius:0 var(--ps-r) var(--ps-r) 0 !important;
     text-decoration:none !important; color:var(--ps-sb-text) !important;
