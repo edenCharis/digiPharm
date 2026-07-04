@@ -118,7 +118,12 @@ def _open_connection(src: dict, encrypted: bool = True):
                 allow_agent=False,
                 **auth,
             )
+            import logging as _log
+            _log.getLogger("paramiko").setLevel(_log.DEBUG)
             tunnel.start()
+        except Exception as _te:
+            import traceback as _tb
+            raise RuntimeError(f"[SSH-DEBUG] {type(_te).__name__}: {_te}\n{_tb.format_exc()}") from _te
         finally:
             paramiko.RejectPolicy = _orig_policy
         conn = pymysql.connect(host="127.0.0.1", port=tunnel.local_bind_port, **db_kwargs)
