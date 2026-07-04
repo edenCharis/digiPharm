@@ -20,7 +20,7 @@ Analytics endpoints (API key auth, multi-tenant digipharmai_db):
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import forecast, inventory, alerts, trends, dashboard
-from routers import analytics
+from routers import analytics, etl_control
 from core.config import AI_SERVICE_HOST, AI_SERVICE_PORT
 
 app = FastAPI(
@@ -45,6 +45,7 @@ app.include_router(alerts.router)
 app.include_router(trends.router)
 app.include_router(dashboard.router)
 app.include_router(analytics.router)
+app.include_router(etl_control.router)
 
 
 # ── Health check ──────────────────────────────────────────────────────────
