@@ -44,6 +44,7 @@ ini_set('display_errors', 0);
 
 html, body {
   height: 100%;
+  overflow: hidden;
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
 }
@@ -90,11 +91,14 @@ html, body {
 
 .l-scroll {
   position: relative; z-index: 1;
-  height: 100%; overflow-y: auto; scrollbar-width: none;
+  height: 100%; overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: 1.875rem 2.375rem;
   display: flex; flex-direction: column; gap: 1.125rem;
 }
-.l-scroll::-webkit-scrollbar { display: none; }
+.l-scroll::-webkit-scrollbar { display: none; width: 0; }
 
 /* brand */
 .brand { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
@@ -230,6 +234,18 @@ html, body {
 .d-legend { display: flex; flex-direction: column; gap: 3px; }
 .d-item { display: flex; align-items: center; gap: 3px; font-size: 6.5px; color: rgba(255,255,255,.35); }
 .d-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* left footer */
+.l-foot {
+  flex-shrink: 0; padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.l-reg-link {
+  font-size: 13px; color: rgba(255,255,255,.45); text-decoration: none;
+  transition: color .2s;
+}
+.l-reg-link:hover { color: rgba(255,255,255,.85); }
+.l-reg-link span { color: var(--green-lit); font-weight: 600; }
 
 /* stats bar */
 .stats {
@@ -546,6 +562,12 @@ html, body {
       <div class="stat"><span class="stat-v">300K+</span><span class="stat-l">Ventes enregistrées</span></div>
       <div class="stat"><span class="stat-v">99.98%</span><span class="stat-l">Uptime</span></div>
       <div class="stat"><span class="stat-v">100%</span><span class="stat-l">Cloud sécurisé</span></div>
+    </div>
+
+    <div class="l-foot">
+      <a href="register" class="l-reg-link">
+        Pas encore client ? <span>Créer un compte gratuit →</span>
+      </a>
     </div>
 
   </div>
