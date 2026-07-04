@@ -70,7 +70,8 @@ body {
 }
 
 /* ── Shell ─────────────────────────────────────────────── */
-.app-layout { display:flex !important; height:100vh !important; overflow:hidden !important; min-height:unset !important; }
+.app-layout { display:flex !important; height:100vh !important; overflow:hidden !important; min-height:unset !important; font-size:0 !important; }
+.main-content { font-size:14px !important; }
 .main-content { flex:1 !important; display:flex !important; flex-direction:column !important; overflow:hidden !important; min-width:0; }
 .content-area { flex:1 !important; overflow-y:auto !important; padding:28px 32px !important; background:var(--ps-bg) !important; }
 .sidebar-overlay { display:none !important; position:fixed !important; inset:0 !important; background:rgba(0,0,0,0.45) !important; z-index:90 !important; }
@@ -86,6 +87,7 @@ body {
     display:flex !important; flex-direction:column !important;
     flex-shrink:0 !important; overflow:hidden !important;
     transition:width var(--ps-dur) var(--ps-ease) !important; z-index:100;
+    font-size:0 !important;
 }
 .sidebar.collapsed { width:var(--ps-rail-w) !important; }
 
