@@ -2,6 +2,7 @@
 require_once __DIR__ . '/config/auth.php';
 require_once __DIR__ . '/config/crypto.php';
 ai_check_auth();
+
 $user = ai_user();
 
 if ($user['role'] !== 'admin') {
@@ -46,12 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'save') {
         $connType   = $_POST['conn_type']  ?? 'ssh';
         $sshHost    = trim($_POST['ssh_host']    ?? '');
-        $sshPort    = (int)($_POST['ssh_port']   ?? 22);
+        $sshPort    = max(1, min(65535, (int)($_POST['ssh_port'] ?? 22)));
         $sshUser    = trim($_POST['ssh_user']    ?? 'root');
         $sshPass    = trim($_POST['ssh_password'] ?? '');
 
         $dbHost     = trim($_POST['db_host'] ?? '127.0.0.1');
-        $dbPort     = (int)($_POST['db_port'] ?? 3306);
+        $dbPort     = max(1, min(65535, (int)($_POST['db_port'] ?? 3306)));
         $dbName     = trim($_POST['db_name']  ?? '');
         $dbUser     = trim($_POST['db_user']  ?? 'root');
         $dbPass     = trim($_POST['db_password'] ?? '');
