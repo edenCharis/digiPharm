@@ -38,7 +38,7 @@ $users = $db->query("
     SELECT u.*, p.name AS pharmacy_name, p.status AS pharmacy_status
     FROM user u
     LEFT JOIN pharmacies p ON p.id = u.pharmacy_id
-    ORDER BY p.name, u.role, u.name
+    ORDER BY p.name, u.role, u.username
 ")->fetchAll();
 
 // Pour le formulaire
