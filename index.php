@@ -266,7 +266,10 @@ html, body {
   width: 50%; height: 100vh; background: var(--surf);
   display: flex; align-items: center; justify-content: center;
   overflow-y: auto; padding: 2rem 1.5rem; position: relative;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.r::-webkit-scrollbar { display: none; }
 .r::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background-image: radial-gradient(rgba(22,163,74,.024) 1px, transparent 1px);
