@@ -405,6 +405,14 @@ html, body {
 .c-foot a:hover { color: var(--green-h); }
 .c-foot-copy { font-size: 12px; color: var(--text-3); }
 
+/* register link inside card */
+.card-foot-link {
+  text-align: center; margin-top: 16px;
+  font-size: 13px; color: var(--text-2);
+}
+.card-foot-link a { color: var(--green); font-weight: 600; text-decoration: none; }
+.card-foot-link a:hover { color: var(--green-h); }
+
 /* helpers */
 .hidden { display: none !important; }
 @keyframes fadeIn    { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -635,7 +643,7 @@ html, body {
 
         <div class="extras">
           <label class="remember"><input type="checkbox" id="rem"> Se souvenir de moi</label>
-          <a href="#" class="forgot">Mot de passe oublié ?</a>
+          <a href="forgot-password" class="forgot">Mot de passe oublié ?</a>
         </div>
 
         <button type="submit" class="btn-go" id="loginBtn">
@@ -644,6 +652,8 @@ html, body {
           </svg>
           <span id="loginBtnTxt">Se connecter</span>
         </button>
+
+        <p class="card-foot-link">Pas encore client ? <a href="register">Créer un compte gratuit →</a></p>
 
       </form>
 
@@ -687,23 +697,6 @@ html, body {
 
       </form>
 
-      <div class="sec-note">
-        <div class="sec-ico">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
-        <div>
-          <p class="sec-main">Vos données sont protégées par une sécurité de niveau entreprise</p>
-          <span class="sec-sub">SSL 256 bits · Authentification OTP · Conforme RGPD</span>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="c-foot">
-      <p>Pas encore client ? <a href="register">Demander une démo →</a></p>
-      <p class="c-foot-copy">© <?= date('Y') ?> Digitech Technologies Congo</p>
     </div>
 
   </div>
