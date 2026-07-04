@@ -7,6 +7,9 @@ import sys
 import os
 import hashlib
 import base64
+import socket
+import select
+import threading
 from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import text
 from models.analytics import _engine, aquery
@@ -52,13 +55,125 @@ def _decrypt(value: str) -> str:
     try:
         from Crypto.Cipher import AES
         from Crypto.Util.Padding import unpad
-        enc_key = os.getenv("ENCRYPTION_KEY", "digipharmai_fallback_key_change_me")
+        enc_key = os.getenv("ENCRYPTION_KEY", "")
+        if not enc_key:
+            return ""
         key = hashlib.sha256(enc_key.encode()).digest()[:32]
         raw = base64.b64decode(value)
         cipher = AES.new(key, AES.MODE_CBC, raw[:16])
         return unpad(cipher.decrypt(raw[16:]), AES.block_size).decode()
     except Exception:
         return ""
+
+
+# ── Paramiko SSH tunnel (replaces sshtunnel) ──────────────────────────────
+
+class _TunnelHandle:
+    """Wraps a paramiko SSHClient so callers can do tunnel.stop()."""
+    def __init__(self, client):
+        self._client = client
+
+    def stop(self):
+        try:
+            self._client.close()
+        except Exception:
+            pass
+
+
+def _make_ssh_tunnel(ssh_host: str, ssh_port: int, ssh_user: str, ssh_pass: str | None,
+                     remote_host: str, remote_port: int) -> tuple[int, "_TunnelHandle"]:
+    """
+    Open an SSH connection and start a local port-forwarding listener.
+    Returns (local_port, tunnel_handle).
+    pymysql should connect to 127.0.0.1:local_port.
+    """
+    import paramiko
+
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    connect_kw: dict = dict(
+        port=ssh_port,
+        username=ssh_user,
+        timeout=15,
+        allow_agent=False,
+        look_for_keys=False,
+        banner_timeout=30,
+    )
+    if ssh_pass:
+        connect_kw["password"] = ssh_pass
+    else:
+        key_path = "/root/.ssh/id_rsa"
+        if os.path.exists(key_path):
+            connect_kw["key_filename"] = key_path
+        else:
+            raise ValueError(
+                "Mot de passe SSH manquant et aucune clé SSH disponible sur le serveur"
+            )
+
+    try:
+        client.connect(ssh_host, **connect_kw)
+    except paramiko.AuthenticationException:
+        client.close()
+        raise ValueError(
+            f"Authentification SSH refusée pour '{ssh_user}@{ssh_host}' — "
+            "vérifiez le nom d'utilisateur et le mot de passe SSH"
+        )
+    except paramiko.SSHException as e:
+        client.close()
+        raise ValueError(f"Erreur de protocole SSH : {e}")
+    except (OSError, socket.timeout, TimeoutError) as e:
+        client.close()
+        raise ValueError(f"Impossible de joindre {ssh_host}:{ssh_port} — {e}")
+
+    transport = client.get_transport()
+
+    # Bind a local TCP server that pymysql will connect to
+    srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(("127.0.0.1", 0))
+    local_port = srv.getsockname()[1]
+    srv.listen(1)
+    srv.settimeout(15)
+
+    def _forward():
+        lconn = None
+        chan = None
+        try:
+            lconn, addr = srv.accept()
+            lconn.settimeout(None)
+            try:
+                chan = transport.open_channel(
+                    "direct-tcpip", (remote_host, remote_port), addr
+                )
+            except Exception as e:
+                return  # lconn gets closed in finally
+
+            while True:
+                r, _, _ = select.select([lconn, chan], [], [], 1.0)
+                if lconn in r:
+                    data = lconn.recv(8192)
+                    if not data:
+                        break
+                    chan.sendall(data)
+                if chan in r:
+                    if chan.closed or not chan.recv_ready() and chan.eof_received:
+                        break
+                    data = chan.recv(8192)
+                    if not data:
+                        break
+                    lconn.sendall(data)
+        except Exception:
+            pass
+        finally:
+            for obj in (lconn, chan, srv):
+                try:
+                    obj.close()
+                except Exception:
+                    pass
+
+    threading.Thread(target=_forward, daemon=True).start()
+    return local_port, _TunnelHandle(client)
 
 
 # ── Connection factory ────────────────────────────────────────────────────
@@ -69,7 +184,6 @@ def _open_connection(src: dict, encrypted: bool = True):
     encrypted=True  → passwords are AES-encrypted (loaded from DB)
     encrypted=False → passwords are plain text (submitted from form)
     """
-    from sshtunnel import SSHTunnelForwarder
     import pymysql
 
     def pwd(field: str) -> str:
@@ -89,44 +203,29 @@ def _open_connection(src: dict, encrypted: bool = True):
     )
 
     if str(src.get("conn_type", "ssh")) == "ssh":
-        import paramiko
-
         ssh_host = str(src.get("ssh_host") or "").strip()
         if not ssh_host:
             raise ValueError("Hôte SSH manquant")
 
-        ssh_pass = pwd("ssh_password")
-        auth = {}
-        if ssh_pass:
-            auth["ssh_password"] = ssh_pass
-        else:
-            key_path = "/root/.ssh/id_rsa"
-            if os.path.exists(key_path):
-                auth["ssh_pkey"] = key_path
-            else:
-                raise ValueError("Mot de passe SSH manquant (et aucune clé SSH trouvée sur le serveur)")
+        ssh_pass = pwd("ssh_password") or None
+        remote_host = str(src.get("db_host") or "127.0.0.1")
+        remote_port = int(src.get("db_port") or 3306)
 
-        # sshtunnel uses paramiko.RejectPolicy by default — www-data has no known_hosts.
-        # Monkey-patch to AutoAddPolicy for the duration of tunnel creation.
-        _orig_policy = paramiko.RejectPolicy
-        paramiko.RejectPolicy = paramiko.AutoAddPolicy
+        local_port, tunnel = _make_ssh_tunnel(
+            ssh_host,
+            int(src.get("ssh_port") or 22),
+            str(src.get("ssh_user") or "root"),
+            ssh_pass,
+            remote_host,
+            remote_port,
+        )
+
         try:
-            tunnel = SSHTunnelForwarder(
-                (ssh_host, int(src.get("ssh_port") or 22)),
-                ssh_username=str(src.get("ssh_user") or "root"),
-                remote_bind_address=(str(src.get("db_host") or "127.0.0.1"), int(src.get("db_port") or 3306)),
-                allow_agent=False,
-                **auth,
-            )
-            import logging as _log
-            _log.getLogger("paramiko").setLevel(_log.DEBUG)
-            tunnel.start()
-        except Exception as _te:
-            import traceback as _tb
-            raise RuntimeError(f"[SSH-DEBUG] {type(_te).__name__}: {_te}\n{_tb.format_exc()}") from _te
-        finally:
-            paramiko.RejectPolicy = _orig_policy
-        conn = pymysql.connect(host="127.0.0.1", port=tunnel.local_bind_port, **db_kwargs)
+            conn = pymysql.connect(host="127.0.0.1", port=local_port, **db_kwargs)
+        except Exception as e:
+            tunnel.stop()
+            raise ValueError(f"Connexion MySQL via tunnel SSH échouée : {e}")
+
         return conn, tunnel
 
     else:  # direct TCP
@@ -144,8 +243,6 @@ def _open_connection(src: dict, encrypted: bool = True):
 async def test_connection(request: Request):
     pid = _resolve_pharmacy(request)
 
-    # Priority 1: use form data submitted in the POST body (no save required)
-    # Priority 2: fall back to DB-saved config
     body: dict = {}
     try:
         body = await request.json()
@@ -155,7 +252,33 @@ async def test_connection(request: Request):
     from_form = bool(body.get("db_name", "").strip())
 
     if from_form:
-        src, encrypted = body, False
+        # Form values are plain text. But password fields may be empty if the page was
+        # reloaded (PHP doesn't render stored passwords for security). In that case,
+        # fall back to the DB-saved encrypted value for the empty fields.
+        db_src = _load_source(pid)
+        src = dict(body)
+        encrypted_fields = {}
+
+        if db_src:
+            for pwd_field in ("ssh_password", "db_password"):
+                if not str(body.get(pwd_field) or "").strip():
+                    # Field is empty in form → use DB stored (encrypted) value
+                    encrypted_fields[pwd_field] = str(db_src.get(pwd_field) or "")
+                    src[pwd_field] = encrypted_fields[pwd_field]
+
+        # Build a mixed-encryption resolver: plain text for all fields except
+        # those we just loaded from DB (which are encrypted).
+        def _resolve_src(field: str) -> str:
+            raw = str(src.get(field) or "")
+            if field in encrypted_fields and raw:
+                return _decrypt(raw)
+            return raw
+
+        # Override src with resolved passwords
+        for f in ("ssh_password", "db_password"):
+            src[f] = _resolve_src(f)
+
+        encrypted = False  # passwords already resolved above
     else:
         src = _load_source(pid)
         if not src:
@@ -185,13 +308,7 @@ async def test_connection(request: Request):
         return {"ok": True, "tables": len(tables), "table_names": tables[:20]}
 
     except Exception as exc:
-        import paramiko as _pm
-        if isinstance(exc, _pm.AuthenticationException):
-            err = "Authentification SSH refusée — vérifiez le nom d'utilisateur et le mot de passe SSH."
-        elif isinstance(exc, _pm.SSHException):
-            err = f"Erreur SSH : {exc}"
-        else:
-            err = str(exc)
+        err = str(exc)
         if not from_form:
             try:
                 with _engine().connect() as db:
