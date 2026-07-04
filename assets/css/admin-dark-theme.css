@@ -97,8 +97,8 @@ body {
 .brand-name { font-size:15px; font-weight:800; color:#fff; letter-spacing:-0.2px; white-space:nowrap; line-height:1.1; }
 .brand-role { font-size:10px; font-weight:600; color:var(--ps-green); letter-spacing:0.06em; text-transform:uppercase; margin-top:1px; }
 
-.nav { flex:1 !important; overflow-y:auto !important; overflow-x:hidden !important; padding:6px 0 12px !important; scrollbar-width:none !important; }
-.nav::-webkit-scrollbar { display:none !important; }
+.sidebar .nav { flex:1 !important; display:flex !important; flex-direction:column !important; flex-wrap:nowrap !important; overflow-y:auto !important; overflow-x:hidden !important; padding:6px 0 12px !important; scrollbar-width:none !important; }
+.sidebar .nav::-webkit-scrollbar { display:none !important; }
 
 /* Section labels */
 .sidebar .nav-label {
