@@ -62,11 +62,13 @@ body link { display: none !important; width: 0 !important; height: 0 !important;
 
 /* ── Base ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 body {
     font-family: 'Inter','Roboto',system-ui,-apple-system,sans-serif;
     font-size: 14px; line-height: 1.5;
     color: var(--ps-text); background: var(--ps-bg);
     -webkit-font-smoothing: antialiased;
+    overflow: hidden;
 }
 
 /* ── Shell ─────────────────────────────────────────────── */
