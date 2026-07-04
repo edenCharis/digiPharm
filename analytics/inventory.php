@@ -15,8 +15,18 @@ $pageTitle  = 'Inventaire';
 <?php include __DIR__ . '/includes/common.css.php'; ?>
 .stock-bar-wrap { width:80px;height:6px;background:var(--border-lt);border-radius:3px;display:inline-block;vertical-align:middle; }
 .stock-bar { height:100%;border-radius:3px; }
-input.search-box { padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;width:260px;outline:none; }
+input.search-box { padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;width:240px;outline:none; }
 input.search-box:focus { border-color:var(--green); }
+
+/* Pagination */
+.pagination { display:flex;align-items:center;gap:4px;padding:14px 18px;border-top:1px solid var(--border-lt);justify-content:space-between; }
+.pagination-info { font-size:12.5px;color:var(--text-3); }
+.pagination-controls { display:flex;align-items:center;gap:4px; }
+.pg-btn { min-width:32px;height:32px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text-2);font-size:13px;cursor:pointer;display:grid;place-items:center;padding:0 6px;transition:all .12s; }
+.pg-btn:hover:not(:disabled) { background:var(--surface-alt);border-color:var(--text-3); }
+.pg-btn.active { background:var(--green);color:#fff;border-color:var(--green);font-weight:600; }
+.pg-btn:disabled { opacity:.35;cursor:default; }
+.per-page-select { padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:12.5px;color:var(--text-2);background:var(--surface);cursor:pointer; }
 </style>
 </head>
 <body>
@@ -28,7 +38,7 @@ input.search-box:focus { border-color:var(--green); }
       <div class="topbar-meta"><span class="status-dot" id="aiDot"></span><span id="aiStatus">Chargement…</span></div>
     </div>
     <div class="topbar-right">
-      <input class="search-box" type="text" id="searchBox" placeholder="Rechercher un produit…" oninput="filterTable()">
+      <input class="search-box" type="text" id="searchBox" placeholder="Rechercher un produit…" oninput="onSearch()">
       <button class="refresh-btn" onclick="load()">
         <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/></svg>
         Actualiser
@@ -45,14 +55,23 @@ input.search-box:focus { border-color:var(--green); }
 
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Stock actuel</span>
-        <span class="card-meta" id="invMeta"></span>
+        <span class="card-title">Stock actuel — ordre décroissant</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="card-meta" id="invMeta"></span>
+          <select class="per-page-select" id="perPageSelect" onchange="onPerPage()">
+            <option value="25">25 / page</option>
+            <option value="50" selected>50 / page</option>
+            <option value="100">100 / page</option>
+            <option value="200">200 / page</option>
+          </select>
+        </div>
       </div>
       <div class="card-body" style="padding:0">
         <div style="overflow-x:auto">
           <table class="tbl" id="invTable">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Produit</th>
                 <th>Catégorie</th>
                 <th class="num">Stock</th>
@@ -64,9 +83,13 @@ input.search-box:focus { border-color:var(--green); }
               </tr>
             </thead>
             <tbody id="invBody">
-              <tr><td colspan="8" class="tbl-empty">Chargement…</td></tr>
+              <tr><td colspan="9" class="tbl-empty">Chargement…</td></tr>
             </tbody>
           </table>
+        </div>
+        <div class="pagination">
+          <span class="pagination-info" id="pgInfo"></span>
+          <div class="pagination-controls" id="pgControls"></div>
         </div>
       </div>
     </div>
@@ -75,7 +98,11 @@ input.search-box:focus { border-color:var(--green); }
 <script>
 <?php include __DIR__ . '/includes/chart.js.php'; ?>
 
-let allRows = [];
+let allRows    = [];
+let filtered   = [];
+let currentPage = 1;
+
+function perPage() { return parseInt(document.getElementById('perPageSelect').value) || 50; }
 
 function stockColor(dos) {
   if (dos === null || dos > 30) return '#22c55e';
@@ -86,61 +113,101 @@ function stockColor(dos) {
 }
 
 async function load() {
+  document.getElementById('invBody').innerHTML = '<tr><td colspan="9" class="tbl-empty">Chargement…</td></tr>';
   const d = await fetchAI('inventory');
-  const items = d.items || [];
-  allRows = items;
-  setText('kTotal', items.length.toLocaleString('fr'));
-  setText('invMeta', `${items.length} produits`);
+  allRows = d.items || [];
 
   let critical = 0, low = 0, value = 0;
-  items.forEach(it => {
+  allRows.forEach(it => {
     const dos = it.dos ?? null;
     if (dos !== null && dos <= 3) critical++;
     else if (dos !== null && dos <= 14) low++;
     if (it.unit_cost) value += (it.stock_quantity || 0) * it.unit_cost;
   });
+  setText('kTotal', allRows.length.toLocaleString('fr'));
   setText('kCritical', critical);
   setText('kLow', low);
   setText('kValue', fmt(value));
 
-  renderTable(items);
+  applyFilter();
 }
 
-function renderTable(items) {
+function applyFilter() {
+  const q = document.getElementById('searchBox').value.toLowerCase().trim();
+  filtered = q ? allRows.filter(r => (r.product_name||'').toLowerCase().includes(q)) : allRows;
+  currentPage = 1;
+  render();
+}
+
+function onSearch() { applyFilter(); }
+function onPerPage() { currentPage = 1; render(); }
+
+function render() {
+  const pp    = perPage();
+  const total = filtered.length;
+  const pages = Math.max(1, Math.ceil(total / pp));
+  if (currentPage > pages) currentPage = pages;
+  const start = (currentPage - 1) * pp;
+  const slice = filtered.slice(start, start + pp);
+
+  // Table rows
   const body = document.getElementById('invBody');
-  if (!items.length) {
-    body.innerHTML = '<tr><td colspan="8" class="tbl-empty">Aucun produit trouvé</td></tr>';
-    return;
+  if (!slice.length) {
+    body.innerHTML = '<tr><td colspan="9" class="tbl-empty">Aucun produit trouvé</td></tr>';
+  } else {
+    body.innerHTML = slice.map((it, i) => {
+      const dos     = it.dos ?? null;
+      const color   = stockColor(dos);
+      const pct     = dos === null ? 100 : Math.min(100, (dos / 30) * 100);
+      const dosText = dos === null ? '—' : dos > 300 ? '>300j' : Number(dos).toFixed(1) + 'j';
+      const exp     = it.expiry_date ? new Date(it.expiry_date + 'T00:00:00').toLocaleDateString('fr') : '—';
+      const expClass = it.expiry_date && (new Date(it.expiry_date) - new Date()) < 30*86400000 ? 'red' : 'text-2';
+      return `<tr>
+        <td style="color:var(--text-3);font-size:12px">${start + i + 1}</td>
+        <td>${it.product_name || '—'}</td>
+        <td>${it.category || '—'}</td>
+        <td class="num" style="font-weight:600">${Number(it.stock_quantity||0).toLocaleString('fr')}</td>
+        <td class="num" style="color:${color};font-weight:600">${dosText}</td>
+        <td>
+          <div class="stock-bar-wrap">
+            <div class="stock-bar" style="width:${pct}%;background:${color}"></div>
+          </div>
+        </td>
+        <td class="num">${it.unit_cost ? fmt(it.unit_cost)+' XAF' : '—'}</td>
+        <td class="num">${it.unit_price ? fmt(it.unit_price)+' XAF' : '—'}</td>
+        <td style="color:var(--${expClass})">${exp}</td>
+      </tr>`;
+    }).join('');
   }
-  body.innerHTML = items.map(it => {
-    const dos = it.dos ?? null;
-    const color = stockColor(dos);
-    const pct = dos === null ? 100 : Math.min(100, (dos / 30) * 100);
-    const dosText = dos === null ? '—' : dos > 300 ? '>300j' : dos.toFixed(1) + 'j';
-    const exp = it.expiry_date ? new Date(it.expiry_date).toLocaleDateString('fr') : '—';
-    const today = new Date();
-    const expClass = it.expiry_date && (new Date(it.expiry_date) - today) < 30*86400000 ? 'red' : '';
-    return `<tr data-name="${(it.product_name||'').toLowerCase()}">
-      <td>${it.product_name || '—'}</td>
-      <td>${it.category || '—'}</td>
-      <td class="num">${Number(it.stock_quantity||0).toLocaleString('fr')}</td>
-      <td class="num" style="color:${color};font-weight:600">${dosText}</td>
-      <td>
-        <div class="stock-bar-wrap">
-          <div class="stock-bar" style="width:${pct}%;background:${color}"></div>
-        </div>
-      </td>
-      <td class="num">${it.unit_cost ? fmt(it.unit_cost)+' XAF' : '—'}</td>
-      <td class="num">${it.unit_price ? fmt(it.unit_price)+' XAF' : '—'}</td>
-      <td style="color:var(--${expClass||'text-2'})">${exp}</td>
-    </tr>`;
-  }).join('');
+
+  // Info
+  const from = total ? start + 1 : 0;
+  const to   = Math.min(start + pp, total);
+  setText('invMeta', `${total.toLocaleString('fr')} produits`);
+  setText('pgInfo', `${from}–${to} sur ${total.toLocaleString('fr')}`);
+
+  // Controls
+  const ctrl = document.getElementById('pgControls');
+  const maxBtns = 7;
+  let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>&#8249;</button>`;
+
+  let startP = Math.max(1, currentPage - Math.floor(maxBtns/2));
+  let endP   = Math.min(pages, startP + maxBtns - 1);
+  if (endP - startP < maxBtns - 1) startP = Math.max(1, endP - maxBtns + 1);
+
+  if (startP > 1) html += `<button class="pg-btn" onclick="goPage(1)">1</button>${startP>2?'<span style="padding:0 4px;color:var(--text-3)">…</span>':''}`;
+  for (let p = startP; p <= endP; p++)
+    html += `<button class="pg-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
+  if (endP < pages) html += `${endP<pages-1?'<span style="padding:0 4px;color:var(--text-3)">…</span>':''}<button class="pg-btn" onclick="goPage(${pages})">${pages}</button>`;
+  html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>&#8250;</button>`;
+  ctrl.innerHTML = html;
 }
 
-function filterTable() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  const filtered = q ? allRows.filter(r => (r.product_name||'').toLowerCase().includes(q)) : allRows;
-  renderTable(filtered);
+function goPage(p) {
+  const pages = Math.max(1, Math.ceil(filtered.length / perPage()));
+  currentPage = Math.max(1, Math.min(p, pages));
+  render();
+  document.querySelector('.card').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 load();

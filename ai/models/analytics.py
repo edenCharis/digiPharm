@@ -77,7 +77,7 @@ def get_inventory(pharmacy_id: int) -> pd.DataFrame:
             GROUP BY product_id
         ) s ON s.product_id = i.product_id
         WHERE i.pharmacy_id = :pid
-        ORDER BY dos ASC, i.product_name ASC
+        ORDER BY i.stock_quantity DESC, i.product_name ASC
     """, {"pid": pharmacy_id})
 
 
