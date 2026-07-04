@@ -83,11 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
             try { $db->exec("ALTER TABLE pharmacy_registrations ADD COLUMN pharmacy_id INT NULL AFTER id"); } catch (Exception $e) {}
             try { $db->exec("ALTER TABLE pharmacy_registrations ADD COLUMN approved_at DATETIME NULL AFTER status"); } catch (Exception $e) {}
 
-            // Create pharmacy
+            // Create pharmacy — map plan: basic→starter (DB enum: starter/pro/enterprise)
+            $planMapped = $reg['plan'] === 'pro' ? 'pro' : 'starter';
             db_exec($db,
-                "INSERT INTO pharmacies (name, responsible_name, email, phone, city, plan, status, trial_ends_at, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, 'trial', DATE_ADD(NOW(), INTERVAL 14 DAY), NOW())",
-                [$reg['pharmacy_name'], $reg['responsible_name'], $reg['email'], $reg['phone'] ?? '', $reg['city'] ?? '', $reg['plan']]
+                "INSERT INTO pharmacies (name, email, phone, city, plan, status, trial_ends_at)
+                 VALUES (?, ?, ?, ?, ?, 'trial', DATE_ADD(CURDATE(), INTERVAL 14 DAY))",
+                [$reg['pharmacy_name'], $reg['email'], $reg['phone'] ?? '', $reg['city'] ?? '', $planMapped]
             );
             $newPharmacyId = (int) $db->lastInsertId();
 
