@@ -16,8 +16,9 @@ try {
     }
 
     $user_id = $_SESSION['user_id'];
-    $success_message = '';
-    $error_message = '';
+    $success_message = $_SESSION['flash_success'] ?? '';
+    $error_message   = $_SESSION['flash_error']   ?? '';
+    unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
     // Get current user information
     $userSQL = "SELECT id, username, email, role, createdAt, updatedAt, statut FROM user WHERE id = ?";
@@ -119,6 +120,10 @@ try {
                     break;
             }
         }
+    if ($success_message) $_SESSION['flash_success'] = $success_message;
+    if ($error_message)   $_SESSION['flash_error']   = $error_message;
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
     }
 
     // Get user activity stats

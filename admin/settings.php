@@ -16,8 +16,9 @@ try {
     }
 
     $admin_id = $_SESSION['user_id'];
-    $success_message = '';
-    $error_message = '';
+    $success_message = $_SESSION['flash_success'] ?? '';
+    $error_message   = $_SESSION['flash_error']   ?? '';
+    unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
     // Create app_settings table if it doesn't exist
     $createTableSQL = "CREATE TABLE IF NOT EXISTS app_settings (
@@ -114,6 +115,10 @@ try {
                     break;
             }
         }
+    if ($success_message) $_SESSION['flash_success'] = $success_message;
+    if ($error_message)   $_SESSION['flash_error']   = $error_message;
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
     }
 
     // Get current settings

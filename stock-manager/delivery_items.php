@@ -24,8 +24,9 @@ try {
         exit();
     }
 
-    $success_message = '';
-    $error_message = '';
+    $success_message = $_SESSION['flash_success'] ?? '';
+    $error_message   = $_SESSION['flash_error']   ?? '';
+    unset($_SESSION['flash_success'], $_SESSION['flash_error']);
 
    $sql = "SELECT * FROM delivery WHERE id = ?";
 $stmt = $pdo->prepare($sql);
@@ -256,6 +257,10 @@ if (empty($delivery)) {
         }
         header("Location: " . $redirect_url);
         exit();
+    if ($success_message) $_SESSION['flash_success'] = $success_message;
+    if ($error_message)   $_SESSION['flash_error']   = $error_message;
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']);
+    exit;
     }
 
     // Handle messages from redirect

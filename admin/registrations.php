@@ -11,7 +11,8 @@ ini_set('display_errors', 0);
 require_once '../config/database.php';
 require_once '../includes/Mailer.php';
 
-$flash = ['type' => '', 'msg' => ''];
+$flash = ['type' => $_SESSION['flash_type'] ?? '', 'msg' => $_SESSION['flash_msg'] ?? ''];
+unset($_SESSION['flash_type'], $_SESSION['flash_msg']);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -146,6 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['reg
     } catch (Exception $e) {
         $flash = ['type' => 'danger', 'msg' => "Erreur : " . htmlspecialchars($e->getMessage())];
     }
+    if ($flash['msg']) {
+        $_SESSION['flash_type'] = $flash['type'];
+        $_SESSION['flash_msg']  = $flash['msg'];
+    }
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
