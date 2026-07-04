@@ -1,21 +1,33 @@
 <?php
 // ============================================================
-//  DigiPharma AI — Superadmin Auth Guard (Digitech)
+//  digiPharm — Superadmin Auth Guard (Digitech)
 // ============================================================
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Superadmin credentials Digitech
-define('SA_USERNAME', 'digitech');
-define('SA_PASSWORD_HASH', password_hash('Digitech@2026!', PASSWORD_BCRYPT));
-
 function sa_db(): PDO {
     static $pdo = null;
     if ($pdo === null) {
         require_once dirname(__DIR__, 2) . '/config/database.php';
         $pdo = $GLOBALS['pdo'] ?? (new Database())->connect();
+
+        // Superadmin users table
+        $pdo->exec("CREATE TABLE IF NOT EXISTS superadmin_users (
+            id           INT AUTO_INCREMENT PRIMARY KEY,
+            username     VARCHAR(80) NOT NULL UNIQUE,
+            password     VARCHAR(255) NOT NULL,
+            display_name VARCHAR(120) DEFAULT NULL,
+            is_owner     TINYINT(1) NOT NULL DEFAULT 0,
+            created_at   DATETIME DEFAULT NOW()
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        // Seed initial owner account if none exists
+        $count = (int) $pdo->query("SELECT COUNT(*) FROM superadmin_users")->fetchColumn();
+        if ($count === 0) {
+            $stmt = $pdo->prepare("INSERT INTO superadmin_users (username, password, display_name, is_owner) VALUES (?, ?, ?, 1)");
+            $stmt->execute(['digitech', password_hash('Digitech@2026!', PASSWORD_BCRYPT), 'Digitech Congo']);
+        }
 
         // Ensure the pharmacies table exists with the full schema.
         // MODIFY COLUMN is a no-op if the ENUM already matches, so this is safe to run every time.
@@ -43,6 +55,17 @@ function sa_db(): PDO {
         } catch (PDOException $e) { /* ADD COLUMN IF NOT EXISTS may not be supported on old MySQL — ignore */ }
     }
     return $pdo;
+}
+
+function sa_verify_login(string $username, string $password): array|false {
+    $db   = sa_db();
+    $stmt = $db->prepare("SELECT * FROM superadmin_users WHERE username = ? LIMIT 1");
+    $stmt->execute([trim($username)]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user && password_verify($password, $user['password'])) {
+        return $user;
+    }
+    return false;
 }
 
 function sa_check_auth(): void {

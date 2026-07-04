@@ -7,10 +7,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($username === SA_USERNAME && password_verify($password, SA_PASSWORD_HASH)) {
-        $_SESSION['sa_logged_in'] = true;
-        $_SESSION['sa_user']      = $username;
-        $_SESSION['sa_login_at']  = date('Y-m-d H:i:s');
+    $user = sa_verify_login($username, $password);
+    if ($user) {
+        $_SESSION['sa_logged_in']   = true;
+        $_SESSION['sa_user']        = $user['username'];
+        $_SESSION['sa_user_id']     = $user['id'];
+        $_SESSION['sa_display_name']= $user['display_name'] ?? $user['username'];
+        $_SESSION['sa_login_at']    = date('Y-m-d H:i:s');
         header('Location: dashboard.php');
         exit;
     } else {

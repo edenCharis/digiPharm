@@ -88,8 +88,24 @@ body {
 }
 .btn-logout:hover { background: rgba(239,68,68,0.22); color: white; }
 
+/* ── Sidebar toggle ── */
+.sidebar {
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1), width 0.25s cubic-bezier(.4,0,.2,1);
+}
+.sidebar.collapsed { transform: translateX(-240px); }
+.main { margin-left: 240px; min-height: 100vh; transition: margin-left 0.25s cubic-bezier(.4,0,.2,1); }
+.main.expanded { margin-left: 0; }
+.btn-sidebar-toggle {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #F3F4F6; border: 1px solid #E5E7EB;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: #6B7280; flex-shrink: 0; transition: background .15s;
+    margin-right: .75rem;
+}
+.btn-sidebar-toggle:hover { background: #E5E7EB; color: #111827; }
+.btn-sidebar-toggle svg { width: 18px; height: 18px; }
+
 /* ── Main ── */
-.main { margin-left: 240px; min-height: 100vh; }
 .topbar {
     background: white; padding: 1rem 1.5rem;
     border-bottom: 1px solid #E5E7EB;
@@ -306,6 +322,12 @@ tr:hover td { background: #FAFAFA; }
             </svg>
             Comptes admin
         </a>
+        <a href="/superadmin/admins.php" class="nav-item <?= $current_page === 'admins' ? 'active' : '' ?>">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            SuperAdmins
+        </a>
 
         <div class="nav-section">Monitoring</div>
         <a href="/superadmin/pharmacies/logs.php" class="nav-item <?= $current_page === 'logs' ? 'active' : '' ?>">
@@ -327,6 +349,15 @@ tr:hover td { background: #FAFAFA; }
 
 <div class="main">
     <div class="topbar">
+        <div style="display:flex;align-items:center">
+        <button class="btn-sidebar-toggle" id="sidebarToggle" title="Réduire/afficher le menu" onclick="toggleSidebar()">
+            <svg id="toggleIconOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            <svg id="toggleIconClose" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+        </button>
         <div>
             <div class="topbar-title">
                 <?php
@@ -336,6 +367,7 @@ tr:hover td { background: #FAFAFA; }
                     'list'          => 'Pharmacies',
                     'create'        => 'Nouvelle pharmacie',
                     'users'         => 'Comptes admin',
+                    'admins'        => 'SuperAdmins',
                     'logs'          => 'Logs système',
                     'view'          => 'Détail pharmacie',
                     'edit'          => 'Modifier pharmacie',
@@ -345,6 +377,7 @@ tr:hover td { background: #FAFAFA; }
             </div>
             <div class="topbar-meta">digiPharm Platform · Digitech</div>
         </div>
+        </div>
         <div class="topbar-stats">
             <div class="topbar-stat"><div class="dot dot-green"></div><span><?= $stats['active'] ?> actives</span></div>
             <div class="topbar-stat"><div class="dot dot-yellow"></div><span><?= $stats['trial'] ?> en essai</span></div>
@@ -352,3 +385,19 @@ tr:hover td { background: #FAFAFA; }
         </div>
     </div>
     <div class="content">
+<script>
+(function(){
+    var SB_KEY = 'sa_sidebar_collapsed';
+    var sidebar = document.querySelector('.sidebar');
+    var main    = document.querySelector('.main');
+    if (localStorage.getItem(SB_KEY) === '1') {
+        sidebar.classList.add('collapsed');
+        main.classList.add('expanded');
+    }
+    window.toggleSidebar = function() {
+        var isCollapsed = sidebar.classList.toggle('collapsed');
+        main.classList.toggle('expanded', isCollapsed);
+        localStorage.setItem(SB_KEY, isCollapsed ? '1' : '0');
+    };
+})();
+</script>
