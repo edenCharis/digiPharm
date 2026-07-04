@@ -10,7 +10,7 @@ $pageTitle  = 'Alertes';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Alertes</title>
+<title>digiMind — Alertes</title>
 <style>
 <?php include __DIR__ . '/includes/common.css.php'; ?>
 .alert-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:flex-start;gap:14px;margin-bottom:10px; }

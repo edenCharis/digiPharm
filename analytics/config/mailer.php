@@ -1,6 +1,6 @@
 <?php
 /**
- * SMTP mailer for DigiPharm AI — OTP codes, notifications.
+ * SMTP mailer for digiMind — OTP codes, notifications.
  * Uses PHPMailer via the main vendor/autoload.php.
  */
 
@@ -8,7 +8,7 @@ function ai_send_mail(string $to, string $subject, string $htmlBody): bool
 {
     $vendorPath = dirname(__DIR__, 2) . '/vendor/autoload.php';
     if (!file_exists($vendorPath)) {
-        error_log('[DigiPharm Mailer] vendor/autoload.php not found');
+        error_log('[digiMind Mailer] vendor/autoload.php not found');
         return false;
     }
     require_once $vendorPath;
@@ -28,7 +28,7 @@ function ai_send_mail(string $to, string $subject, string $htmlBody): bool
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = defined('SMTP_PORT') ? (int) SMTP_PORT : 587;
         $mail->CharSet    = 'UTF-8';
-        $mail->setFrom($mail->Username, 'DigiPharm AI');
+        $mail->setFrom($mail->Username, 'digiMind');
         $mail->addAddress($to);
         $mail->isHTML(true);
         $mail->Subject = $subject;
@@ -37,7 +37,7 @@ function ai_send_mail(string $to, string $subject, string $htmlBody): bool
         $mail->send();
         return true;
     } catch (\Exception $e) {
-        error_log('[DigiPharm Mailer] ' . $e->getMessage());
+        error_log('[digiMind Mailer] ' . $e->getMessage());
         return false;
     }
 }
@@ -47,7 +47,7 @@ function ai_otp_email_html(string $otp, string $displayName, string $reason): st
     return "
     <div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;'>
       <div style='margin-bottom:24px;'>
-        <span style='font-size:20px;font-weight:700;color:#111827;'>DigiPharm <span style='color:#1a7f4b;'>AI</span></span>
+        <span style='font-size:20px;font-weight:700;color:#111827;'>digiMind</span>
       </div>
       <h2 style='font-size:20px;font-weight:700;color:#111827;margin-bottom:8px;'>Code de vérification</h2>
       <p style='color:#4b5563;font-size:14px;line-height:1.6;margin-bottom:24px;'>
@@ -59,6 +59,6 @@ function ai_otp_email_html(string $otp, string $displayName, string $reason): st
       </div>
       <p style='color:#9ca3af;font-size:12px;'>Si vous n'avez pas demandé ce code, ignorez cet email.</p>
       <hr style='border:none;border-top:1px solid #e5e7eb;margin:24px 0;'>
-      <p style='color:#9ca3af;font-size:11px;'>DigiPharm AI · Digital Technologies Congo</p>
+      <p style='color:#9ca3af;font-size:11px;'>digiMind · Digital Technologies Congo</p>
     </div>";
 }

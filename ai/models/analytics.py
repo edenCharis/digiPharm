@@ -478,7 +478,7 @@ def generate_brief(pharmacy_id: int) -> dict:
             "impact": f"Si vous ne passez pas de commande aujourd'hui, vous perdrez environ {_fmtk(lost_rev)} XAF de ventes cette semaine. Ces clients iront probablement chez la concurrence.",
             "recommendation": f"Commandez {names[0]} en priorité absolue maintenant. Ensuite {names[1] if len(names)>1 else 'les suivants'}. Chaque heure compte.",
             "expected_result": f"En commandant aujourd'hui avant 15h, vous sécurisez ~{_fmtk(lost_rev)} XAF de CA et évitez la rupture avant la fin de semaine.",
-            "confidence": 92, "action_label": "Générer un bon de commande", "action_target": "/analytics/inventory.php",
+            "confidence": 92, "action_label": None, "action_target": None,
         })
 
     if _warn:
@@ -491,7 +491,7 @@ def generate_brief(pharmacy_id: int) -> dict:
             "headline": f"{len(_warn)} produit(s) épuisés cette semaine sans commande",
             "explanation": f"Ces produits ont entre 3 et 7 jours de stock restant. Sans réapprovisionnement, les ruptures commenceront dès mercredi.",
             "impact": f"{_fmtk(rev_warn)} XAF de CA à risque sur les 7 prochains jours.",
-            "recommendation": f"Préparez un bon de commande aujourd'hui pour les {len(_warn)} produits concernés. Priorisez ceux avec la rotation la plus forte.",
+            "recommendation": f"Réapprovisionnez aujourd'hui les {len(_warn)} produits concernés. Priorisez ceux avec la rotation la plus forte.",
             "expected_result": f"Une commande passée aujourd'hui garantit votre disponibilité jusqu'à la prochaine livraison, protégeant {_fmtk(rev_warn)} XAF.",
             "confidence": 87, "action_label": "Voir les alertes", "action_target": "/analytics/alerts.php",
         })
@@ -607,11 +607,11 @@ def generate_brief(pharmacy_id: int) -> dict:
     action_cards: list[dict] = []
 
     _action_defs = [
-        ("critical_stockout", "critical", "Passez une commande d'urgence avant ce soir",
-         "Générer un bon de commande", "/analytics/inventory.php"),
+        ("critical_stockout", "critical", "Planifiez un réapprovisionnement d'urgence",
+         "Voir l'inventaire", "/analytics/inventory.php"),
         ("expiry_risk", None, "Lancez une promotion flash avant la péremption",
          "Lancer une promotion", "/analytics/alerts.php"),
-        ("warning_stockout", "warning", "Préparez votre bon de commande de réapprovisionnement",
+        ("warning_stockout", "warning", "Prévoyez un réapprovisionnement rapide",
          "Voir les alertes", "/analytics/alerts.php"),
         ("revenue_decline", "warning", "Analysez et corrigez la baisse de CA",
          "Analyser les tendances", "/analytics/trends.php"),

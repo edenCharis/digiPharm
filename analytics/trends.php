@@ -9,7 +9,7 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Tendances</title>
+<title>digiMind — Tendances</title>
 <style>
 <?php include __DIR__ . '/includes/common.css.php'; ?>
 </style>

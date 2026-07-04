@@ -15,7 +15,7 @@ async function fetchAI(type, extra='') {
     const r = await fetch(`${base}?type=${type}&days=${days}${extra}`);
     const d = await r.json();
     document.getElementById('aiDot')?.classList.add('online');
-    document.getElementById('aiStatus') && (document.getElementById('aiStatus').textContent = 'DigiPharm AI · en ligne');
+    document.getElementById('aiStatus') && (document.getElementById('aiStatus').textContent = 'digiMind · en ligne');
     return d;
   } catch(e) {
     document.getElementById('aiStatus') && (document.getElementById('aiStatus').textContent = 'Service indisponible');

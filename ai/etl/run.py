@@ -444,7 +444,7 @@ def run_pharmacy(src: dict, full_sync: bool = False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="DigiPharm AI ETL runner")
+    parser = argparse.ArgumentParser(description="digiMind ETL runner")
     parser.add_argument("--pharmacy", help="Pharmacy slug (e.g. galy)")
     parser.add_argument("--all",  action="store_true", help="Sync all active pharmacies")
     parser.add_argument("--full", action="store_true", help="Full sync (ignore last date)")

@@ -1,6 +1,6 @@
 <?php
 // $pageTitle must be set before including
-$pageTitle = $pageTitle ?? 'DigiPharm AI';
+$pageTitle = $pageTitle ?? 'digiMind';
 ?>
 <div class="topbar">
   <div class="topbar-left">

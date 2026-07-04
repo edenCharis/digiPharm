@@ -29,7 +29,7 @@ $stat = $stats->fetch() ?: [];
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Synchronisation</title>
+<title>digiMind — Synchronisation</title>
 <style>
 <?php include __DIR__ . '/includes/common.css.php'; ?>
 .source-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px; }

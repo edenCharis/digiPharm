@@ -112,7 +112,7 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Paramètres source de données</title>
+<title>digiMind — Paramètres source de données</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -228,7 +228,7 @@ nav { flex:1; padding:8px 0; }
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <div class="logo-text">DigiPharm<span> AI</span></div>
+    <div class="logo-text">digiMind</div>
   </div>
   <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
   <nav>

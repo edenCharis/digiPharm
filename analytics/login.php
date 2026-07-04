@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Connexion</title>
+<title>digiMind — Connexion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -140,7 +140,7 @@ input:focus { border-color: var(--green); }
     <div class="logo-icon">
       <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     </div>
-    <div class="logo-text">DigiPharm<span> AI</span></div>
+    <div class="logo-text">digiMind</div>
   </div>
 
   <h1>Connexion</h1>

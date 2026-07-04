@@ -10,7 +10,7 @@ $pageTitle  = 'Inventaire';
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DigiPharm AI — Inventaire</title>
+<title>digiMind — Inventaire</title>
 <style>
 <?php include __DIR__ . '/includes/common.css.php'; ?>
 .stock-bar-wrap { width:80px;height:6px;background:var(--border-lt);border-radius:3px;display:inline-block;vertical-align:middle; }

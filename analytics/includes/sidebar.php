@@ -10,7 +10,7 @@ function _nav($href, $page, $active, $icon, $label) {
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <div class="logo-text">DigiPharm<span> AI</span></div>
+    <div class="logo-text"><span>digi</span>Mind</div>
   </div>
   <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
   <nav>

@@ -1,5 +1,5 @@
 """
-DigiPharm AI Service — FastAPI
+digiMind Service — FastAPI
 Runs on localhost:8000 alongside the PHP ERP.
 
 ERP endpoints (pharmacy_id in URL, no auth — internal only):
@@ -24,8 +24,8 @@ from routers import analytics, etl_control
 from core.config import AI_SERVICE_HOST, AI_SERVICE_PORT
 
 app = FastAPI(
-    title="DigiPharm AI",
-    description="AI analytics service for the DigiPharm pharmacy ERP",
+    title="digiMind",
+    description="AI analytics service for the digiMind pharmacy ERP",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",

@@ -48,7 +48,7 @@ switch ($action) {
         require_once __DIR__ . '/config/mailer.php';
         $sent = ai_send_mail(
             $email,
-            'Votre code de vérification DigiPharm AI',
+            'Votre code de vérification digiMind',
             ai_otp_email_html($otp, $user['display_name'],
                 'Vous avez demandé à modifier votre adresse email de connexion. Entrez le code ci-dessous pour confirmer.')
         );
