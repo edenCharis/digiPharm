@@ -50,10 +50,16 @@ def get_sales(pharmacy_id: int, days: int = 90) -> pd.DataFrame:
 
 
 def get_inventory(pharmacy_id: int) -> pd.DataFrame:
-    """Latest inventory snapshot."""
+    """Latest inventory snapshot with days-of-stock estimate."""
     return aquery("""
         SELECT i.product_id, i.product_name, i.category,
-               i.stock_quantity, i.unit_cost, i.unit_price, i.expiry_date
+               i.stock_quantity, i.unit_cost, i.unit_price,
+               DATE_FORMAT(i.expiry_date, '%%Y-%%m-%%d') AS expiry_date,
+               CASE
+                 WHEN COALESCE(s.avg_daily_qty, 0) > 0
+                 THEN ROUND(i.stock_quantity / s.avg_daily_qty, 1)
+                 ELSE NULL
+               END AS dos
         FROM ai_inventory i
         INNER JOIN (
             SELECT product_id, MAX(snapshot_date) AS latest
@@ -62,7 +68,16 @@ def get_inventory(pharmacy_id: int) -> pd.DataFrame:
             GROUP BY product_id
         ) latest ON latest.product_id = i.product_id
                 AND latest.latest = i.snapshot_date
+        LEFT JOIN (
+            SELECT product_id,
+                   SUM(quantity) / GREATEST(DATEDIFF(MAX(sale_date), MIN(sale_date)), 1) AS avg_daily_qty
+            FROM ai_sales
+            WHERE pharmacy_id = :pid
+              AND sale_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            GROUP BY product_id
+        ) s ON s.product_id = i.product_id
         WHERE i.pharmacy_id = :pid
+        ORDER BY dos ASC, i.product_name ASC
     """, {"pid": pharmacy_id})
 
 
