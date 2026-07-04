@@ -2,7 +2,7 @@
 DigiPharm AI Service — FastAPI
 Runs on localhost:8000 alongside the PHP ERP.
 
-Endpoints:
+ERP endpoints (pharmacy_id in URL, no auth — internal only):
   GET /health
   GET /dashboard/{pharmacy_id}
   GET /forecast/{pharmacy_id}/{product_id}?days=30
@@ -10,10 +10,17 @@ Endpoints:
   GET /inventory/recommendations/{pharmacy_id}
   GET /alerts/{pharmacy_id}
   GET /trends/{pharmacy_id}?days=30
+
+Analytics endpoints (API key auth, multi-tenant digipharmai_db):
+  GET /analytics/dashboard     X-API-Key: <key>
+  GET /analytics/trends        X-API-Key: <key>
+  GET /analytics/alerts        X-API-Key: <key>
+  GET /analytics/inventory     X-API-Key: <key>
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import forecast, inventory, alerts, trends, dashboard
+from routers import analytics
 from core.config import AI_SERVICE_HOST, AI_SERVICE_PORT
 
 app = FastAPI(
@@ -37,6 +44,7 @@ app.include_router(inventory.router)
 app.include_router(alerts.router)
 app.include_router(trends.router)
 app.include_router(dashboard.router)
+app.include_router(analytics.router)
 
 
 # ── Health check ──────────────────────────────────────────────────────────
