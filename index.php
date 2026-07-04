@@ -455,7 +455,6 @@ html, body {
       </div>
       <div>
         <span class="brand-name">digiPharm</span>
-        <span class="brand-tag">Modern Pharmacy Operating System</span>
       </div>
     </div>
 
