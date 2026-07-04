@@ -602,7 +602,7 @@ html, body {
       </div>
 
       <h1 class="c-title" id="cardTitle">Connexion</h1>
-      <p class="c-desc"  id="cardDesc">Bienvenue de retour ! Connectez-vous à votre espace digiPharm.</p>
+      <p class="c-desc"  id="cardDesc">Connectez-vous à votre espace digiPharm.</p>
 
       <div class="msg-area" id="msgArea"></div>
 
