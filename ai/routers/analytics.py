@@ -4,7 +4,16 @@ Protected by API key (X-API-Key header or ?api_key= query param).
 """
 from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import text
+import math
 import os
+
+
+def _clean(records: list[dict]) -> list[dict]:
+    """Replace float NaN with None so records are JSON-serializable."""
+    return [
+        {k: (None if isinstance(v, float) and math.isnan(v) else v) for k, v in r.items()}
+        for r in records
+    ]
 
 from models.analytics import (
     dashboard_summary, revenue_trends, generate_alerts, get_inventory
@@ -82,9 +91,7 @@ def analytics_inventory(request: Request):
     pid = _resolve_pharmacy(request)
     try:
         inv = get_inventory(pid)
-        return {
-            "pharmacy_id": pid,
-            "items":       inv.to_dict("records") if not inv.empty else [],
-        }
+        items = _clean(inv.to_dict("records")) if not inv.empty else []
+        return {"pharmacy_id": pid, "items": items}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

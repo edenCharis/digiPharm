@@ -78,7 +78,7 @@ def get_inventory(pharmacy_id: int) -> pd.DataFrame:
         ) s ON s.product_id = i.product_id
         WHERE i.pharmacy_id = :pid
         ORDER BY dos ASC, i.product_name ASC
-    """, {"pid": pharmacy_id}).where(pd.notna, other=None)
+    """, {"pid": pharmacy_id})
 
 
 # ── Revenue trends ────────────────────────────────────────────────────────
