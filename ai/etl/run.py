@@ -254,7 +254,7 @@ class DynamicAdapter:
                 float(row.get("stock_quantity") or 0),
                 float(row["unit_cost"]) if row.get("unit_cost") else None,
                 float(row["unit_price"]) if row.get("unit_price") else None,
-                str(row["expiry_date"]) if row.get("expiry_date") else None,
+                None if not row.get("expiry_date") or str(row["expiry_date"]).startswith("0000") else str(row["expiry_date"]),
             ))
 
     def get_last_sync_date(self) -> str | None:
