@@ -92,6 +92,12 @@ def _make_ssh_tunnel(ssh_host: str, ssh_port: int, ssh_user: str, ssh_pass: str 
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+    # Key candidates: project-specific key (preferred) then root fallback
+    KEY_PATHS = [
+        "/var/www/digipharma/ai/.ssh/id_rsa",
+        "/root/.ssh/id_rsa",
+    ]
+
     connect_kw: dict = dict(
         port=ssh_port,
         username=ssh_user,
@@ -103,12 +109,13 @@ def _make_ssh_tunnel(ssh_host: str, ssh_port: int, ssh_user: str, ssh_pass: str 
     if ssh_pass:
         connect_kw["password"] = ssh_pass
     else:
-        key_path = "/root/.ssh/id_rsa"
-        if os.path.exists(key_path):
+        key_path = next((p for p in KEY_PATHS if os.path.exists(p)), None)
+        if key_path:
             connect_kw["key_filename"] = key_path
         else:
             raise ValueError(
-                "Mot de passe SSH manquant et aucune clé SSH disponible sur le serveur"
+                "Mot de passe SSH manquant et aucune clé SSH disponible. "
+                "Générez une clé sur le VPS ou renseignez un mot de passe."
             )
 
     try:

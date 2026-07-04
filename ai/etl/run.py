@@ -68,39 +68,86 @@ def analytics_connect() -> pymysql.Connection:
 
 
 def source_connect_ssh(src: dict) -> tuple:
-    from sshtunnel import SSHTunnelForwarder
+    import paramiko, socket, select, threading
+
+    KEY_PATHS = [
+        "/var/www/digipharma/ai/.ssh/id_rsa",
+        "/root/.ssh/id_rsa",
+    ]
+
     ssh_pass = _decrypt(src.get("ssh_password") or "")
     db_pass  = _decrypt(src.get("db_password")  or "")
 
-    auth = {}
-    if ssh_pass:
-        auth["ssh_password"] = ssh_pass
-    else:
-        key_path = "/root/.ssh/id_rsa"
-        if os.path.exists(key_path):
-            auth["ssh_pkey"] = key_path
-        else:
-            raise RuntimeError("No SSH auth configured (no password, no key file)")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    tunnel = SSHTunnelForwarder(
-        (src["ssh_host"], int(src.get("ssh_port") or 22)),
-        ssh_username=src.get("ssh_user") or "root",
-        remote_bind_address=(src.get("db_host") or "127.0.0.1", int(src.get("db_port") or 3306)),
-        **auth,
+    connect_kw: dict = dict(
+        port=int(src.get("ssh_port") or 22),
+        username=src.get("ssh_user") or "root",
+        timeout=15,
+        allow_agent=False,
+        look_for_keys=False,
+        banner_timeout=30,
     )
-    tunnel.start()
-    logger.info(f"SSH tunnel → {src['ssh_host']} local_port={tunnel.local_bind_port}")
+    if ssh_pass:
+        connect_kw["password"] = ssh_pass
+    else:
+        key_path = next((p for p in KEY_PATHS if os.path.exists(p)), None)
+        if key_path:
+            connect_kw["key_filename"] = key_path
+        else:
+            raise RuntimeError("Aucune authentification SSH configurée (ni mot de passe, ni clé)")
+
+    client.connect(src["ssh_host"], **connect_kw)
+    transport = client.get_transport()
+
+    remote_host = src.get("db_host") or "127.0.0.1"
+    remote_port = int(src.get("db_port") or 3306)
+
+    srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind(("127.0.0.1", 0))
+    local_port = srv.getsockname()[1]
+    srv.listen(1)
+    srv.settimeout(15)
+
+    def _forward():
+        lconn = chan = None
+        try:
+            lconn, addr = srv.accept()
+            lconn.settimeout(None)
+            chan = transport.open_channel("direct-tcpip", (remote_host, remote_port), addr)
+            while True:
+                r, _, _ = select.select([lconn, chan], [], [], 1.0)
+                if lconn in r:
+                    d = lconn.recv(8192)
+                    if not d: break
+                    chan.sendall(d)
+                if chan in r:
+                    if chan.closed or (not chan.recv_ready() and chan.eof_received): break
+                    d = chan.recv(8192)
+                    if not d: break
+                    lconn.sendall(d)
+        except Exception:
+            pass
+        finally:
+            for obj in (lconn, chan, srv):
+                try: obj.close()
+                except Exception: pass
+
+    threading.Thread(target=_forward, daemon=True).start()
+    logger.info(f"SSH tunnel → {src['ssh_host']} local_port={local_port}")
 
     conn = pymysql.connect(
         host="127.0.0.1",
-        port=tunnel.local_bind_port,
+        port=local_port,
         user=src.get("db_user") or "root",
         password=db_pass,
         database=src["db_name"],
         charset="utf8mb4",
         autocommit=False,
     )
-    return conn, tunnel
+    return conn, client  # client.close() instead of tunnel.stop()
 
 
 def source_connect_direct(src: dict) -> tuple:
@@ -387,7 +434,10 @@ def run_pharmacy(src: dict, full_sync: bool = False):
         if source_conn:
             source_conn.close()
         if tunnel:
-            tunnel.stop()
+            try:
+                tunnel.stop()
+            except AttributeError:
+                tunnel.close()  # paramiko SSHClient
         analytics_conn.close()
 
     return result
