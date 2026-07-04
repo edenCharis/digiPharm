@@ -30,12 +30,18 @@ input.search-box:focus { border-color:var(--green); }
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php include __DIR__ . '/includes/sidebar.php'; ?>
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title"><?= $pageTitle ?></div>
-      <div class="topbar-meta"><span class="status-dot" id="aiDot"></span><span id="aiStatus">Chargement…</span></div>
+    <div class="topbar-left" style="flex-direction:row;align-items:center;gap:10px;">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title"><?= $pageTitle ?></div>
+        <div class="topbar-meta"><span class="status-dot" id="aiDot"></span><span id="aiStatus">Chargement…</span></div>
+      </div>
     </div>
     <div class="topbar-right">
       <input class="search-box" type="text" id="searchBox" placeholder="Rechercher un produit…" oninput="onSearch()">
@@ -211,5 +217,8 @@ function goPage(p) {
 }
 
 load();
+
+function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
 </script>
 </body></html>

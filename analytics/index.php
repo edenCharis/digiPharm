@@ -198,10 +198,35 @@ nav{flex:1;padding:8px 0;}
 .err{background:var(--red-lt);border:1px solid #fca5a5;border-radius:var(--r);padding:14px 18px;color:var(--red-dk);font-size:13px;}
 
 @media(max-width:1100px){.greeting-wrap{grid-template-columns:1fr;}}
+
+/* Mobile */
+.sidebar{transition:transform .25s ease;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99;}
+.sidebar-overlay.open{display:block;}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text-2);}
+.hamburger svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0!important;}
+  .hamburger{display:flex;align-items:center;}
+  .content{padding:14px 14px 28px!important;}
+  .topbar{padding:0 14px!important;}
+  .g-stats{grid-template-columns:1fr 1fr;}
+  .greeting-wrap{grid-template-columns:1fr;}
+  .tab-btn{padding:10px 10px;font-size:11.5px;}
+  .refresh-btn span{display:none;}
+}
+@media(max-width:420px){
+  .g-stats{grid-template-columns:1fr;}
+  .tab-btn svg{display:none;}
+  .card-foot{flex-wrap:wrap;}
+}
 </style>
 </head>
 <body>
 
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <aside class="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
@@ -229,6 +254,10 @@ nav{flex:1;padding:8px 0;}
     <a href="/analytics/settings.php" class="nav-link">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Paramètres
     </a>
+    <div class="nav-s" style="margin-top:8px">Compte</div>
+    <a href="/analytics/account.php" class="nav-link">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mon compte
+    </a>
   </nav>
   <div class="sidebar-footer">
     <div class="avatar"><?= $initials ?></div>
@@ -242,11 +271,16 @@ nav{flex:1;padding:8px 0;}
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title">Briefing quotidien</div>
-      <div class="topbar-meta">
-        <span class="status-dot" id="aiDot"></span>
-        <span id="aiStatus">Analyse en cours…</span>
+    <div class="topbar-left" style="flex-direction:row;align-items:center;gap:10px;">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title">Briefing quotidien</div>
+        <div class="topbar-meta">
+          <span class="status-dot" id="aiDot"></span>
+          <span id="aiStatus">Analyse en cours…</span>
+        </div>
       </div>
     </div>
     <button class="refresh-btn" onclick="loadBrief()">
@@ -583,6 +617,9 @@ async function loadBrief(){
 }
 
 loadBrief();
+
+function openSidebar()  { document.querySelector('.sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('open'); }
+function closeSidebar() { document.querySelector('.sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); }
 </script>
 </body>
 </html>

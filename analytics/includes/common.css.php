@@ -88,3 +88,20 @@ nav { flex:1;padding:8px 0; }
 .status-dot.online { background:var(--green); }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 @media(max-width:1100px) { .kpi-row{grid-template-columns:repeat(2,1fr);} }
+
+/* ── Responsive sidebar ───────────────────────────────────────────────── */
+.sidebar { transition:transform .25s ease; }
+.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:99; }
+.sidebar-overlay.open { display:block; }
+.hamburger { display:none; background:none; border:none; cursor:pointer; padding:4px; color:var(--text-2); }
+.hamburger svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+@media(max-width:768px) {
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0!important; }
+  .hamburger { display:flex; align-items:center; }
+  .content { padding:16px 16px 28px!important; }
+  .topbar { padding:0 14px!important; }
+  .topbar-left { flex-direction:row!important; align-items:center; gap:10px; }
+  .kpi-row { grid-template-columns:repeat(2,1fr)!important; }
+}
