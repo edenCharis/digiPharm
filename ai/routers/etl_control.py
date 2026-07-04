@@ -89,6 +89,8 @@ def _open_connection(src: dict, encrypted: bool = True):
     )
 
     if str(src.get("conn_type", "ssh")) == "ssh":
+        import paramiko
+
         ssh_host = str(src.get("ssh_host") or "").strip()
         if not ssh_host:
             raise ValueError("Hôte SSH manquant")
@@ -104,13 +106,21 @@ def _open_connection(src: dict, encrypted: bool = True):
             else:
                 raise ValueError("Mot de passe SSH manquant (et aucune clé SSH trouvée sur le serveur)")
 
-        tunnel = SSHTunnelForwarder(
-            (ssh_host, int(src.get("ssh_port") or 22)),
-            ssh_username=str(src.get("ssh_user") or "root"),
-            remote_bind_address=(str(src.get("db_host") or "127.0.0.1"), int(src.get("db_port") or 3306)),
-            **auth,
-        )
-        tunnel.start()
+        # sshtunnel uses paramiko.RejectPolicy by default — www-data has no known_hosts.
+        # Monkey-patch to AutoAddPolicy for the duration of tunnel creation.
+        _orig_policy = paramiko.RejectPolicy
+        paramiko.RejectPolicy = paramiko.AutoAddPolicy
+        try:
+            tunnel = SSHTunnelForwarder(
+                (ssh_host, int(src.get("ssh_port") or 22)),
+                ssh_username=str(src.get("ssh_user") or "root"),
+                remote_bind_address=(str(src.get("db_host") or "127.0.0.1"), int(src.get("db_port") or 3306)),
+                allow_agent=False,
+                **auth,
+            )
+            tunnel.start()
+        finally:
+            paramiko.RejectPolicy = _orig_policy
         conn = pymysql.connect(host="127.0.0.1", port=tunnel.local_bind_port, **db_kwargs)
         return conn, tunnel
 
@@ -170,7 +180,13 @@ async def test_connection(request: Request):
         return {"ok": True, "tables": len(tables), "table_names": tables[:20]}
 
     except Exception as exc:
-        err = str(exc)
+        import paramiko as _pm
+        if isinstance(exc, _pm.AuthenticationException):
+            err = "Authentification SSH refusée — vérifiez le nom d'utilisateur et le mot de passe SSH."
+        elif isinstance(exc, _pm.SSHException):
+            err = f"Erreur SSH : {exc}"
+        else:
+            err = str(exc)
         if not from_form:
             try:
                 with _engine().connect() as db:
