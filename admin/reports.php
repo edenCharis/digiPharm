@@ -51,7 +51,7 @@ function getSalesReport($pdo, $date_from, $date_to, $pharmacyId, $cashier_filter
         $params[] = "%$product_filter%";
     }
 
-    $sql .= " GROUP BY DATE(s.saleDate) ORDER BY saleDate DESC";
+    $sql .= " GROUP BY DATE(s.saleDate) ORDER BY sale_date DESC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
