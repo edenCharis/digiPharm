@@ -263,4 +263,3 @@ if (isset($db)) {
 
 // Define that settings are available
 define('APP_SETTINGS_LOADED', true);
-?>

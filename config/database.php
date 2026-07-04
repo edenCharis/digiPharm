@@ -173,5 +173,3 @@ class Database {
 // Current pharmacy scope — available to every page that includes this file.
 // Defaults to 1 (the platform's own pharmacy) when no session is active.
 $pharmacyId = (int)(($_SESSION ?? [])['pharmacy_id'] ?? 1);
-
-?>
