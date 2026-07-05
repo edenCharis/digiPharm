@@ -1,20 +1,29 @@
 <?php
-// $activePage must be set before including (e.g., 'dashboard', 'trends', 'inventory', 'alerts', 'sync', 'settings')
 $activePage = $activePage ?? '';
 $_initials  = strtoupper(substr($user['display_name'], 0, 1));
 function _nav($href, $page, $active, $icon, $label) {
     $cls = $page === $active ? ' active' : '';
-    echo "<a href=\"$href\" class=\"nav-link$cls\"><svg viewBox=\"0 0 24 24\">$icon</svg>$label</a>";
+    echo "<a href=\"$href\" class=\"nav-link$cls\" title=\"$label\">"
+       . "<svg viewBox=\"0 0 24 24\">$icon</svg>"
+       . "<span class=\"nav-label\">$label</span>"
+       . "</a>";
 }
 ?>
-<aside class="sidebar">
+<aside class="sidebar" id="mainSidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
     <div class="logo-text"><span>digi</span>Mind</div>
+    <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" title="Réduire le menu">
+      <span class="ico-collapse">
+        <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7"/><path d="M18 19l-7-7 7-7"/></svg>
+      </span>
+      <span class="ico-expand">
+        <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7"/><path d="M6 5l7 7-7 7"/></svg>
+      </span>
+    </button>
   </div>
   <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
   <nav>
-    <div class="nav-section">Analyse</div>
     <?php _nav('/analytics/', 'dashboard', $activePage,
       '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
       'Vue d\'ensemble'); ?>
@@ -27,21 +36,18 @@ function _nav($href, $page, $active, $icon, $label) {
     <?php _nav('/analytics/alerts.php', 'alerts', $activePage,
       '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
       'Alertes'); ?>
-    <div class="nav-section" style="margin-top:8px">Approvisionnement</div>
     <?php _nav('/analytics/suppliers.php', 'suppliers', $activePage,
       '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
       'Fournisseurs'); ?>
     <?php _nav('/analytics/orders.php', 'orders', $activePage,
       '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
       'Commandes'); ?>
-    <div class="nav-section" style="margin-top:8px">Données</div>
     <?php _nav('/analytics/sync.php', 'sync', $activePage,
       '<polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/>',
       'Synchronisation'); ?>
     <?php _nav('/analytics/settings.php', 'settings', $activePage,
-      '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+      '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
       'Paramètres'); ?>
-    <div class="nav-section" style="margin-top:8px">Compte</div>
     <?php _nav('/analytics/account.php', 'account', $activePage,
       '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
       'Mon compte'); ?>
@@ -55,3 +61,25 @@ function _nav($href, $page, $active, $icon, $label) {
     <a href="/analytics/logout.php" class="logout-btn" title="Déconnexion">✕</a>
   </div>
 </aside>
+
+<script>
+(function () {
+  var KEY = 'digimind_sb_col';
+  if (localStorage.getItem(KEY) === '1') {
+    document.body.classList.add('sb-col');
+  }
+  window.toggleSidebar = function () {
+    var collapsed = document.body.classList.toggle('sb-col');
+    localStorage.setItem(KEY, collapsed ? '1' : '0');
+  };
+  // Mobile open/close (called from each page's hamburger button)
+  window.openSidebar  = function () {
+    document.getElementById('sidebarOverlay').classList.add('open');
+    document.getElementById('mainSidebar').classList.add('open');
+  };
+  window.closeSidebar = function () {
+    document.getElementById('sidebarOverlay').classList.remove('open');
+    document.getElementById('mainSidebar').classList.remove('open');
+  };
+}());
+</script>

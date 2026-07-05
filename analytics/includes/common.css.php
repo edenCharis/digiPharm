@@ -89,19 +89,54 @@ nav { flex:1;padding:8px 0; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 @media(max-width:1100px) { .kpi-row{grid-template-columns:repeat(2,1fr);} }
 
-/* ── Responsive sidebar ───────────────────────────────────────────────── */
-.sidebar { transition:transform .25s ease; }
-.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:99; }
+/* ── Sidebar collapse (desktop) ───────────────────────────────────────── */
+.sidebar { transition:width .2s ease, transform .25s ease; overflow:hidden; }
+.main    { transition:margin-left .2s ease; }
+.nav-label { white-space:nowrap; overflow:hidden; transition:opacity .15s; }
+
+/* toggle button inside sidebar header */
+.sb-toggle { background:none;border:none;cursor:pointer;color:var(--text-3);display:flex;align-items:center;
+  justify-content:center;padding:5px;border-radius:6px;margin-left:auto;flex-shrink:0; }
+.sb-toggle:hover { background:var(--surface-alt);color:var(--text); }
+.sb-toggle svg { width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round; }
+.sb-toggle .ico-collapse { display:flex; }
+.sb-toggle .ico-expand   { display:none; }
+
+/* collapsed state */
+body.sb-col .sidebar           { width:64px; }
+body.sb-col .main              { margin-left:64px; }
+body.sb-col .logo-text         { display:none; }
+body.sb-col .sidebar-pharmacy  { display:none; }
+body.sb-col .nav-label         { display:none; }
+body.sb-col .nav-link          { justify-content:center; padding:10px 0; margin:1px 10px; }
+body.sb-col .sidebar-footer    { justify-content:center; padding:14px 0; }
+body.sb-col .avatar-info       { display:none; }
+body.sb-col .logout-btn        { display:none; }
+body.sb-col .sb-toggle .ico-collapse { display:none; }
+body.sb-col .sb-toggle .ico-expand   { display:flex; }
+
+/* ── Responsive sidebar (mobile) ─────────────────────────────────────── */
+.sidebar-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99; }
 .sidebar-overlay.open { display:block; }
-.hamburger { display:none; background:none; border:none; cursor:pointer; padding:4px; color:var(--text-2); }
-.hamburger svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.hamburger { display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text-2); }
+.hamburger svg { width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
 @media(max-width:768px) {
-  .sidebar { transform:translateX(-100%); }
+  .sidebar { transform:translateX(-100%);width:var(--sidebar-w)!important; }
   .sidebar.open { transform:translateX(0); }
   .main { margin-left:0!important; }
-  .hamburger { display:flex; align-items:center; }
-  .content { padding:16px 16px 28px!important; }
-  .topbar { padding:0 14px!important; }
-  .topbar-left { flex-direction:row!important; align-items:center; gap:10px; }
-  .kpi-row { grid-template-columns:repeat(2,1fr)!important; }
+  .hamburger { display:flex;align-items:center; }
+  .sb-toggle { display:none; }
+  /* always show labels on mobile even if collapsed setting is saved */
+  body.sb-col .logo-text,
+  body.sb-col .sidebar-pharmacy,
+  body.sb-col .nav-label  { display:unset; }
+  body.sb-col .nav-link   { justify-content:flex-start;padding:8px 14px;margin:1px 8px; }
+  body.sb-col .avatar-info,
+  body.sb-col .logout-btn { display:unset; }
+  body.sb-col .sidebar-footer { justify-content:unset;padding:14px 16px; }
+  .content  { padding:16px 16px 28px!important; }
+  .topbar   { padding:0 14px!important; }
+  .topbar-left { flex-direction:row!important;align-items:center;gap:10px; }
+  .kpi-row  { grid-template-columns:repeat(2,1fr)!important; }
 }
