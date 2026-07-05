@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/config/auth.php';
 ai_check_auth();
-$user     = ai_user();
-$initials = strtoupper(substr($user['display_name'], 0, 1));
+$user       = ai_user();
+$activePage = 'dashboard';
+$initials   = strtoupper(substr($user['display_name'], 0, 1));
 $jours = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
 $mois  = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 $today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] . ' ' . date('Y');
@@ -227,47 +228,7 @@ nav{flex:1;padding:8px 0;}
 <body>
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <div class="logo-text">digiMind</div>
-  </div>
-  <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
-  <nav>
-    <div class="nav-s">Analyse</div>
-    <a href="/analytics/" class="nav-link active">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Vue d'ensemble
-    </a>
-    <a href="/analytics/trends.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Tendances
-    </a>
-    <a href="/analytics/inventory.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Inventaire
-    </a>
-    <a href="/analytics/alerts.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Alertes
-    </a>
-    <div class="nav-s" style="margin-top:8px">Données</div>
-    <a href="/analytics/sync.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Synchronisation
-    </a>
-    <a href="/analytics/settings.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Paramètres
-    </a>
-    <div class="nav-s" style="margin-top:8px">Compte</div>
-    <a href="/analytics/account.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mon compte
-    </a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="avatar"><?= $initials ?></div>
-    <div>
-      <div class="av-name"><?= htmlspecialchars($user['display_name']) ?></div>
-      <div class="av-role"><?= $user['role']==='admin'?'Administrateur':'Lecteur' ?></div>
-    </div>
-    <a href="/analytics/logout.php" class="logout-btn" title="Déconnexion">✕</a>
-  </div>
-</aside>
+<?php include __DIR__ . '/includes/sidebar.php'; ?>
 
 <div class="main">
   <div class="topbar">

@@ -65,65 +65,91 @@ function statusBadge(string $status): string {
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .page-title{font-size:22px;font-weight:700;color:var(--text)}
 .page-sub{font-size:13px;color:var(--muted);margin-top:2px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:background .15s}
-.btn-primary{background:#1a7f4b;color:#fff}
-.btn-primary:hover{background:#155e38}
-.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
-.btn-outline:hover{background:var(--hover)}
-.btn-sm{padding:6px 12px;font-size:12px}
-.btn-red{background:#dc2626;color:#fff}
-.btn-red:hover{background:#b91c1c}
+/* ── local overrides (common.css.php vars apply) ─────────────────── */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:22px;font-weight:700;color:var(--text)}
+.page-sub{font-size:13px;color:var(--text-3);margin-top:2px}
+
 .orders-table{width:100%;border-collapse:collapse;font-size:13px}
-.orders-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
-.orders-table td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.orders-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.orders-table td{padding:12px 14px;border-bottom:1px solid var(--border-lt);color:var(--text-2);vertical-align:middle}
 .orders-table tr:last-child td{border-bottom:none}
-.orders-table tr:hover td{background:var(--hover)}
-.ref{font-weight:700;font-family:monospace;font-size:12px;color:#1a7f4b}
-.empty-row td{text-align:center;padding:60px;color:var(--muted)}
+.orders-table tr:hover td{background:var(--surface-alt)}
+.ref{font-weight:700;font-family:monospace;font-size:12px;color:var(--green)}
+.empty-row td{text-align:center;padding:60px;color:var(--text-3)}
+.action-cell{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
+/* ── Modal ───────────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
 .modal-overlay.open{display:flex}
-.modal{background:var(--card);border-radius:16px;width:100%;max-width:720px;padding:32px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:24px}
-.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-full{grid-column:1/-1}
-.field-group{display:flex;flex-direction:column;gap:6px}
-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-input[type=text],input[type=email],input[type=date],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);color:var(--text);box-sizing:border-box;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#1a7f4b;box-shadow:0 0 0 3px rgba(26,127,75,.12)}
-textarea{resize:vertical;min-height:70px}
-.divider{grid-column:1/-1;border:none;border-top:1px solid var(--border);margin:4px 0}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:660px;position:relative;box-shadow:0 16px 48px rgba(0,0,0,.18)}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:17px;font-weight:700;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--text-3);cursor:pointer;padding:4px;display:flex;border-radius:6px}
+.modal-close:hover{background:var(--surface-alt);color:var(--text)}
+.modal-body{padding:20px 24px 24px}
 
-/* Product picker */
-.product-search-wrap{position:relative;grid-column:1/-1}
-.product-search{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);color:var(--text);box-sizing:border-box}
-.product-search:focus{outline:none;border-color:#1a7f4b}
-.product-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1.5px solid var(--border);border-radius:8px;max-height:200px;overflow-y:auto;z-index:300;display:none;box-shadow:0 8px 24px rgba(0,0,0,.12)}
-.product-option{padding:10px 14px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;gap:12px}
-.product-option:hover{background:var(--hover)}
-.product-option .pname{font-weight:600;color:var(--text)}
-.product-option .pstock{font-size:11px;color:var(--muted)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.single{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{
+  padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;background:var(--bg);color:var(--text);
+  font-family:inherit;width:100%;box-sizing:border-box;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,127,75,.1)
+}
+.field textarea{resize:vertical;min-height:60px}
 
-/* Item list */
-.items-list{grid-column:1/-1;display:flex;flex-direction:column;gap:8px;margin-top:4px}
-.item-row{display:grid;grid-template-columns:1fr 90px 100px auto;gap:8px;align-items:center;background:var(--hover);border-radius:8px;padding:10px 12px}
-.item-name{font-size:13px;font-weight:600;color:var(--text)}
-.item-sub{font-size:11px;color:var(--muted)}
-.item-qty{width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text);text-align:center}
-.item-price{width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;background:var(--bg);color:var(--text)}
-.item-del{background:none;border:none;color:#dc2626;cursor:pointer;padding:4px;display:flex}
+.section-sep{border:none;border-top:1px solid var(--border-lt);margin:18px 0 16px}
+.section-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
 
-/* Action row in orders table */
-.action-cell{display:flex;gap:6px;align-items:center}
+/* Product search */
+.psearch-wrap{position:relative;margin-bottom:12px}
+.psearch-wrap input{
+  padding:9px 11px 9px 36px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;background:var(--bg);color:var(--text);width:100%;box-sizing:border-box;
+}
+.psearch-wrap input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,127,75,.1)}
+.psearch-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none}
+.pdropdown{position:absolute;top:calc(100% + 3px);left:0;right:0;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  max-height:210px;overflow-y:auto;z-index:300;display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.popt{padding:9px 14px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border-lt)}
+.popt:last-child{border-bottom:none}
+.popt:hover{background:var(--surface-alt)}
+.popt-name{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.popt-cat{font-size:11px;color:var(--text-3);margin-top:1px}
+.popt-stock{font-size:12px;color:var(--text-3);text-align:right;flex-shrink:0}
 
-/* Info panel for an order */
-.order-detail-toast{display:none;position:fixed;bottom:24px;right:24px;background:#1a7f4b;color:#fff;padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:500;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+/* Item rows */
+.items-list{display:flex;flex-direction:column;gap:6px}
+.item-row{display:grid;grid-template-columns:1fr 80px 100px 28px;gap:8px;align-items:center;
+  background:var(--surface-alt);border:1px solid var(--border-lt);border-radius:8px;padding:8px 12px}
+.item-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-hint{font-size:11px;color:var(--text-3);margin-top:1px}
+.item-input{padding:5px 7px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;
+  background:var(--bg);color:var(--text);width:100%;text-align:center;box-sizing:border-box}
+.item-input:focus{outline:none;border-color:var(--green)}
+.item-del{background:none;border:none;color:var(--text-3);cursor:pointer;padding:2px;display:flex;border-radius:4px}
+.item-del:hover{color:#dc2626;background:#fee2e2}
 
-@media(max-width:640px){
-  .form-grid{grid-template-columns:1fr}
-  .item-row{grid-template-columns:1fr 70px 80px auto}
+/* Modal footer */
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;padding-top:20px;border-top:1px solid var(--border-lt);margin-top:4px}
+
+/* Toast */
+.toast{display:none;position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;
+  padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.2)}
+
+@media(max-width:600px){
+  .form-row{grid-template-columns:1fr}
+  .item-row{grid-template-columns:1fr 70px 90px 28px}
+  .modal-body{padding:16px}
+  .modal-header{padding:16px 16px 0}
 }
 </style>
 </head>
@@ -201,73 +227,83 @@ textarea{resize:vertical;min-height:70px}
 <!-- Create order modal -->
 <div class="modal-overlay" id="orderModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">Nouvelle commande fournisseur</div>
+    <div class="modal-header">
+      <div class="modal-title">Nouvelle commande</div>
+      <button class="modal-close" onclick="closeModal()" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
 
-    <form id="orderForm" onsubmit="submitOrder(event)">
-      <div class="form-grid">
+    <div class="modal-body">
+      <form id="orderForm" onsubmit="submitOrder(event)">
 
-        <!-- Supplier -->
-        <div class="field-group">
-          <label>Fournisseur *</label>
-          <?php if ($suppliers): ?>
-          <select id="supplierSelect" onchange="prefillContact()" required>
-            <option value="">— Sélectionner —</option>
-            <?php foreach ($suppliers as $s): ?>
-            <option value="<?= htmlspecialchars($s['name']) ?>" data-contact="<?= htmlspecialchars($s['contact'] ?? '') ?>">
-              <?= htmlspecialchars($s['name']) ?>
-            </option>
-            <?php endforeach; ?>
-          </select>
-          <?php else: ?>
-          <input type="text" id="supplierSelect" placeholder="Nom du fournisseur" required>
-          <?php endif; ?>
+        <!-- Row 1: supplier + email -->
+        <div class="form-row">
+          <div class="field">
+            <label>Fournisseur *</label>
+            <?php if ($suppliers): ?>
+            <select id="supplierSelect" onchange="prefillContact()" required>
+              <option value="">— Sélectionner —</option>
+              <?php foreach ($suppliers as $s): ?>
+              <option value="<?= htmlspecialchars($s['name']) ?>" data-contact="<?= htmlspecialchars($s['contact'] ?? '') ?>">
+                <?= htmlspecialchars($s['name']) ?>
+              </option>
+              <?php endforeach; ?>
+            </select>
+            <?php else: ?>
+            <input type="text" id="supplierSelect" placeholder="Nom du fournisseur" required>
+            <?php endif; ?>
+          </div>
+          <div class="field">
+            <label>Email fournisseur *</label>
+            <input type="email" id="supplierEmail" placeholder="contact@fournisseur.com" required>
+          </div>
         </div>
 
-        <!-- Email -->
-        <div class="field-group">
-          <label>Email fournisseur *</label>
-          <input type="email" id="supplierEmail" placeholder="contact@fournisseur.com" required>
+        <!-- Row 2: date + notes -->
+        <div class="form-row">
+          <div class="field">
+            <label>Livraison souhaitée</label>
+            <input type="date" id="requestedDate" min="<?= date('Y-m-d') ?>">
+          </div>
+          <div class="field">
+            <label>Notes</label>
+            <input type="text" id="orderNotes" placeholder="Instructions particulières…">
+          </div>
         </div>
 
-        <!-- Expected date -->
-        <div class="field-group">
-          <label>Livraison souhaitée</label>
-          <input type="date" id="requestedDate" min="<?= date('Y-m-d') ?>">
+        <hr class="section-sep">
+        <div class="section-label">Produits à commander</div>
+
+        <!-- Product search -->
+        <div class="psearch-wrap">
+          <svg class="psearch-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="productSearch" placeholder="Rechercher un produit de l'inventaire…"
+            autocomplete="off" oninput="filterProducts(this.value)"
+            onfocus="showDropdown()" onblur="setTimeout(hideDropdown,200)">
+          <div class="pdropdown" id="productDropdown"></div>
         </div>
 
-        <!-- Notes -->
-        <div class="field-group">
-          <label>Notes</label>
-          <input type="text" id="orderNotes" placeholder="Instructions particulières…">
-        </div>
-
-        <hr class="divider">
-
-        <!-- Product picker -->
-        <div class="product-search-wrap">
-          <label style="display:block;margin-bottom:6px">Ajouter des produits</label>
-          <input type="text" class="product-search" id="productSearch" placeholder="Rechercher un produit…" autocomplete="off" oninput="filterProducts(this.value)" onfocus="showDropdown()" onblur="setTimeout(hideDropdown,200)">
-          <div class="product-dropdown" id="productDropdown"></div>
-        </div>
-
-        <!-- Item list -->
+        <!-- Added items -->
         <div class="items-list" id="itemsList"></div>
+        <div id="itemsEmpty" style="text-align:center;padding:20px 0;color:var(--text-3);font-size:13px">
+          Aucun produit ajouté — recherchez ci-dessus pour ajouter
+        </div>
 
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Créer et envoyer
+          </button>
+        </div>
 
-      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:28px">
-        <button type="button" class="btn btn-outline" onclick="closeModal()">Annuler</button>
-        <button type="submit" class="btn btn-primary" id="submitBtn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Créer et envoyer
-        </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 
-<div class="order-detail-toast" id="toast"></div>
+<div class="toast" id="toast"></div>
 
 <script>
 // Inventory data from PHP
@@ -301,19 +337,34 @@ function prefillContact() {
 function filterProducts(q) {
   const dd = document.getElementById('productDropdown');
   const lq = q.toLowerCase().trim();
-  const matches = lq.length < 2 ? [] : INVENTORY.filter(p =>
+  if (lq.length < 2) { dd.style.display = 'none'; return; }
+
+  const matches = INVENTORY.filter(p =>
     p.product_name?.toLowerCase().includes(lq) || p.category?.toLowerCase().includes(lq)
-  ).slice(0, 20);
+  ).slice(0, 25);
 
-  dd.innerHTML = matches.map(p => `
-    <div class="product-option" onmousedown="addItem(${JSON.stringify(p).replace(/"/g,'&quot;')})">
-      <div><div class="pname">${p.product_name}</div><div class="pstock">${p.category || ''}</div></div>
-      <div style="text-align:right"><div class="pname">${p.stock_quantity ?? '?'} unités</div><div class="pstock">${p.unit_cost ? Math.round(p.unit_cost).toLocaleString()+' CFA' : ''}</div></div>
-    </div>`).join('') || '<div style="padding:14px;color:var(--muted);font-size:13px">Aucun résultat</div>';
+  dd.innerHTML = matches.length
+    ? matches.map(p => {
+        const safe = JSON.stringify(p).replace(/"/g,'&quot;');
+        return `<div class="popt" onmousedown="addItem(${safe})">
+          <div style="min-width:0">
+            <div class="popt-name">${p.product_name}</div>
+            <div class="popt-cat">${p.category || ''}</div>
+          </div>
+          <div class="popt-stock">
+            <div>${p.stock_quantity ?? '?'} unités</div>
+            <div>${p.unit_cost ? Math.round(p.unit_cost).toLocaleString()+' CFA' : ''}</div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<div style="padding:12px 14px;color:var(--text-3);font-size:13px">Aucun résultat</div>';
 
-  dd.style.display = lq.length >= 2 ? 'block' : 'none';
+  dd.style.display = 'block';
 }
-function showDropdown() { if (document.getElementById('productSearch').value.length >= 2) filterProducts(document.getElementById('productSearch').value); }
+function showDropdown() {
+  const v = document.getElementById('productSearch').value;
+  if (v.length >= 2) filterProducts(v);
+}
 function hideDropdown() { document.getElementById('productDropdown').style.display = 'none'; }
 
 function addItem(p) {
@@ -325,32 +376,44 @@ function addItem(p) {
   hideDropdown();
 }
 
-function removeItem(id) {
-  orderItems = orderItems.filter(i => i.product_id !== id);
+function removeItem(pid) {
+  orderItems = orderItems.filter(i => i.product_id !== pid);
   renderItems();
 }
 
 function renderItems() {
-  const list = document.getElementById('itemsList');
-  if (!orderItems.length) { list.innerHTML = ''; return; }
-  list.innerHTML = orderItems.map(item => `
-    <div class="item-row">
-      <div>
+  const list  = document.getElementById('itemsList');
+  const empty = document.getElementById('itemsEmpty');
+  if (!orderItems.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = orderItems.map(item => {
+    const pid  = item.product_id.replace(/'/g,"\\'");
+    const hint = [
+      item.stock_quantity != null ? `Stock: ${item.stock_quantity}` : '',
+      item.unit_cost ? Math.round(item.unit_cost).toLocaleString()+' CFA/u' : '',
+    ].filter(Boolean).join(' · ');
+    return `<div class="item-row">
+      <div style="min-width:0">
         <div class="item-name">${item.product_name}</div>
-        <div class="item-sub">Stock: ${item.stock_quantity ?? '?'} · ${item.unit_cost ? Math.round(item.unit_cost).toLocaleString()+' CFA/u' : ''}</div>
+        ${hint ? `<div class="item-hint">${hint}</div>` : ''}
       </div>
-      <input class="item-qty" type="number" min="1" value="${item.quantity}"
-        onchange="updateQty('${item.product_id}', this.value)" placeholder="Qté">
-      <input class="item-price" type="number" min="0" value="${item.unit_cost || ''}"
-        onchange="updatePrice('${item.product_id}', this.value)" placeholder="Prix unit.">
-      <button class="item-del" onclick="removeItem('${item.product_id}')" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <input class="item-input" type="number" min="1" value="${item.quantity}"
+        onchange="updateQty('${pid}', this.value)" placeholder="Qté" title="Quantité">
+      <input class="item-input" type="number" min="0" step="any" value="${item.unit_cost || ''}"
+        onchange="updatePrice('${pid}', this.value)" placeholder="Prix (CFA)" title="Prix unitaire">
+      <button class="item-del" onclick="removeItem('${pid}')" type="button" title="Retirer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
-function updateQty(id, v) { const i = orderItems.find(x => x.product_id === id); if (i) i.quantity = parseInt(v)||1; }
-function updatePrice(id, v) { const i = orderItems.find(x => x.product_id === id); if (i) i.unit_cost = parseFloat(v)||null; }
+function updateQty(id, v)   { const i = orderItems.find(x => x.product_id === id); if (i) i.quantity  = parseInt(v)   || 1;   }
+function updatePrice(id, v) { const i = orderItems.find(x => x.product_id === id); if (i) i.unit_cost = parseFloat(v) || null; }
 
 // Submit order
 async function submitOrder(e) {

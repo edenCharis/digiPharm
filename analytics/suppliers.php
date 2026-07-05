@@ -22,12 +22,12 @@ $knownSuppliers = $suppliersDb->fetchAll();
 <?php require_once __DIR__ . '/includes/common.css.php'; ?>
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
 .page-title{font-size:22px;font-weight:700;color:var(--text)}
-.page-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.page-sub{font-size:13px;color:var(--text-3);margin-top:2px}
 .supplier-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:32px}
-.supplier-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative}
+.supplier-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative}
 .sup-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
 .sup-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.3}
-.sup-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.sup-meta{font-size:12px;color:var(--text-3);margin-top:3px}
 .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-excellent{background:#dcfce7;color:#166534}
 .badge-fiable{background:#dbeafe;color:#1e40af}
@@ -35,23 +35,23 @@ $knownSuppliers = $suppliersDb->fetchAll();
 .badge-risque{background:#fee2e2;color:#991b1b}
 .score-circle{display:flex;flex-direction:column;align-items:center;min-width:56px}
 .score-val{font-size:28px;font-weight:800;line-height:1;color:var(--text)}
-.score-lbl{font-size:10px;color:var(--muted);margin-top:2px;text-align:center}
+.score-lbl{font-size:10px;color:var(--text-3);margin-top:2px;text-align:center}
 .dim-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.dim-label{font-size:12px;color:var(--muted);width:120px;flex-shrink:0}
+.dim-label{font-size:12px;color:var(--text-3);width:120px;flex-shrink:0}
 .dim-bar-wrap{flex:1;background:var(--border);border-radius:6px;height:7px;overflow:hidden}
 .dim-bar{height:100%;border-radius:6px;transition:width .6s ease}
 .dim-val{font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right}
 .sup-stats{display:flex;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
 .stat-item{text-align:center;flex:1}
 .stat-item .n{font-size:16px;font-weight:700;color:var(--text)}
-.stat-item .l{font-size:11px;color:var(--muted)}
-.empty-state{text-align:center;padding:80px 24px;color:var(--muted)}
+.stat-item .l{font-size:11px;color:var(--text-3)}
+.empty-state{text-align:center;padding:80px 24px;color:var(--text-3)}
 .empty-state .icon{font-size:48px;margin-bottom:16px}
 .empty-state p{font-size:14px;max-width:360px;margin:8px auto;line-height:1.6}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
 .btn-primary{background:#1a7f4b;color:#fff}
 .btn-primary:hover{background:#155e38}
-.section-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:28px 0 14px}
+.section-title{font-size:13px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin:28px 0 14px}
 
 /* order link */
 .order-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#1a7f4b;text-decoration:none;margin-top:12px;font-weight:600}
@@ -83,7 +83,7 @@ $knownSuppliers = $suppliersDb->fetchAll();
     </div>
 
     <!-- Loading state -->
-    <div id="loadingState" style="text-align:center;padding:60px;color:var(--muted)">
+    <div id="loadingState" style="text-align:center;padding:60px;color:var(--text-3)">
       <div style="font-size:14px">Chargement des scores…</div>
     </div>
 
@@ -102,18 +102,18 @@ $knownSuppliers = $suppliersDb->fetchAll();
     <?php if ($knownSuppliers): ?>
     <div id="knownSuppliersSection" style="display:none">
       <div class="section-title">Fournisseurs connus (<?= count($knownSuppliers) ?>)</div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
         <table style="width:100%;border-collapse:collapse">
           <thead><tr style="border-bottom:1px solid var(--border)">
-            <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--muted);font-weight:600">Nom</th>
-            <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--muted);font-weight:600">Contact</th>
-            <th style="padding:12px 16px;text-align:right;font-size:12px;color:var(--muted);font-weight:600"></th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-3);font-weight:600">Nom</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-3);font-weight:600">Contact</th>
+            <th style="padding:12px 16px;text-align:right;font-size:12px;color:var(--text-3);font-weight:600"></th>
           </tr></thead>
           <tbody>
           <?php foreach ($knownSuppliers as $sup): ?>
           <tr style="border-bottom:1px solid var(--border)">
             <td style="padding:12px 16px;font-size:14px;font-weight:600;color:var(--text)"><?= htmlspecialchars($sup['name']) ?></td>
-            <td style="padding:12px 16px;font-size:13px;color:var(--muted)"><?= htmlspecialchars($sup['contact'] ?? '—') ?></td>
+            <td style="padding:12px 16px;font-size:13px;color:var(--text-3)"><?= htmlspecialchars($sup['contact'] ?? '—') ?></td>
             <td style="padding:12px 16px;text-align:right">
               <a href="/analytics/orders.php?supplier=<?= urlencode($sup['name']) ?>" style="font-size:12px;color:#1a7f4b;font-weight:600;text-decoration:none">Commander →</a>
             </td>
