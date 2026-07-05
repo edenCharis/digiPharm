@@ -18,8 +18,8 @@ $knownSuppliers = $suppliersDb->fetchAll();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fournisseurs — digiMind</title>
-<?php require_once __DIR__ . '/includes/common.css.php'; ?>
 <style>
+<?php require_once __DIR__ . '/includes/common.css.php'; ?>
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
 .page-title{font-size:22px;font-weight:700;color:var(--text)}
 .page-sub{font-size:13px;color:var(--muted);margin-top:2px}
