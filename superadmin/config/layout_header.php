@@ -457,6 +457,14 @@ tbody tr:hover td { background: #FAFBFC; }
             SuperAdmins
         </a>
 
+        <div class="nav-section">digiMind AI</div>
+        <a href="/superadmin/digimind/users.php" class="nav-item <?= $current_page === 'dm_users' ? 'active' : '' ?>">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            Utilisateurs
+        </a>
+
         <div class="nav-section">Configuration</div>
         <a href="/superadmin/plans.php" class="nav-item <?= $current_page === 'plans' ? 'active' : '' ?>">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
