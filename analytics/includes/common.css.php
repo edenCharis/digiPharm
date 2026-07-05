@@ -10,9 +10,10 @@
   --surface:#ffffff; --surface-alt:#f8f9fa; --bg:#f3f4f6;
   --sidebar-w:240px; --header-h:56px; --radius:10px;
 }
-body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; overflow-x:hidden; }
 .sidebar { width:var(--sidebar-w); min-height:100vh; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0;left:0;bottom:0; z-index:100; }
-.sidebar-logo { padding:18px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-lt); }
+.sidebar-logo { padding:14px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-lt); }
+.logo-text-wrap { flex:1; min-width:0; }
 .logo-icon { width:32px;height:32px;background:var(--green);border-radius:7px;display:grid;place-items:center; }
 .logo-icon svg { width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round; }
 .logo-text { font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.3px; }
@@ -29,8 +30,9 @@ nav { flex:1;padding:8px 0; }
 .avatar-info { flex:1;min-width:0; }
 .avatar-name { font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 .avatar-role { font-size:11px;color:var(--text-3); }
-.logout-btn { color:var(--text-3);text-decoration:none;font-size:11px; }
-.logout-btn:hover { color:var(--red); }
+.logout-btn { color:var(--text-3);text-decoration:none;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;flex-shrink:0;transition:background .12s,color .12s; }
+.logout-btn:hover { color:var(--red);background:var(--red-lt); }
+.logout-btn svg { width:16px;height:16px; }
 .main { margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh; }
 .topbar { height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50; }
 .topbar-left { display:flex;flex-direction:column; }
@@ -94,11 +96,12 @@ nav { flex:1;padding:8px 0; }
 .main    { transition:margin-left .2s ease; }
 .nav-label { white-space:nowrap; overflow:hidden; transition:opacity .15s; }
 
-/* toggle button inside sidebar header */
-.sb-toggle { background:none;border:none;cursor:pointer;color:var(--text-3);display:flex;align-items:center;
-  justify-content:center;padding:5px;border-radius:6px;margin-left:auto;flex-shrink:0; }
+/* toggle button — inside logo header, icon-only */
+.sb-toggle { display:flex;align-items:center;justify-content:center;width:28px;height:28px;
+  padding:0;border-radius:6px;background:none;border:none;cursor:pointer;
+  color:var(--text-3);flex-shrink:0;margin-left:auto;transition:background .12s,color .12s; }
 .sb-toggle:hover { background:var(--surface-alt);color:var(--text); }
-.sb-toggle svg { width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;
+.sb-toggle svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round; }
 .sb-toggle .ico-collapse { display:flex; }
 .sb-toggle .ico-expand   { display:none; }
@@ -107,6 +110,7 @@ nav { flex:1;padding:8px 0; }
 body.sb-col .sidebar           { width:64px; }
 body.sb-col .main              { margin-left:64px; }
 body.sb-col .logo-text         { display:none; }
+body.sb-col .logo-text-wrap    { display:none; }
 body.sb-col .sidebar-pharmacy  { display:none; }
 body.sb-col .nav-label         { display:none; }
 body.sb-col .nav-link          { justify-content:center; padding:10px 0; margin:1px 10px; }
@@ -119,24 +123,41 @@ body.sb-col .sb-toggle .ico-expand   { display:flex; }
 /* ── Responsive sidebar (mobile) ─────────────────────────────────────── */
 .sidebar-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99; }
 .sidebar-overlay.open { display:block; }
-.hamburger { display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text-2); }
+.hamburger { display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--text-2);flex-shrink:0; }
 .hamburger svg { width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
 @media(max-width:768px) {
   .sidebar { transform:translateX(-100%);width:var(--sidebar-w)!important; }
   .sidebar.open { transform:translateX(0); }
   .main { margin-left:0!important; }
   .hamburger { display:flex;align-items:center; }
-  .sb-toggle { display:none; }
-  /* always show labels on mobile even if collapsed setting is saved */
+  .sb-toggle { display:none !important; }
   body.sb-col .logo-text,
   body.sb-col .sidebar-pharmacy,
   body.sb-col .nav-label  { display:unset; }
   body.sb-col .nav-link   { justify-content:flex-start;padding:8px 14px;margin:1px 8px; }
+  body.sb-col .sb-toggle  { display:none !important; }
   body.sb-col .avatar-info,
   body.sb-col .logout-btn { display:unset; }
   body.sb-col .sidebar-footer { justify-content:unset;padding:14px 16px; }
-  .content  { padding:16px 16px 28px!important; }
-  .topbar   { padding:0 14px!important; }
-  .topbar-left { flex-direction:row!important;align-items:center;gap:10px; }
+  /* Layout */
+  .content  { padding:14px 14px 28px!important; }
+  .topbar   { padding:0 12px!important; height:52px; }
+  .topbar-left { flex-direction:row!important;align-items:center;gap:8px; }
+  .topbar-title { font-size:15px; }
+  .topbar-meta  { font-size:11px; }
+  /* Tables */
   .kpi-row  { grid-template-columns:repeat(2,1fr)!important; }
+  .tbl th, .tbl td { padding:8px 10px; font-size:12px; }
+  /* Cards */
+  .card-header { padding:12px 14px; }
+  .card-body   { padding:14px; }
+  /* Topbar action buttons — icon only on mobile */
+  .refresh-btn .btn-label { display:none; }
+  .refresh-btn { padding:6px 8px; }
+}
+@media(max-width:480px) {
+  .kpi-row  { grid-template-columns:1fr!important; }
+  .content  { padding:12px 12px 24px!important; }
+  .topbar   { padding:0 10px!important; }
+  .topbar-title { font-size:14px; }
 }

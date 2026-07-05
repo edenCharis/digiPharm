@@ -68,6 +68,14 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
 .notice.ok    { background:var(--green-lt); color:var(--green-dk); border:1px solid #bbf7d0; display:flex; }
 .notice.error { background:var(--red-lt);   color:var(--red);      border:1px solid #fecaca; display:flex; }
 
+/* ── Account tabs ──────────────────────────────────────────────────────── */
+.acc-tabs { display:flex; border-bottom:1px solid var(--border); margin-bottom:20px; overflow-x:auto; scrollbar-width:none; }
+.acc-tabs::-webkit-scrollbar { display:none; }
+.acc-tab { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-3); cursor:pointer; border:none; border-bottom:2px solid transparent; background:none; white-space:nowrap; margin-bottom:-1px; transition:color .12s,border-color .12s; }
+.acc-tab.active { color:var(--green); border-bottom-color:var(--green); font-weight:600; }
+.acc-panel { display:none; flex-direction:column; gap:16px; }
+.acc-panel.active { display:flex; }
+
 /* ── Info card ─────────────────────────────────────────────────────────── */
 .info-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px 20px; position:sticky; top:72px; }
 .info-avatar { width:64px; height:64px; background:var(--green); border-radius:50%; display:grid; place-items:center; font-size:26px; font-weight:800; color:#fff; margin:0 auto 16px; }
@@ -102,123 +110,94 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
   <div class="content">
     <div class="acc-grid">
 
-      <!-- Left column: forms -->
+      <!-- Left column: tabbed forms -->
+      <?php
+        $stP = $db->prepare("SELECT name, plan FROM ai_pharmacies WHERE id=?");
+        $stP->execute([$user['pharmacy_id']]);
+        $pharm = $stP->fetch() ?: [];
+      ?>
       <div>
-
-        <!-- Profile -->
-        <div class="panel">
-          <div class="panel-head">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span class="panel-title">Profil</span>
-          </div>
-          <div class="panel-body">
-            <div id="noticeProfile" class="notice"></div>
-            <div class="field-row">
-              <label class="field-label">Nom d'affichage</label>
-              <input class="tf" id="displayName" type="text" value="<?= htmlspecialchars($full['display_name'] ?? '') ?>" placeholder="Votre nom" maxlength="120">
-            </div>
-            <button class="save-btn" onclick="saveProfile()">Enregistrer</button>
-          </div>
+        <!-- Tab nav -->
+        <div class="acc-tabs">
+          <button class="acc-tab active" data-tab="profile" onclick="switchAccTab('profile')">Profil</button>
+          <button class="acc-tab" data-tab="security" onclick="switchAccTab('security')">Sécurité</button>
+          <?php if ($user['role'] === 'admin'): ?>
+          <button class="acc-tab" data-tab="pharmacy" onclick="switchAccTab('pharmacy')">Pharmacie</button>
+          <?php endif; ?>
         </div>
 
-        <!-- Login email -->
-        <div class="panel">
-          <div class="panel-head">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span class="panel-title">Email de connexion</span>
+        <!-- Tab: Profil — name + OTP email -->
+        <div class="acc-panel active" id="tab-profile">
+          <div id="noticeProfile" class="notice"></div>
+          <div class="field-row">
+            <label class="field-label">Nom d'affichage</label>
+            <input class="tf" id="displayName" type="text" value="<?= htmlspecialchars($full['display_name'] ?? '') ?>" placeholder="Votre nom" maxlength="120">
           </div>
-          <div class="panel-body">
-            <div id="noticeEmail" class="notice"></div>
-            <div class="field-row">
-              <label class="field-label">Adresse actuelle</label>
-              <input class="tf" type="email" value="<?= htmlspecialchars($full['email'] ?? '') ?>" disabled>
-              <div class="field-sub">Pour changer votre email, saisissez la nouvelle adresse et vérifiez-la par code OTP.</div>
-            </div>
-            <div class="field-row">
-              <label class="field-label">Nouvelle adresse</label>
-              <div class="tf-row">
-                <input class="tf" id="newEmail" type="email" placeholder="nouvelle@email.com">
-                <button class="send-btn" id="sendOtpBtn" onclick="sendOtp()">Envoyer le code</button>
-              </div>
-            </div>
-            <div class="otp-row" id="otpRow">
-              <label class="field-label">Code de vérification (6 chiffres)</label>
-              <input class="tf otp-input" id="otpCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000">
-              <button class="save-btn" onclick="verifyOtp()">Confirmer le changement</button>
-            </div>
+          <div class="field-row">
+            <label class="field-label">Email de réception des codes OTP</label>
+            <input class="tf" id="otpEmail" type="email"
+                   value="<?= htmlspecialchars($full['otp_email'] ?? '') ?>"
+                   placeholder="Laisser vide pour utiliser l'email de connexion">
+            <div class="field-sub">Les codes de sécurité seront envoyés ici. Si vide, l'email de connexion est utilisé.</div>
           </div>
+          <button class="save-btn" onclick="saveProfile()">Enregistrer</button>
         </div>
 
-        <!-- OTP email -->
-        <div class="panel">
-          <div class="panel-head">
-            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41a2 2 0 0 1 1.99-2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l.93-.93a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span class="panel-title">Email pour les codes OTP</span>
+        <!-- Tab: Sécurité — email change + password -->
+        <div class="acc-panel" id="tab-security">
+          <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;">Changer l'email de connexion</div>
+          <div id="noticeEmail" class="notice"></div>
+          <div class="field-row">
+            <label class="field-label">Adresse actuelle</label>
+            <input class="tf" type="email" value="<?= htmlspecialchars($full['email'] ?? '') ?>" disabled>
           </div>
-          <div class="panel-body">
-            <div id="noticeOtpEmail" class="notice"></div>
-            <div class="field-row">
-              <label class="field-label">Email de réception des codes</label>
-              <input class="tf" id="otpEmail" type="email"
-                     value="<?= htmlspecialchars($full['otp_email'] ?? '') ?>"
-                     placeholder="optionnel — laisser vide pour utiliser l'email de connexion">
-              <div class="field-sub">Les codes OTP et alertes de sécurité seront envoyés à cette adresse. Si vide, l'email de connexion est utilisé.</div>
+          <div class="field-row">
+            <label class="field-label">Nouvelle adresse</label>
+            <div class="tf-row">
+              <input class="tf" id="newEmail" type="email" placeholder="nouvelle@email.com">
+              <button class="send-btn" id="sendOtpBtn" onclick="sendOtp()">Envoyer code</button>
             </div>
-            <button class="save-btn" onclick="saveOtpEmail()">Enregistrer</button>
           </div>
+          <div class="otp-row" id="otpRow">
+            <label class="field-label">Code de vérification (6 chiffres)</label>
+            <input class="tf otp-input" id="otpCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000">
+            <button class="save-btn" onclick="verifyOtp()">Confirmer</button>
+          </div>
+
+          <hr style="border:none;border-top:1px solid var(--border-lt);margin:4px 0">
+          <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;">Changer le mot de passe</div>
+          <div id="noticePassword" class="notice"></div>
+          <div class="field-row">
+            <label class="field-label">Mot de passe actuel</label>
+            <input class="tf" id="currentPwd" type="password" placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <div class="field-row">
+            <label class="field-label">Nouveau mot de passe</label>
+            <input class="tf" id="newPwd" type="password" placeholder="Minimum 8 caractères" autocomplete="new-password">
+          </div>
+          <div class="field-row">
+            <label class="field-label">Confirmer</label>
+            <input class="tf" id="confirmPwd" type="password" placeholder="••••••••" autocomplete="new-password">
+          </div>
+          <button class="save-btn" onclick="savePassword()">Changer le mot de passe</button>
         </div>
 
-        <!-- Password -->
-        <div class="panel">
-          <div class="panel-head">
-            <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            <span class="panel-title">Mot de passe</span>
-          </div>
-          <div class="panel-body">
-            <div id="noticePassword" class="notice"></div>
-            <div class="field-row">
-              <label class="field-label">Mot de passe actuel</label>
-              <input class="tf" id="currentPwd" type="password" placeholder="••••••••" autocomplete="current-password">
-            </div>
-            <div class="field-row">
-              <label class="field-label">Nouveau mot de passe</label>
-              <input class="tf" id="newPwd" type="password" placeholder="Minimum 8 caractères" autocomplete="new-password">
-            </div>
-            <div class="field-row">
-              <label class="field-label">Confirmer le nouveau mot de passe</label>
-              <input class="tf" id="confirmPwd" type="password" placeholder="••••••••" autocomplete="new-password">
-            </div>
-            <button class="save-btn" onclick="savePassword()">Changer le mot de passe</button>
-          </div>
-        </div>
-
+        <!-- Tab: Pharmacie (admin only) -->
         <?php if ($user['role'] === 'admin'): ?>
-        <!-- Pharmacy name (admin only) -->
-        <?php
-          $stP = $db->prepare("SELECT name, plan FROM ai_pharmacies WHERE id=?");
-          $stP->execute([$user['pharmacy_id']]);
-          $pharm = $stP->fetch() ?: [];
-        ?>
-        <div class="panel">
-          <div class="panel-head">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span class="panel-title">Pharmacie</span>
+        <div class="acc-panel" id="tab-pharmacy">
+          <div id="noticePharmacy" class="notice"></div>
+          <div class="field-row">
+            <label class="field-label">Nom de la pharmacie</label>
+            <input class="tf" id="pharmacyName" type="text"
+                   value="<?= htmlspecialchars($pharm['name'] ?? '') ?>"
+                   placeholder="Nom officiel" maxlength="150">
           </div>
-          <div class="panel-body">
-            <div id="noticePharmacy" class="notice"></div>
-            <div class="field-row">
-              <label class="field-label">Nom de la pharmacie</label>
-              <input class="tf" id="pharmacyName" type="text"
-                     value="<?= htmlspecialchars($pharm['name'] ?? '') ?>"
-                     placeholder="Nom officiel" maxlength="150">
-            </div>
-            <div class="field-row">
-              <label class="field-label">Plan</label>
-              <input class="tf" type="text" value="<?= htmlspecialchars(ucfirst($pharm['plan'] ?? '')) ?>" disabled>
-              <div class="field-sub">Pour changer de plan, contactez le support.</div>
-            </div>
-            <button class="save-btn" onclick="savePharmacy()">Enregistrer</button>
+          <div class="field-row">
+            <label class="field-label">Plan</label>
+            <input class="tf" type="text" value="<?= htmlspecialchars(ucfirst($pharm['plan'] ?? '')) ?>" disabled>
+            <div class="field-sub">Pour changer de plan, contactez le support.</div>
           </div>
+          <button class="save-btn" onclick="savePharmacy()">Enregistrer</button>
         </div>
         <?php endif; ?>
 
@@ -276,11 +255,25 @@ function showNotice(id, res) {
   if (res.ok) setTimeout(() => { el.className = 'notice'; }, 4000);
 }
 
+function switchAccTab(id) {
+  document.querySelectorAll('.acc-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
+  document.querySelectorAll('.acc-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + id));
+}
+
 async function saveProfile() {
-  const name = document.getElementById('displayName').value.trim();
-  const res = await post('profile', {display_name: name});
-  showNotice('noticeProfile', res);
-  if (res.ok) document.getElementById('cardName').textContent = name;
+  const name     = document.getElementById('displayName').value.trim();
+  const otpEmail = document.getElementById('otpEmail').value.trim();
+  const [r1, r2] = await Promise.all([
+    post('profile',    {display_name: name}),
+    post('otp_email',  {otp_email: otpEmail}),
+  ]);
+  const ok = r1.ok && r2.ok;
+  showNotice('noticeProfile', ok ? {ok:true, message:'Profil enregistré'} : {ok:false, error: r1.error || r2.error});
+  if (ok) {
+    document.getElementById('cardName').textContent = name;
+    const card = document.getElementById('cardOtpEmail');
+    card.innerHTML = otpEmail ? otpEmail : '<em style="color:var(--text-3)">Non configuré</em>';
+  }
 }
 
 async function sendOtp() {
@@ -308,16 +301,6 @@ async function verifyOtp() {
     document.getElementById('cardEmail').textContent = res.new_email;
     // reload the current-email display
     location.reload();
-  }
-}
-
-async function saveOtpEmail() {
-  const email = document.getElementById('otpEmail').value.trim();
-  const res = await post('otp_email', {otp_email: email});
-  showNotice('noticeOtpEmail', res);
-  if (res.ok) {
-    const card = document.getElementById('cardOtpEmail');
-    card.innerHTML = email ? email : '<em style="color:var(--text-3)">Non configuré</em>';
   }
 }
 

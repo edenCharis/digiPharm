@@ -48,23 +48,38 @@ $stat = $stats->fetch() ?: [];
 .run-rows { font-size:13px;color:var(--text-2);min-width:100px; }
 .run-dur  { font-size:12px;color:var(--text-3);min-width:70px; }
 .run-err  { font-size:12px;color:var(--red);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-.sync-actions { display:flex;gap:10px;align-items:center;margin-bottom:20px; }
+.sync-actions { display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap; }
 .btn-danger { background:#fee2e2;color:var(--red);border:1px solid #fecaca;padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer; }
 #syncMsg { font-size:13px;color:var(--text-2); }
+.run-row { flex-wrap:wrap; }
+@media(max-width:768px) {
+  .source-info { grid-template-columns:1fr 1fr!important; }
+  .run-date { min-width:unset; }
+  .run-rows, .run-dur { min-width:unset; }
+}
+@media(max-width:480px) {
+  .source-info { grid-template-columns:1fr!important; }
+}
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php include __DIR__ . '/includes/sidebar.php'; ?>
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title"><?= $pageTitle ?></div>
-      <div class="topbar-meta">
-        <?php if (!empty($source['last_synced_at'])): ?>
-          Dernier sync : <?= date('d/m/Y H:i', strtotime($source['last_synced_at'])) ?>
-        <?php else: ?>
-          Aucune synchronisation effectuée
-        <?php endif; ?>
+    <div class="topbar-left" style="flex-direction:row;align-items:center;gap:8px;">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <div class="topbar-title"><?= $pageTitle ?></div>
+        <div class="topbar-meta">
+          <?php if (!empty($source['last_synced_at'])): ?>
+            Dernier sync : <?= date('d/m/Y H:i', strtotime($source['last_synced_at'])) ?>
+          <?php else: ?>
+            Aucune synchronisation effectuée
+          <?php endif; ?>
+        </div>
       </div>
     </div>
   </div>

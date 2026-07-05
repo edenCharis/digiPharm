@@ -12,14 +12,13 @@ function _nav($href, $page, $active, $icon, $label) {
 <aside class="sidebar" id="mainSidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <div class="logo-text"><span>digi</span>Mind</div>
-    <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" title="Réduire le menu">
-      <span class="ico-collapse">
-        <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7"/><path d="M18 19l-7-7 7-7"/></svg>
-      </span>
-      <span class="ico-expand">
-        <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7"/><path d="M6 5l7 7-7 7"/></svg>
-      </span>
+    <div class="logo-text-wrap">
+      <div class="logo-text"><span>digi</span>Mind</div>
+      <div class="logo-sub">AI assistant</div>
+    </div>
+    <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" title="Réduire / agrandir">
+      <span class="ico-collapse"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="6"/><line x1="18" y1="12" x2="6" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg></span>
+      <span class="ico-expand"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="6"/><line x1="18" y1="12" x2="6" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg></span>
     </button>
   </div>
   <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
@@ -58,7 +57,9 @@ function _nav($href, $page, $active, $icon, $label) {
       <div class="avatar-name"><?= htmlspecialchars($user['display_name']) ?></div>
       <div class="avatar-role"><?= $user['role'] === 'admin' ? 'Administrateur' : 'Lecteur' ?></div>
     </div>
-    <a href="/analytics/logout.php" class="logout-btn" title="Déconnexion">✕</a>
+    <a href="/analytics/logout.php" class="logout-btn" title="Déconnexion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
   </div>
 </aside>
 

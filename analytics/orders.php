@@ -64,7 +64,7 @@ function statusBadge(string $status): string {
 <?php require_once __DIR__ . '/includes/common.css.php'; ?>
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .page-title{font-size:22px;font-weight:700;color:var(--text)}
-.page-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.page-sub{font-size:13px;color:var(--text-3);margin-top:2px}
 /* ── local overrides (common.css.php vars apply) ─────────────────── */
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .page-title{font-size:22px;font-weight:700;color:var(--text)}
@@ -145,11 +145,44 @@ function statusBadge(string $status): string {
   padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:500;
   box-shadow:0 4px 20px rgba(0,0,0,.2)}
 
-@media(max-width:600px){
-  .form-row{grid-template-columns:1fr}
-  .item-row{grid-template-columns:1fr 70px 90px 28px}
-  .modal-body{padding:16px}
-  .modal-header{padding:16px 16px 0}
+/* ── Mobile: table → cards ─────────────────────────────────────────── */
+@media(max-width:680px){
+  /* Remove the scrolling wrapper effect */
+  .orders-table { display:block; }
+  .orders-table thead { display:none; }
+  .orders-table tbody { display:flex; flex-direction:column; gap:10px; padding:12px; }
+  .orders-table tr { display:grid; grid-template-columns:1fr auto; grid-template-rows:auto auto auto;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px;
+    column-gap:12px; row-gap:6px; }
+  .orders-table tr:last-child { border-bottom:1px solid var(--border); }
+  /* ref (col1, row1) */
+  .orders-table td:nth-child(1) { grid-column:1; grid-row:1; }
+  /* fournisseur (col1, row2) */
+  .orders-table td:nth-child(2) { grid-column:1; grid-row:2; font-size:14px; color:var(--text); }
+  /* articles — hide on mobile */
+  .orders-table td:nth-child(3) { display:none; }
+  /* statut (col2, row1) */
+  .orders-table td:nth-child(4) { grid-column:2; grid-row:1; text-align:right; }
+  /* livraison (col2, row2) */
+  .orders-table td:nth-child(5) { grid-column:2; grid-row:2; font-size:11px; color:var(--text-3); text-align:right; }
+  /* créé le — hide on mobile */
+  .orders-table td:nth-child(6) { display:none; }
+  /* actions (row3, full width) */
+  .orders-table td:nth-child(7) { grid-column:1/-1; grid-row:3; border-top:1px solid var(--border-lt); margin-top:4px; padding-top:10px; }
+  .orders-table td { border:none; padding:0; font-size:13px; }
+  .action-cell { gap:8px; }
+
+  /* Modal bottom sheet */
+  .modal-overlay { padding:0; align-items:flex-end; }
+  .modal { border-radius:16px 16px 0 0; max-height:92vh; overflow-y:auto; }
+  .modal-header { padding:16px 16px 0; position:sticky; top:0; background:var(--surface); z-index:1; border-radius:16px 16px 0 0; }
+  .modal-body { padding:16px; }
+  .modal-footer { position:sticky; bottom:0; background:var(--surface); padding:14px 16px; margin:0 -16px -16px; border-top:1px solid var(--border-lt); }
+  .form-row { grid-template-columns:1fr; gap:10px; }
+  .item-row { grid-template-columns:1fr 64px 80px 28px; }
+  .page-header { margin-bottom:14px; }
+  .page-title  { font-size:17px; }
+  .toast { bottom:12px; right:12px; left:12px; text-align:center; }
 }
 </style>
 </head>
@@ -159,10 +192,16 @@ function statusBadge(string $status): string {
 
 <div class="main">
   <div class="topbar">
-    <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <div class="topbar-left" style="flex-direction:row;align-items:center;gap:8px;">
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title">Commandes fournisseurs</div>
+    </div>
+    <button class="btn btn-primary" onclick="openModal()" style="display:flex;align-items:center;gap:6px;padding:7px 13px;font-size:13px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span class="btn-label">Nouvelle commande</span>
     </button>
-    <div class="topbar-title">Commandes fournisseurs</div>
   </div>
 
   <div class="content">
@@ -171,14 +210,10 @@ function statusBadge(string $status): string {
         <div class="page-title">Bons de commande</div>
         <div class="page-sub"><?= count($orders) ?> commande<?= count($orders)!==1?'s':'' ?></div>
       </div>
-      <button class="btn btn-primary" onclick="openModal()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nouvelle commande
-      </button>
     </div>
 
     <!-- Orders table -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow-x:auto">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto">
       <table class="orders-table">
         <thead>
           <tr>
@@ -201,13 +236,13 @@ function statusBadge(string $status): string {
             <td style="text-align:center"><?= (int)$o['item_count'] ?></td>
             <td><?= statusBadge($o['status']) ?></td>
             <td><?= $o['requested_delivery_date'] ? date('d/m/Y', strtotime($o['requested_delivery_date'])) : '—' ?></td>
-            <td style="color:var(--muted)"><?= date('d/m/Y', strtotime($o['created_at'])) ?></td>
+            <td style="color:var(--text-3)"><?= date('d/m/Y', strtotime($o['created_at'])) ?></td>
             <td>
               <div class="action-cell">
                 <?php if (in_array($o['status'], ['shipped', 'confirmed'])): ?>
                   <button class="btn btn-sm btn-primary" onclick="markDelivered(<?= $o['id'] ?>, this)">Livré ✓</button>
                 <?php elseif ($o['status'] === 'sent'): ?>
-                  <span style="font-size:11px;color:var(--muted)">En attente fournisseur</span>
+                  <span style="font-size:11px;color:var(--text-3)">En attente fournisseur</span>
                 <?php elseif ($o['status'] === 'draft'): ?>
                   <button class="btn btn-sm btn-outline" onclick="resendOrder(<?= $o['id'] ?>, this)">Envoyer</button>
                 <?php endif; ?>

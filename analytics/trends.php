@@ -15,6 +15,7 @@ $initials = strtoupper(substr($user['display_name'], 0, 1));
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php include __DIR__ . '/includes/sidebar.php'; ?>
 <div class="main">
   <?php include __DIR__ . '/includes/topbar.php'; ?>

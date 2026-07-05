@@ -105,158 +105,67 @@ $source->execute([$pid]);
 $src = $source->fetch() ?: [];
 if (!empty($src['schema_map'])) $schema = json_decode($src['schema_map'], true);
 
-$initials = strtoupper(substr($user['display_name'], 0, 1));
+$activePage = 'settings';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>digiMind — Paramètres source de données</title>
+<title>Paramètres — digiMind</title>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --green:#1a7f4b; --green-dk:#155e38; --green-lt:#e8f5ee;
-  --red:#dc2626; --red-lt:#fee2e2; --amber:#d97706; --amber-lt:#fef3c7;
-  --border:#dadce0; --border-lt:#f0f0f0;
-  --text:#111827; --text-2:#4b5563; --text-3:#9ca3af;
-  --surface:#ffffff; --surface-alt:#f8f9fa; --bg:#f3f4f6;
-  --sidebar-w:240px; --header-h:56px; --radius:10px;
-}
-body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; }
-
-/* sidebar (same as index.php) */
-.sidebar { width:var(--sidebar-w); min-height:100vh; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:100; }
-.sidebar-logo { padding:18px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-lt); }
-.logo-icon { width:32px; height:32px; background:var(--green); border-radius:7px; display:grid; place-items:center; }
-.logo-icon svg { width:18px; height:18px; stroke:#fff; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
-.logo-text { font-size:15px; font-weight:700; color:var(--text); letter-spacing:-.3px; }
-.logo-text span { color:var(--green); }
-.sidebar-pharmacy { padding:12px 20px; font-size:11px; font-weight:600; color:var(--text-3); text-transform:uppercase; letter-spacing:.6px; border-bottom:1px solid var(--border-lt); }
-nav { flex:1; padding:8px 0; }
-.nav-section { padding:16px 20px 4px; font-size:10px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:.6px; }
-.nav-link { display:flex; align-items:center; gap:10px; padding:8px 14px; margin:1px 8px; border-radius:8px; font-size:13.5px; color:var(--text-2); text-decoration:none; transition:background .12s,color .12s; }
-.nav-link svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
-.nav-link:hover { background:var(--surface-alt); color:var(--text); }
-.nav-link.active { background:var(--green-lt); color:var(--green-dk); font-weight:600; }
-.sidebar-footer { padding:14px 16px; border-top:1px solid var(--border-lt); display:flex; align-items:center; gap:10px; }
-.avatar { width:32px; height:32px; background:var(--green); border-radius:50%; display:grid; place-items:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
-.avatar-info { flex:1; min-width:0; }
-.avatar-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.avatar-role { font-size:11px; color:var(--text-3); }
-.logout-btn { color:var(--text-3); text-decoration:none; font-size:11px; }
-.logout-btn:hover { color:var(--red); }
-
-/* main */
-.main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
-.topbar { height:var(--header-h); background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; display:flex; align-items:center; justify-content:space-between; }
-.topbar-title { font-size:16px; font-weight:700; }
+<?php require_once __DIR__ . '/includes/common.css.php'; ?>
 .content { padding:24px 28px; max-width:860px; }
-
-/* cards */
-.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; }
-.card-header { padding:16px 20px; border-bottom:1px solid var(--border-lt); display:flex; align-items:center; gap:10px; }
+.card { margin-bottom:20px; }
 .card-header-icon { width:30px; height:30px; border-radius:7px; display:grid; place-items:center; background:var(--green-lt); }
 .card-header-icon svg { width:15px; height:15px; stroke:var(--green); fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
-.card-title { font-size:14px; font-weight:700; }
-.card-desc  { font-size:12px; color:var(--text-3); margin-top:1px; }
-.card-body  { padding:20px; }
-
-/* tabs */
+.card-desc { font-size:12px; color:var(--text-3); margin-top:1px; }
 .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin:-20px -20px 20px; padding:0 20px; }
-.tab { padding:10px 16px; font-size:13px; font-weight:500; color:var(--text-3); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .12s,border-color .12s; }
-.tab.active { color:var(--green); border-color:var(--green); font-weight:600; }
+.tab { padding:10px 16px; font-size:13px; font-weight:500; color:var(--text-3); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .12s,border-color .12s; background:none; border-top:none; border-left:none; border-right:none; }
+.tab.active { color:var(--green); border-bottom-color:var(--green); font-weight:600; }
 .tab-panel { display:none; }
 .tab-panel.active { display:block; }
-
-/* form */
 .field { margin-bottom:16px; }
 .field label { display:block; font-size:12.5px; font-weight:600; color:var(--text-2); margin-bottom:5px; }
-.field input, .field select {
-  width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px;
-  font-size:13.5px; color:var(--text); background:#fff; outline:none; transition:border-color .15s;
-}
+.field input, .field select { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-size:13.5px; color:var(--text); background:#fff; outline:none; transition:border-color .15s; }
 .field input:focus, .field select:focus { border-color:var(--green); }
 .field .hint { font-size:11.5px; color:var(--text-3); margin-top:4px; }
 .field input[type=password] { font-family:monospace; }
 .field .placeholder-hint { font-size:11px; color:var(--text-3); margin-top:3px; font-style:italic; }
-
 .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .grid-3 { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; }
-
-/* buttons */
-.btn { padding:9px 18px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer; border:none; transition:background .15s; }
-.btn-primary { background:var(--green); color:#fff; }
-.btn-primary:hover { background:var(--green-dk); }
-.btn-outline { background:var(--surface); color:var(--text-2); border:1px solid var(--border); }
-.btn-outline:hover { background:var(--surface-alt); color:var(--text); }
 .btn-test { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
 .btn-test:hover { background:#dbeafe; }
-.btn-sync { background:#f0faf4; color:var(--green-dk); border:1px solid #bbf7d0; }
-.btn-sync:hover { background:var(--green-lt); }
-
 .btn-row { display:flex; gap:10px; align-items:center; margin-top:4px; flex-wrap:wrap; }
-
-/* notice */
-.notice { padding:11px 15px; border-radius:8px; font-size:13px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-.notice.ok   { background:var(--green-lt); color:var(--green-dk); border:1px solid #bbf7d0; }
-.notice.error { background:var(--red-lt);  color:var(--red);     border:1px solid #fecaca; }
-.notice.warn  { background:var(--amber-lt); color:#92400e;        border:1px solid #fde68a; }
-.notice svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; flex-shrink:0; }
-
-/* status pill */
 .status-row { display:flex; align-items:center; gap:8px; padding:10px 14px; background:var(--surface-alt); border-radius:8px; font-size:13px; margin-bottom:16px; }
 .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
 .dot.green { background:#22c55e; }
 .dot.red   { background:var(--red); }
 .dot.gray  { background:var(--text-3); }
-
-/* schema table */
 .schema-table { width:100%; border-collapse:collapse; font-size:13px; }
 .schema-table th { text-align:left; padding:8px 10px; font-size:11px; font-weight:700; color:var(--text-3); text-transform:uppercase; letter-spacing:.4px; border-bottom:1px solid var(--border); }
 .schema-table td { padding:6px 10px; border-bottom:1px solid var(--border-lt); }
 .schema-table td:first-child { color:var(--text-3); font-family:monospace; font-size:12px; }
 .schema-table input { width:100%; padding:5px 8px; border:1px solid var(--border); border-radius:6px; font-size:13px; font-family:monospace; }
 .schema-table input:focus { border-color:var(--green); outline:none; }
-
 #testResult { margin-top:12px; display:none; }
 #syncResult  { margin-top:12px; display:none; }
+@media(max-width:768px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <div class="logo-text">digiMind</div>
-  </div>
-  <div class="sidebar-pharmacy"><?= htmlspecialchars($user['pharmacy_name']) ?></div>
-  <nav>
-    <div class="nav-section">Analyse</div>
-    <a href="/analytics/" class="nav-link">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Vue d'ensemble
-    </a>
-    <div class="nav-section" style="margin-top:8px">Données</div>
-    <a href="/analytics/sync.php" class="nav-link">
-      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Synchronisation
-    </a>
-    <a href="/analytics/settings.php" class="nav-link active">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Paramètres
-    </a>
-  </nav>
-  <div class="sidebar-footer">
-    <div class="avatar"><?= $initials ?></div>
-    <div class="avatar-info">
-      <div class="avatar-name"><?= htmlspecialchars($user['display_name']) ?></div>
-      <div class="avatar-role"><?= $user['role'] === 'admin' ? 'Administrateur' : 'Lecteur' ?></div>
-    </div>
-    <a href="/analytics/logout.php" class="logout-btn" title="Déconnexion">✕</a>
-  </div>
-</aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<?php require_once __DIR__ . '/includes/sidebar.php'; ?>
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title">Source de données</div>
+    <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="topbar-left">
+      <div class="topbar-title">Source de données</div>
+    </div>
   </div>
 
   <div class="content">
