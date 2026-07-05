@@ -252,7 +252,7 @@ try {
 
 <!-- Footer -->
 <div class="footer">
-    <p><strong>PharmaSys - Système de Gestion Pharmaceutique</strong></p>
+    <p><strong>digiPharm - Système de Gestion Pharmaceutique</strong></p>
     <p>Document confidentiel - Usage interne uniquement</p>
     <p>Généré le <?php echo date('d/m/Y à H:i:s'); ?></p>
     <?php if ($categoryFilter): ?>

@@ -60,7 +60,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Nouvelle Vente</title>
+    <title>digiPharm - Nouvelle Vente</title>
     
     <!-- Use same icon approach as dashboard -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>    <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">

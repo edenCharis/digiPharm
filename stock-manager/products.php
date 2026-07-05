@@ -249,7 +249,7 @@ function isExpired($expiryDate) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Gestion des Produits</title>
+    <title>digiPharm - Gestion des Produits</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>    <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -1265,7 +1265,7 @@ function isExpired($expiryDate) {
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Rapport des Produits - PharmaSys</title>
+                    <title>Rapport des Produits - digiPharm</title>
                     <style>
                         body { font-family: Arial, sans-serif; margin: 20px; }
                         h1 { color: var(--ds-text-900); text-align: center; }
@@ -1285,7 +1285,7 @@ function isExpired($expiryDate) {
                     </div>
                     ${table}
                     <div class="footer">
-                        <p>PharmaSys - Système de Gestion Pharmaceutique</p>
+                        <p>digiPharm - Système de Gestion Pharmaceutique</p>
                     </div>
                     <style>
                         .action-buttons { display: none !important; }

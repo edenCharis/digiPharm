@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Système de Gestion</title>
+    <title>digiPharm - Système de Gestion</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
     <style>
         * {
@@ -529,7 +529,7 @@
                             <i data-lucide="cross"></i>
                         </div>
                         <div>
-                            <div class="brand-text">PharmaSys</div>
+                            <div class="brand-text">digiPharm</div>
                             <div class="brand-subtitle">Gestion Pharmacie</div>
                         </div>
                     </a>
@@ -808,7 +808,7 @@
             if (config) {
                 document.getElementById('pageTitle').textContent = config.title;
                 document.getElementById('pageDescription').textContent = config.description;
-                document.title = `PharmaSys - ${config.title}`;
+                document.title = `digiPharm - ${config.title}`;
             }
 
             // Load page content
@@ -830,7 +830,7 @@
                                 </div>
                             </div>
                             <div class="card-content">
-                                <p>Bienvenue sur votre tableau de bord PharmaSys!</p>
+                                <p>Bienvenue sur votre tableau de bord digiPharm!</p>
                                 <p>Utilisez le menu de gauche pour naviguer entre les différentes sections.</p>
                             </div>
                         </div>

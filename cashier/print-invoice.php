@@ -53,7 +53,7 @@ try {
 
     // Pharmacy information (you should store this in a settings table)
     $pharmacyInfo = [
-        'name' => 'Pharmacie PharmaSys',
+        'name' => 'Pharmacie digiPharm',
         'address' => '123 Avenue de la Santé',
         'city' => 'Brazzaville, République du Congo',
         'phone' => '+242 05 123 4567',
@@ -329,7 +329,7 @@ try {
 
         <div class="footer">
             <div style="margin-bottom: 5px; font-weight: bold;">Merci de votre visite !</div>
-            <div><?php echo date('d/m/Y', strtotime($sale['saleDate'])); ?>    <?php echo date('H:i', strtotime($sale['createdAt'])); ?>    © PharmaSys</div>
+            <div><?php echo date('d/m/Y', strtotime($sale['saleDate'])); ?>    <?php echo date('H:i', strtotime($sale['createdAt'])); ?>    © digiPharm</div>
             <?php if ($pharmacyInfo['siret']): ?>
             <div style="margin-top: 3px;">SIRET: <?php echo htmlspecialchars($pharmacyInfo['siret']); ?></div>
             <?php endif; ?>

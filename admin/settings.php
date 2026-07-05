@@ -34,7 +34,7 @@ try {
 
     // Default settings data
     $defaultSettings = [
-        ['setting_key' => 'app_name', 'setting_value' => 'PharmaSys', 'setting_type' => 'text', 'description' => 'Nom de l\'application'],
+        ['setting_key' => 'app_name', 'setting_value' => 'digiPharm', 'setting_type' => 'text', 'description' => 'Nom de l\'application'],
         ['setting_key' => 'app_icon', 'setting_value' => 'pill', 'setting_type' => 'text', 'description' => 'Icône de l\'application (Lucide icon name)'],
         ['setting_key' => 'pharmacy_name', 'setting_value' => 'Pharmacie Centrale', 'setting_type' => 'text', 'description' => 'Nom de la pharmacie'],
         ['setting_key' => 'pharmacy_address', 'setting_value' => '123 Avenue de la Santé, Brazzaville', 'setting_type' => 'textarea', 'description' => 'Adresse de la pharmacie'],
@@ -841,7 +841,7 @@ $iconOptions = [
             switch (settingKey) {
                 case 'app_name':
                     const appNameEl = document.getElementById('previewAppName');
-                    if (appNameEl) appNameEl.textContent = value || 'PharmaSys';
+                    if (appNameEl) appNameEl.textContent = value || 'digiPharm';
                     break;
                     
                 case 'pharmacy_name':

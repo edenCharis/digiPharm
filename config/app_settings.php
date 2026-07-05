@@ -69,7 +69,7 @@ class AppSettings {
      */
     private static function insertDefaultSettings() {
         $defaultSettings = [
-            ['app_name', 'PharmaSys', 'text', 'Nom de l\'application'],
+            ['app_name', 'digiPharm', 'text', 'Nom de l\'application'],
             ['app_icon', 'pill', 'text', 'Icône de l\'application (Lucide icon name)'],
             ['pharmacy_name', 'Pharmacie Centrale', 'text', 'Nom de la pharmacie'],
             ['pharmacy_address', '123 Avenue de la Santé, Brazzaville', 'textarea', 'Adresse de la pharmacie'],
@@ -103,7 +103,7 @@ class AppSettings {
      */
     private static function setDefaultSettings() {
         self::$settings = [
-            'app_name' => 'PharmaSys',
+            'app_name' => 'digiPharm',
             'app_icon' => 'pill',
             'pharmacy_name' => 'Pharmacie Centrale',
             'pharmacy_address' => '123 Avenue de la Santé, Brazzaville',
@@ -200,7 +200,7 @@ class AppSettings {
      * Get page title with app name
      */
     public static function getPageTitle($pageTitle = '') {
-        $appName = self::get('app_name', 'PharmaSys');
+        $appName = self::get('app_name', 'digiPharm');
         return !empty($pageTitle) ? $pageTitle . ' - ' . $appName : $appName;
     }
     
@@ -234,7 +234,7 @@ function appSetting($key, $default = '') {
 }
 
 function appName() {
-    return AppSettings::get('app_name', 'PharmaSys');
+    return AppSettings::get('app_name', 'digiPharm');
 }
 
 function pharmacyName() {

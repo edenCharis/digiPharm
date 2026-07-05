@@ -177,7 +177,7 @@ function getStatusBadge($status, $itemCount) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Gestion des Livraisons</title>
+    <title>digiPharm - Gestion des Livraisons</title>
      <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Alternative CDN if the above doesn't work -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script> -->    <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">

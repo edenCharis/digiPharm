@@ -175,7 +175,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapports - PharmaSys</title>
+    <title>Rapports - digiPharm</title>
     
     <!-- External Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>

@@ -82,7 +82,7 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Détails Caisse #<?php echo htmlspecialchars($register_id); ?></title>
+    <title>digiPharm - Détails Caisse #<?php echo htmlspecialchars($register_id); ?></title>
     <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -431,7 +431,7 @@ function formatDateTime($dt)     { return date('d/m/Y H:i', strtotime($dt)); }
 <div class="print-content">
     <div class="print-header">
         <h1>Rapport de Caisse #<?php echo htmlspecialchars($register['id']); ?></h1>
-        <p>PharmaSys — Caissier : <?php echo htmlspecialchars($register['cashier_name']); ?></p>
+        <p>digiPharm — Caissier : <?php echo htmlspecialchars($register['cashier_name']); ?></p>
         <p>Du <?php echo formatDateTime($register['opening_time']); ?><?php if($register['closing_time']): ?> au <?php echo formatDateTime($register['closing_time']); ?><?php endif; ?></p>
     </div>
     <div class="print-stats">

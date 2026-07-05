@@ -109,7 +109,7 @@ function formatPrice($price) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impression des Codes-Barres<?php echo $delivery_id ? ' - Livraison #' . htmlspecialchars($delivery_id) : ''; ?> - PharmaSys</title>
+    <title>Impression des Codes-Barres<?php echo $delivery_id ? ' - Livraison #' . htmlspecialchars($delivery_id) : ''; ?> - digiPharm</title>
     <style>
         * {
             margin: 0;

@@ -99,7 +99,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PharmaSys - Traitement Paiement</title>
+    <title>digiPharm - Traitement Paiement</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>    <link rel="stylesheet" href="../assets/css/admin-dark-theme.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -1417,7 +1417,7 @@ try {
                 <div class="invoice-footer">
                     <div style="margin-bottom: 3px; font-weight: bold;">MERCI DE VOTRE VISITE!</div>
                     <div>${currentSaleData.saleTime}</div>
-                    <div style="margin-top: 2px;">${pharmacyInfo.company_description || '© PharmaSys - Système de gestion'}</div>
+                    <div style="margin-top: 2px;">${pharmacyInfo.company_description || '© digiPharm - Système de gestion'}</div>
                 </div>
             `;
 

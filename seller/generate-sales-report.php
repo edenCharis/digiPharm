@@ -360,7 +360,7 @@ try {
 
     <div class="print-container">
         <div class="report-header">
-            <div class="logo">PharmaSys</div>
+            <div class="logo">digiPharm</div>
             <h1 class="report-title">Rapport de Ventes</h1>
         </div>
 
