@@ -317,10 +317,20 @@ def generate_brief(pharmacy_id: int) -> dict:
     n_ok_avail  = sum(1 for pid in active_pids if inv_dos.get(pid, 999) >= 7)
     avail_score = round(n_ok_avail / len(active_pids) * 100) if active_pids else 70
 
+    # Marge calculée sur l'inventaire (unit_price vs unit_cost) — plus fiable
+    # que ai_sales.cost qui stocke purchasePrice sans multiplier par la quantité.
     profit_score = 60
-    if not sales_30.empty and "cost" in sales_30.columns:
+    if not inv.empty and "unit_cost" in inv.columns and "unit_price" in inv.columns:
+        margin_items = inv[(inv["unit_cost"] > 0) & (inv["unit_price"] > inv["unit_cost"])]
+        if not margin_items.empty:
+            avg_margin = float(
+                ((margin_items["unit_price"] - margin_items["unit_cost"]) / margin_items["unit_price"]).mean()
+            )
+            # 0% → 0, 20% → 50, 40% → 100
+            profit_score = min(100, max(0, round(avg_margin * 250)))
+    elif not sales_30.empty and "cost" in sales_30.columns:
         r30, c30 = float(sales_30["revenue"].sum()), float(sales_30["cost"].sum())
-        if r30 > 0:
+        if r30 > 0 and 0 < c30 < r30:
             profit_score = min(100, max(0, round((r30 - c30) / r30 * 150)))
 
     rotation_score = 50
