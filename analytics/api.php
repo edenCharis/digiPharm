@@ -29,6 +29,7 @@ $getRoutes = [
     'trends'    => "/analytics/trends?days=$days",
     'alerts'    => '/analytics/alerts',
     'inventory' => '/analytics/inventory',
+    'suppliers' => '/analytics/suppliers',
     'etl_sync'  => "/analytics/etl/sync$full",
 ];
 

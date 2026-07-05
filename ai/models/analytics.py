@@ -261,6 +261,96 @@ def dashboard_summary(pharmacy_id: int) -> dict:
     }
 
 
+# ── Supplier Reliability ──────────────────────────────────────────────────
+
+def supplier_reliability(pharmacy_id: int) -> list[dict]:
+    """Score each supplier 0-100 from delivery + item validation history.
+
+    Weights: item validation rate 45%, delivery completion 30%, lead-time regularity 25%.
+    Falls back gracefully when ai_deliveries is empty (no ETL run yet).
+    """
+    try:
+        df_d = aquery("""
+            SELECT id, source_delivery_id, supplier_id, supplier_name,
+                   delivery_date, status, source_created_at
+            FROM ai_deliveries
+            WHERE pharmacy_id = :pid
+        """, {"pid": pharmacy_id})
+    except Exception:
+        return []
+
+    if df_d.empty:
+        return []
+
+    try:
+        df_di = aquery("""
+            SELECT di.delivery_id, di.validated, di.price_cession, di.quantity,
+                   d.supplier_id
+            FROM ai_delivery_items di
+            JOIN ai_deliveries d ON d.id = di.delivery_id
+            WHERE di.pharmacy_id = :pid
+        """, {"pid": pharmacy_id})
+    except Exception:
+        df_di = pd.DataFrame()
+
+    df_d["delivery_date"]     = pd.to_datetime(df_d["delivery_date"],     errors="coerce")
+    df_d["source_created_at"] = pd.to_datetime(df_d["source_created_at"], errors="coerce")
+    df_d["lead_days"]         = (df_d["delivery_date"] - df_d["source_created_at"]).dt.days
+
+    _completed_statuses = {"completed", "livree", "livré", "livrée", "delivered", "done"}
+
+    results = []
+    for (sup_id, sup_name), grp_d in df_d.groupby(["supplier_id", "supplier_name"]):
+        n = len(grp_d)
+
+        # Delivery completion rate
+        completed = grp_d["status"].str.lower().isin(_completed_statuses).sum()
+        completion_rate = round(int(completed) / n * 100)
+
+        # Lead-time regularity (low coefficient of variation → high regularity)
+        ld = grp_d["lead_days"].dropna()
+        if len(ld) >= 2 and float(ld.mean()) > 0:
+            cv = float(ld.std()) / float(ld.mean())
+            regularity = max(0, min(100, round((1 - min(cv, 1.0)) * 100)))
+        elif len(ld) == 1:
+            regularity = 70
+        else:
+            regularity = 60
+        avg_lead = round(float(ld.mean()), 1) if len(ld) > 0 and not np.isnan(ld.mean()) else None
+
+        # Item validation rate
+        grp_di = df_di[df_di["supplier_id"] == sup_id] if not df_di.empty else pd.DataFrame()
+        if not grp_di.empty:
+            val_rate   = round(float(grp_di["validated"].mean()) * 100)
+            total_val  = float((grp_di["quantity"].fillna(0) * grp_di["price_cession"].fillna(0)).sum())
+            item_count = len(grp_di)
+        else:
+            val_rate   = 70
+            total_val  = 0.0
+            item_count = 0
+
+        score = round(val_rate * 0.45 + completion_rate * 0.30 + regularity * 0.25)
+
+        results.append({
+            "supplier_id":      str(sup_id),
+            "supplier_name":    str(sup_name),
+            "score":            score,
+            "label":            ("Excellent" if score >= 85 else
+                                 "Fiable"    if score >= 70 else
+                                 "Moyen"     if score >= 55 else
+                                 "Risqué"),
+            "delivery_count":   n,
+            "item_count":       item_count,
+            "completion_rate":  completion_rate,
+            "validation_rate":  val_rate,
+            "regularity_score": regularity,
+            "avg_lead_days":    avg_lead,
+            "total_value_cfa":  round(total_val),
+        })
+
+    return sorted(results, key=lambda x: x["score"], reverse=True)
+
+
 # ── Daily Executive Brief ─────────────────────────────────────────────────
 
 def _fmtk(n) -> str:

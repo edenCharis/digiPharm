@@ -20,7 +20,8 @@ def _clean(records: list[dict]) -> list[dict]:
     return [{k: _conv(v) for k, v in r.items()} for r in records]
 
 from models.analytics import (
-    dashboard_summary, revenue_trends, generate_alerts, get_inventory, generate_brief
+    dashboard_summary, revenue_trends, generate_alerts, get_inventory,
+    generate_brief, supplier_reliability,
 )
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -106,5 +107,14 @@ def analytics_inventory(request: Request):
         inv = get_inventory(pid)
         items = _clean(inv.to_dict("records")) if not inv.empty else []
         return {"pharmacy_id": pid, "items": items}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/suppliers")
+def analytics_suppliers(request: Request):
+    pid = _resolve_pharmacy(request)
+    try:
+        return {"pharmacy_id": pid, "suppliers": supplier_reliability(pid)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -358,12 +358,189 @@ class DynamicAdapter:
             count += 1
         return count
 
+    # ── Supplier sync ─────────────────────────────────────────────────────
+
+    def _upsert_supplier(self, row: dict):
+        with self.analytics.cursor() as cur:
+            cur.execute("""
+                INSERT INTO ai_suppliers
+                    (pharmacy_id, source_supplier_id, name, contact, synced_at)
+                VALUES (%s,%s,%s,%s,NOW())
+                ON DUPLICATE KEY UPDATE
+                    name=VALUES(name), contact=VALUES(contact), synced_at=NOW()
+            """, (
+                self.pharmacy_id,
+                str(row["supplier_id"]),
+                row.get("supplier_name") or "",
+                row.get("contact"),
+            ))
+
+    def sync_suppliers(self) -> int:
+        s = self.schema
+        if not s.get("supplier_table"):
+            return 0
+        contact_col = f"sup.{s['supplier_contact_col']}" if s.get("supplier_contact_col") else "NULL"
+        sql = f"""
+            SELECT
+                sup.{s['supplier_id_col']}   AS supplier_id,
+                sup.{s['supplier_name_col']} AS supplier_name,
+                {contact_col}                AS contact
+            FROM {s['supplier_table']} sup
+        """
+        with self.source.cursor() as cur:
+            cur.execute(sql)
+            cols = [d[0] for d in cur.description]
+            rows = cur.fetchall()
+        count = 0
+        for raw in rows:
+            row = dict(zip(cols, raw))
+            self._upsert_supplier({
+                "supplier_id":   row["supplier_id"],
+                "supplier_name": row.get("supplier_name"),
+                "contact":       row.get("contact"),
+            })
+            count += 1
+        return count
+
+    # ── Delivery sync ─────────────────────────────────────────────────────
+
+    def _upsert_delivery(self, row: dict) -> int | None:
+        with self.analytics.cursor() as cur:
+            cur.execute("""
+                INSERT INTO ai_deliveries
+                    (pharmacy_id, source_delivery_id, supplier_id, supplier_name,
+                     delivery_date, status, source_created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s)
+                ON DUPLICATE KEY UPDATE
+                    supplier_name=VALUES(supplier_name),
+                    delivery_date=VALUES(delivery_date),
+                    status=VALUES(status)
+            """, (
+                self.pharmacy_id,
+                str(row["delivery_id"]),
+                str(row.get("supplier_id") or ""),
+                row.get("supplier_name") or "",
+                row.get("delivery_date"),
+                row.get("status") or "unknown",
+                row.get("created_at"),
+            ))
+            cur.execute("""
+                SELECT id FROM ai_deliveries
+                WHERE pharmacy_id=%s AND source_delivery_id=%s
+            """, (self.pharmacy_id, str(row["delivery_id"])))
+            r = cur.fetchone()
+            return r[0] if r else None
+
+    def _upsert_delivery_item(self, delivery_analytics_id: int, source_delivery_id: str, row: dict):
+        with self.analytics.cursor() as cur:
+            cur.execute("""
+                INSERT INTO ai_delivery_items
+                    (pharmacy_id, delivery_id, source_delivery_id, product_id,
+                     product_name, quantity, price_cession, public_price,
+                     validated, source_created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON DUPLICATE KEY UPDATE
+                    quantity=VALUES(quantity),
+                    price_cession=VALUES(price_cession),
+                    validated=VALUES(validated)
+            """, (
+                self.pharmacy_id,
+                delivery_analytics_id,
+                source_delivery_id,
+                str(row.get("product_id") or ""),
+                row.get("product_name") or "",
+                float(row.get("quantity") or 0),
+                float(row["price_cession"]) if row.get("price_cession") is not None else None,
+                float(row["public_price"]) if row.get("public_price") is not None else None,
+                int(bool(row.get("validated"))),
+                row.get("created_at"),
+            ))
+
+    def sync_deliveries(self) -> int:
+        s = self.schema
+        if not s.get("delivery_table"):
+            return 0
+
+        pname_col = "NULL AS product_name"
+        pname_join = ""
+        if s.get("products_table") and s.get("products_name_col") and s.get("products_id_col"):
+            pname_col  = f"p.{s['products_name_col']} AS product_name"
+            pname_join = f"LEFT JOIN {s['products_table']} p ON p.{s['products_id_col']} = di.{s['di_product_fk']}"
+
+        pub_price_col = f"di.{s['di_public_price_col']} AS public_price" if s.get("di_public_price_col") else "NULL AS public_price"
+
+        sql_d = f"""
+            SELECT
+                d.{s['delivery_id_col']}       AS delivery_id,
+                d.{s['delivery_supplier_fk']}  AS supplier_id,
+                sup.{s['supplier_name_col']}   AS supplier_name,
+                DATE(d.{s['delivery_date_col']}) AS delivery_date,
+                d.{s['delivery_status_col']}   AS status,
+                d.createdAt                     AS created_at
+            FROM {s['delivery_table']} d
+            LEFT JOIN {s['supplier_table']} sup
+                ON sup.{s['supplier_id_col']} = d.{s['delivery_supplier_fk']}
+            ORDER BY d.createdAt
+        """
+
+        sql_di = f"""
+            SELECT
+                di.{s['di_delivery_fk']}   AS source_delivery_id,
+                di.{s['di_product_fk']}    AS product_id,
+                {pname_col},
+                di.{s['di_quantity_col']}  AS quantity,
+                di.{s['di_price_col']}     AS price_cession,
+                {pub_price_col},
+                di.{s['di_validated_col']} AS validated,
+                di.createdAt               AS created_at
+            FROM {s['delivery_items_table']} di
+            {pname_join}
+        """
+
+        with self.source.cursor() as cur:
+            cur.execute(sql_d)
+            d_cols = [c[0] for c in cur.description]
+            deliveries = [dict(zip(d_cols, r)) for r in cur.fetchall()]
+
+        with self.source.cursor() as cur:
+            cur.execute(sql_di)
+            di_cols = [c[0] for c in cur.description]
+            all_items = [dict(zip(di_cols, r)) for r in cur.fetchall()]
+
+        items_by_delivery: dict[str, list] = {}
+        for item in all_items:
+            key = str(item["source_delivery_id"])
+            items_by_delivery.setdefault(key, []).append(item)
+
+        count = 0
+        for raw_d in deliveries:
+            src_id = str(raw_d["delivery_id"])
+            analytics_id = self._upsert_delivery({
+                "delivery_id":   src_id,
+                "supplier_id":   raw_d.get("supplier_id"),
+                "supplier_name": raw_d.get("supplier_name"),
+                "delivery_date": str(raw_d["delivery_date"]) if raw_d.get("delivery_date") else None,
+                "status":        raw_d.get("status"),
+                "created_at":    raw_d.get("created_at"),
+            })
+            if analytics_id is None:
+                continue
+            for item in items_by_delivery.get(src_id, []):
+                self._upsert_delivery_item(analytics_id, src_id, item)
+            count += 1
+            if count % 200 == 0:
+                self.analytics.commit()
+                logger.info(f"  {count} livraisons…")
+        return count
+
+    # ── Orchestrator ──────────────────────────────────────────────────────
+
     def run(self, full_sync: bool = False) -> dict:
         from datetime import datetime
-        t0     = datetime.now()
-        sales  = inv = 0
-        status = "success"
-        error  = None
+        t0        = datetime.now()
+        sales     = inv = suppliers = deliveries = 0
+        status    = "success"
+        error     = None
         last_date = None
 
         try:
@@ -372,6 +549,10 @@ class DynamicAdapter:
             sales = self.sync_sales(since_date=since)
             self.analytics.commit()
             inv = self.sync_inventory()
+            self.analytics.commit()
+            suppliers = self.sync_suppliers()
+            self.analytics.commit()
+            deliveries = self.sync_deliveries()
             self.analytics.commit()
 
             with self.analytics.cursor() as cur:
@@ -385,12 +566,13 @@ class DynamicAdapter:
             logger.exception("[ETL] Failed")
 
         duration = (datetime.now() - t0).total_seconds()
+        total_rows = sales + inv + suppliers + deliveries
 
         with self.analytics.cursor() as cur:
             cur.execute("""
                 INSERT INTO ai_etl_runs (pharmacy_id, adapter, status, rows_synced, last_synced_date, error_message, duration_sec)
                 VALUES (%s,'dynamic',%s,%s,%s,%s,%s)
-            """, (self.pharmacy_id, status, sales + inv, last_date, error, round(duration, 2)))
+            """, (self.pharmacy_id, status, total_rows, last_date, error, round(duration, 2)))
         self.analytics.commit()
 
         if status == "success":
@@ -399,12 +581,19 @@ class DynamicAdapter:
                     UPDATE ai_data_sources
                     SET last_synced_at=NOW(), last_sync_rows=%s
                     WHERE pharmacy_id=%s
-                """, (sales + inv, self.pharmacy_id))
+                """, (total_rows, self.pharmacy_id))
             self.analytics.commit()
 
-        return {"pharmacy_id": self.pharmacy_id, "status": status,
-                "sales_synced": sales, "inventory_synced": inv,
-                "duration_seconds": round(duration, 2), "error": error}
+        return {
+            "pharmacy_id":        self.pharmacy_id,
+            "status":             status,
+            "sales_synced":       sales,
+            "inventory_synced":   inv,
+            "suppliers_synced":   suppliers,
+            "deliveries_synced":  deliveries,
+            "duration_seconds":   round(duration, 2),
+            "error":              error,
+        }
 
 
 # ── Main ──────────────────────────────────────────────────────────────────
