@@ -14,6 +14,7 @@ use PHPMailer\PHPMailer\Exception;
 
 session_start();
 include 'database.php';
+require_once __DIR__ . '/env.php';
 
 class OTPAuth {
     private $db;
