@@ -52,12 +52,12 @@ class OTPAuth {
             $mail->isSMTP();
             $mail->Host = SMTP_HOST;
             $mail->SMTPAuth = true;
-            $mail->Username = SMTP_USER;
-            $mail->Password = SMTP_PASS;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Username = SMTP_USERNAME;
+            $mail->Password = SMTP_PASSWORD;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = SMTP_PORT;
 
-            $mail->setFrom(SMTP_USER, 'DigiPharma');
+            $mail->setFrom(SMTP_USERNAME, 'digiPharm');
             $mail->addAddress($email, $username);
 
             $mail->isHTML(true);
