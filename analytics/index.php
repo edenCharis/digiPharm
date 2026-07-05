@@ -18,7 +18,8 @@ $today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] 
 <?php require_once __DIR__ . '/includes/common.css.php'; ?>
 
 :root { --purple:#7c3aed; --teal:#0d9488; --orange:#f97316; --orange-lt:#ffedd5; }
-.content { padding:20px 24px 32px; flex:1; display:flex; flex-direction:column; gap:16px; }
+.content { padding:20px 24px 32px; flex:1; display:flex; flex-direction:column; gap:16px; min-width:0; }
+.main { overflow-x:hidden; }
 
 /* Topbar */
 .topbar-meta { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-3); }
@@ -41,7 +42,7 @@ $today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] 
 .period-sep { height:1px; background:var(--border-lt); margin:4px 0; }
 
 /* Layout */
-.dash-top    { display:grid; grid-template-columns:1fr 300px; gap:16px; }
+.dash-top    { display:grid; grid-template-columns:1fr 300px; gap:16px; align-items:start; }
 .dash-bottom { display:grid; grid-template-columns:1fr 360px; gap:16px; }
 
 /* Greeting */
@@ -53,16 +54,23 @@ $today = $jours[(int)date('w')] . ' ' . date('j') . ' ' . $mois[(int)date('n')] 
 .g-title span { color:var(--green); }
 .g-sub { font-size:13px; color:var(--text-2); margin-top:5px; line-height:1.55; }
 .g-sub strong { color:var(--text); font-weight:600; }
-.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.kpi-item { padding:12px 14px 0; border-right:1px solid var(--border); display:flex; flex-direction:column; }
+.kpi-strip { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-top:16px; }
+.kpi-item { padding:14px 14px 0; border-right:1px solid var(--border); }
 .kpi-item:last-child { border-right:none; }
-.kpi-val { font-size:20px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; }
+.kpi-top  { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.kpi-icon { width:28px; height:28px; border-radius:6px; display:grid; place-items:center; flex-shrink:0; }
+.kpi-icon svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.kpi-icon.red   { background:#fee2e2; color:#ef4444; }
+.kpi-icon.teal  { background:#ccfbf1; color:#0d9488; }
+.kpi-icon.amber { background:#ffedd5; color:#f97316; }
+.kpi-icon.blue  { background:#dbeafe; color:#3b82f6; }
+.kpi-val { font-size:22px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; }
 .kpi-val.red   { color:#ef4444; }
 .kpi-val.teal  { color:#0d9488; }
 .kpi-val.amber { color:#f97316; }
 .kpi-val.blue  { color:#3b82f6; }
-.kpi-lbl { font-size:11px; color:var(--text-3); margin-top:3px; line-height:1.3; }
-.kpi-spark { display:block; margin-top:auto; padding-top:8px; width:100%; height:36px; }
+.kpi-lbl { font-size:11px; color:var(--text-3); margin-top:4px; margin-bottom:8px; line-height:1.3; }
+.kpi-spark { display:block; width:100%; height:32px; }
 
 /* Health card */
 .health-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
@@ -205,9 +213,10 @@ body.sb-col .logo-sub { display:none; }
   .alert-title { font-size:14px; }
 }
 @media(max-width:480px) {
-  .kpi-strip   { grid-template-columns:1fr; }
+  .kpi-strip   { grid-template-columns:1fr 1fr; }
   .kpi-item    { border-right:none; border-bottom:1px solid var(--border); }
-  .kpi-item:last-child { border-bottom:none; }
+  .kpi-item:nth-child(odd) { border-right:1px solid var(--border); }
+  .kpi-item:nth-last-child(-n+2) { border-bottom:none; }
   .tab-btn span:not(.tab-count):not(.tab-dot) { display:none; }
   .tab-btn     { padding:12px 10px; }
   .g-icon      { width:36px; height:36px; border-radius:8px; }
@@ -395,14 +404,21 @@ function renderGreeting(data) {
     `Voici les cinq décisions les plus importantes que vous devrez prendre aujourd'hui.`;
 
   const kpis = [
-    { val: fmt(g.revenue_at_risk),            lbl: 'CA à risque aujourd\'hui', cls: 'red',  spark: 'down' },
-    { val: fmt(g.revenue_recoverable),         lbl: 'CA récupérable',           cls: 'teal', spark: 'up'   },
-    { val: (g.products_requiring_action||'—')+' produits', lbl: 'Produits à traiter', cls: 'amber', spark: 'flat' },
-    { val: (g.monthly_probability||'—')+'%',  lbl: 'Probabilité objectif mensuel', cls: 'blue', spark: 'up' },
+    { val: fmt(g.revenue_at_risk),                        lbl: 'CA à risque aujourd\'hui',     cls: 'red',   spark: 'down',
+      icon: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' },
+    { val: fmt(g.revenue_recoverable),                    lbl: 'CA récupérable',                cls: 'teal',  spark: 'up',
+      icon: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>' },
+    { val: (g.products_requiring_action||'—')+' produits', lbl: 'Produits à traiter',           cls: 'amber', spark: 'flat',
+      icon: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' },
+    { val: (g.monthly_probability||'—')+'%',              lbl: 'Probabilité objectif mensuel',  cls: 'blue',  spark: 'up',
+      icon: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' },
   ];
   const colors = { red:'#ef4444', teal:'#0d9488', amber:'#f97316', blue:'#3b82f6' };
   document.getElementById('kpiStrip').innerHTML = kpis.map((k,i) =>
     `<div class="kpi-item">
+      <div class="kpi-top">
+        <div class="kpi-icon ${k.cls}"><svg viewBox="0 0 24 24">${k.icon}</svg></div>
+      </div>
       <div class="kpi-val ${k.cls}">${k.val}</div>
       <div class="kpi-lbl">${k.lbl}</div>
       <canvas class="kpi-spark" id="spark${i}"></canvas>
