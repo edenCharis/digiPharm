@@ -3,6 +3,7 @@ Analytics models — query digipharmai_db (normalized multi-tenant schema).
 Used by the standalone analytics dashboard endpoints.
 """
 import math
+import calendar
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -546,9 +547,9 @@ def generate_brief(pharmacy_id: int) -> dict:
     if series and len(series) >= 7:
         rev_list     = [s["revenue"] for s in series]
         recent_avg_t = sum(rev_list[-7:]) / 7
-        days_elapsed = len(series)
-        days_left_m  = max(0, 30 - days_elapsed)
-        projected_m  = float(trends.get("total_revenue", 0)) + recent_avg_t * days_left_m
+        days_in_month = calendar.monthrange(today.year, today.month)[1]
+        days_left_m   = days_in_month - today.day
+        projected_m   = float(trends.get("total_revenue", 0)) + recent_avg_t * days_left_m
         if days_left_m > 0:
             timeline.append({
                 "date":     (today + timedelta(days=days_left_m)).isoformat(),
@@ -762,8 +763,8 @@ def generate_brief(pharmacy_id: int) -> dict:
         revenues      = [s["revenue"] for s in series]
         recent_avg_f  = sum(revenues[-7:]) / 7
         monthly_proj  = recent_avg_f * 30
-        days_elapsed  = len(series)
-        days_left_f   = max(0, 30 - days_elapsed)
+        days_in_month = calendar.monthrange(today.year, today.month)[1]
+        days_left_f   = days_in_month - today.day
         projected_eom = float(trends.get("total_revenue", 0)) + recent_avg_f * days_left_f
         half          = len(revenues) // 2
         first_avg_f   = sum(revenues[:half]) / half if half else recent_avg_f
