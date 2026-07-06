@@ -31,6 +31,43 @@ try {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Honeypot: bots fill the hidden field, humans leave it empty
+    if (!empty($_POST['website'])) {
+        // Silently reject bot submissions
+        $success = true;
+        goto render;
+    }
+
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $ip = trim(explode(',', $ip)[0]);
+
+    // IP rate limit: max 3 submissions per IP per hour
+    try {
+        $adb->exec("CREATE TABLE IF NOT EXISTS dm_register_rate (
+            id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            ip         VARCHAR(45) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ip_time (ip, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        $rateRow = $adb->prepare(
+            "SELECT COUNT(*) AS cnt FROM dm_register_rate
+             WHERE ip = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)"
+        );
+        $rateRow->execute([$ip]);
+        $rateCount = (int)($rateRow->fetch()['cnt'] ?? 0);
+
+        if ($rateCount >= 3) {
+            $error = 'Trop de tentatives depuis votre adresse. Réessayez dans une heure.';
+            goto render;
+        }
+
+        $adb->prepare("INSERT INTO dm_register_rate (ip) VALUES (?)")->execute([$ip]);
+        $adb->exec("DELETE FROM dm_register_rate WHERE created_at < DATE_SUB(NOW(), INTERVAL 2 HOUR)");
+    } catch (\Exception $e) {
+        // Non-fatal: continue without rate limiting if table fails
+    }
+
     $pharmacy = trim($_POST['pharmacy_name'] ?? '');
     $contact  = trim($_POST['contact_name']  ?? '');
     $email    = trim($_POST['email']         ?? '');
@@ -87,6 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+render:
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -418,6 +456,8 @@ textarea.form-input { resize: vertical; min-height: 80px; }
       <?php endif; ?>
 
       <form method="POST" action="" id="regForm" onsubmit="handleSubmit(event)">
+        <!-- Honeypot: hidden from real users, bots fill it -->
+        <input type="text" name="website" style="display:none;position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
         <div class="form-group">
           <label class="form-label">Nom de la pharmacie <span>*</span></label>
           <input type="text" name="pharmacy_name" class="form-input"

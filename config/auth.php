@@ -34,7 +34,7 @@ class OTPAuth {
         $deleteQuery = "DELETE FROM user_otp WHERE user_id = :user_id";
         $this->db->query($deleteQuery, ['user_id' => $userId]);
 
-        $insertQuery = "INSERT INTO user_otp (user_id, otp_code, expires_at, created_at) 
+        $insertQuery = "INSERT INTO user_otp (user_id, otp_code, expires_at, created_at)
                         VALUES (:user_id, :otp_code, :expires_at, NOW())";
 
         return $this->db->query($insertQuery, [
@@ -42,6 +42,43 @@ class OTPAuth {
             'otp_code' => password_hash($otp, PASSWORD_DEFAULT),
             'expires_at' => $expiryTime
         ]);
+    }
+
+    // Returns false if an OTP was already sent less than 2 minutes ago (prevent email flood)
+    private function canSendOTP($userId) {
+        $row = $this->db->fetch(
+            "SELECT created_at FROM user_otp WHERE user_id = :uid ORDER BY created_at DESC LIMIT 1",
+            ['uid' => $userId]
+        );
+        if (!$row) return true;
+        return (time() - strtotime($row['created_at'])) >= 120;
+    }
+
+    // Returns true if this IP has exceeded max login attempts in the last minute
+    private function isRateLimited($ip) {
+        $row = $this->db->fetch(
+            "SELECT COUNT(*) AS cnt FROM user_otp_rate
+             WHERE ip = :ip AND created_at > DATE_SUB(NOW(), INTERVAL 1 MINUTE)",
+            ['ip' => $ip]
+        );
+        return ($row && $row['cnt'] >= 10);
+    }
+
+    private function recordLoginAttempt($ip) {
+        // Auto-create table if missing (runs once)
+        $this->db->query("CREATE TABLE IF NOT EXISTS user_otp_rate (
+            id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            ip         VARCHAR(45) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ip_time (ip, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        $this->db->query(
+            "INSERT INTO user_otp_rate (ip) VALUES (:ip)",
+            ['ip' => $ip]
+        );
+        // Clean up old records (older than 1 hour) to keep the table small
+        $this->db->query("DELETE FROM user_otp_rate WHERE created_at < DATE_SUB(NOW(), INTERVAL 1 HOUR)");
     }
 
     private function sendOTPEmail($email, $username, $otp) {
@@ -187,19 +224,27 @@ HTML;
     }
 
     public function authenticateCredentials($username, $password) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $ip = trim(explode(',', $ip)[0]);
+
+        if ($this->isRateLimited($ip)) {
+            return ['success' => false, 'message' => 'Trop de tentatives. Réessayez dans une minute.'];
+        }
+
         $query = "SELECT id, username, email, role, password, pharmacy_id FROM user WHERE username = :username";
         $user = $this->db->fetch($query, ['username' => $username]);
 
         if (!$user) {
+            $this->recordLoginAttempt($ip);
             return ['success' => false, 'message' => 'Nom d\'utilisateur incorrect'];
         }
 
         if (!password_verify($password, $user['password'])) {
+            $this->recordLoginAttempt($ip);
             return ['success' => false, 'message' => 'Mot de passe incorrect'];
         }
 
         // Emergency bypass: when OTP_BYPASS=true in env.php, skip email and log in directly.
-        // Set to false once email is working again.
         if (defined('OTP_BYPASS') && OTP_BYPASS === true) {
             $_SESSION['user_id']     = $user['id'];
             $_SESSION['username']    = $user['username'];
@@ -218,6 +263,19 @@ HTML;
             return ['success' => true, 'role' => $user['role'], 'redirect' => $redirect, 'message' => 'Connexion réussie'];
         }
 
+        // If an OTP was sent less than 2 minutes ago, don't send another email
+        if (!$this->canSendOTP($user['id'])) {
+            $_SESSION['temp_user'] = [
+                'id'          => $user['id'],
+                'username'    => $user['username'],
+                'email'       => $user['email'],
+                'role'        => $user['role'],
+                'pharmacy_id' => (int)($user['pharmacy_id'] ?? 1),
+            ];
+            return ['success' => true, 'message' => 'Un code a déjà été envoyé. Vérifiez votre boîte mail.'];
+        }
+
+        $this->recordLoginAttempt($ip);
         $otp = $this->generateOTP();
 
         if ($this->storeOTP($user['id'], $otp)) {
@@ -229,10 +287,7 @@ HTML;
                 'role'        => $user['role'],
                 'pharmacy_id' => (int)($user['pharmacy_id'] ?? 1),
             ];
-            return [
-                'success' => true,
-                'message' => 'Code OTP envoyé à votre email'
-            ];
+            return ['success' => true, 'message' => 'Code OTP envoyé à votre email'];
         }
         return ['success' => false, 'message' => 'Erreur lors de l\'envoi du code OTP'];
     }
@@ -298,16 +353,25 @@ HTML;
             return ['success' => false, 'message' => 'Session expirée. Reconnectez-vous.'];
         }
 
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $ip = trim(explode(',', $ip)[0]);
+
+        if ($this->isRateLimited($ip)) {
+            return ['success' => false, 'message' => 'Trop de demandes. Réessayez dans une minute.'];
+        }
+
         $user = $_SESSION['temp_user'];
+
+        if (!$this->canSendOTP($user['id'])) {
+            return ['success' => false, 'message' => 'Veuillez attendre 2 minutes avant de renvoyer un code.'];
+        }
+
+        $this->recordLoginAttempt($ip);
         $otp = $this->generateOTP();
 
         if ($this->storeOTP($user['id'], $otp)) {
             $this->sendOTPEmail($user['email'], $user['username'], $otp);
-
-            return [
-                'success' => true,
-                'message' => 'Nouveau code OTP envoyé'
-            ];
+            return ['success' => true, 'message' => 'Nouveau code OTP envoyé'];
         }
 
         return ['success' => false, 'message' => 'Erreur lors de l\'envoi du code OTP'];
