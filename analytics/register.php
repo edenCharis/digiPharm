@@ -195,6 +195,7 @@ body {
   font-style: italic;
   background: linear-gradient(135deg, #99f6e4, var(--teal));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  padding-right: 0.08em; display: inline-block;
 }
 .pitch-sub { font-size: 15px; color: rgba(255,255,255,.5); line-height: 1.72; max-width: 400px; margin-bottom: 36px; }
 

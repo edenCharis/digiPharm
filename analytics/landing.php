@@ -153,6 +153,7 @@ h1.hero-title em {
   font-style: italic; font-weight: 800;
   background: linear-gradient(135deg, var(--teal-xlight) 0%, var(--teal) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  padding-right: 0.08em; display: inline-block;
 }
 
 .hero-sub {
