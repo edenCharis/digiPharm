@@ -872,7 +872,7 @@ h2.sec-title {
       </div>
       <div class="spotlight-visual">
         <div class="sv-header">
-          <span class="sv-title">Score santé IA · Pharmacie Galy</span>
+          <span class="sv-title">Score santé IA · Pharmacie Centrale</span>
         </div>
         <div style="display:flex;align-items:center;gap:16px;padding:16px 0 8px;">
           <div class="sv-score">
