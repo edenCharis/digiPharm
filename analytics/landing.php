@@ -542,7 +542,7 @@ h2.sec-title {
 @media (max-width: 768px) {
   .nav { padding: 0 20px; }
   .nav-links { display: none; }
-  .hero { padding: 90px 24px 60px; }
+  .hero { padding: 90px 24px 56px; }
   h1.hero-title { letter-spacing: -1px; }
   .section { padding: 64px 24px; }
   .feat-grid { grid-template-columns: 1fr; }
@@ -553,6 +553,54 @@ h2.sec-title {
   .cta { padding: 70px 24px; }
   .footer { grid-template-columns: 1fr 1fr; padding: 48px 24px 24px; }
   .footer-bottom { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
+}
+@media (max-width: 480px) {
+  /* Nav — hide login link, keep only CTA */
+  .btn-nav-ghost { display: none; }
+  .btn-nav-solid { padding: 7px 14px; font-size: 13px; }
+  .logo-name { font-size: 15px; }
+  .logo-badge { display: none; }
+
+  /* Hero */
+  .hero { padding: 76px 16px 48px; gap: 32px; }
+  h1.hero-title { font-size: 34px; letter-spacing: -.5px; line-height: 1.1; }
+  h1.hero-title em { padding-right: 0.1em; }
+  .hero-sub { font-size: 15px; }
+  .hero-pill { font-size: 11px; }
+  .btn-cta-teal { width: 100%; justify-content: center; padding: 13px 20px; }
+  .btn-cta-ghost { font-size: 14px; }
+  .hero-ctas { flex-direction: column; align-items: stretch; gap: 10px; }
+  .hero-fine { gap: 12px; }
+
+  /* Sections */
+  .section { padding: 48px 16px; }
+  .feat-card { padding: 20px; }
+  .feat-card h3 { font-size: 15px; }
+  h2.sec-title { font-size: 26px; letter-spacing: -.5px; }
+
+  /* Spotlight */
+  .spotlight { padding: 48px 16px; }
+
+  /* Pricing */
+  .plan-solo { padding: 24px 20px; }
+  .plan-price-val { font-size: 48px; }
+
+  /* Compat */
+  .compat { padding: 48px 16px; }
+  .compat-text h2 { font-size: 22px; }
+
+  /* How */
+  .how-step p { max-width: 100%; }
+
+  /* CTA */
+  .cta { padding: 56px 16px; }
+  .btn-white, .btn-dark-ghost { padding: 13px 20px; font-size: 14px; width: 100%; text-align: center; }
+  .cta-btns { flex-direction: column; align-items: stretch; }
+
+  /* Footer */
+  .footer { grid-template-columns: 1fr; gap: 28px; padding: 40px 16px 20px; }
+  .footer-bottom { padding: 14px 16px; flex-direction: column; gap: 6px; text-align: center; }
+  .footer-brand p { max-width: 100%; }
 }
 </style>
 </head>
