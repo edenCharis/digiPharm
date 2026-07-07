@@ -63,6 +63,9 @@
       <div class="chat-head-title">digiMind</div>
       <div class="chat-head-sub">Posez une question sur votre pharmacie</div>
     </div>
+    <a href="/analytics/assistant.php" class="chat-close" title="Ouvrir en plein écran" aria-label="Ouvrir en plein écran">
+      <svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </a>
     <button class="chat-close" onclick="toggleChat()" aria-label="Fermer">
       <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>

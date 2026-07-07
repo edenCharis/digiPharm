@@ -26,6 +26,9 @@ function _nav($href, $page, $active, $icon, $label) {
     <?php _nav('/analytics/', 'dashboard', $activePage,
       '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
       'Vue d\'ensemble'); ?>
+    <?php _nav('/analytics/assistant.php', 'assistant', $activePage,
+      '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+      'Assistant'); ?>
     <?php _nav('/analytics/trends.php', 'trends', $activePage,
       '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
       'Tendances'); ?>
