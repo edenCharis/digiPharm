@@ -189,6 +189,7 @@ function statusBadge(string $status): string {
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php require_once __DIR__ . '/includes/sidebar.php'; ?>
+<?php require_once __DIR__ . '/includes/modal.php'; ?>
 
 <div class="main">
   <div class="topbar">
@@ -453,7 +454,7 @@ function updatePrice(id, v) { const i = orderItems.find(x => x.product_id === id
 // Submit order
 async function submitOrder(e) {
   e.preventDefault();
-  if (!orderItems.length) { alert('Ajoutez au moins un produit.'); return; }
+  if (!orderItems.length) { await dgModalAlert('Ajoutez au moins un produit.'); return; }
 
   const sel = document.getElementById('supplierSelect');
   const supplierName = sel.tagName === 'SELECT' ? sel.value : sel.value;
@@ -487,12 +488,12 @@ async function submitOrder(e) {
       showToast('Commande ' + data.order_ref + ' créée et envoyée ✓');
       setTimeout(() => location.reload(), 1500);
     } else {
-      alert('Erreur: ' + (data.error || 'Inconnue'));
+      await dgModalAlert('Erreur: ' + (data.error || 'Inconnue'), { danger: true });
       btn.disabled = false;
       btn.textContent = 'Créer et envoyer';
     }
   } catch(err) {
-    alert('Erreur réseau: ' + err.message);
+    await dgModalAlert('Erreur réseau: ' + err.message, { danger: true });
     btn.disabled = false;
     btn.textContent = 'Créer et envoyer';
   }
@@ -500,7 +501,8 @@ async function submitOrder(e) {
 
 // Mark as delivered
 async function markDelivered(orderId, btn) {
-  if (!confirm('Marquer cette commande comme livrée ?')) return;
+  const ok = await dgModalConfirm('Marquer cette commande comme livrée ?', { confirmText: 'Marquer comme livrée' });
+  if (!ok) return;
   btn.disabled = true;
   const r = await fetch('/analytics/orders-save.php', {
     method: 'POST', headers: {'Content-Type':'application/json'}, credentials:'same-origin',
@@ -508,12 +510,15 @@ async function markDelivered(orderId, btn) {
   });
   const data = await r.json();
   if (data.ok) { showToast('Commande marquée comme livrée'); setTimeout(()=>location.reload(), 1200); }
-  else { alert('Erreur: '+(data.error||'')); btn.disabled=false; }
+  else { await dgModalAlert('Erreur: '+(data.error||''), { danger: true }); btn.disabled=false; }
 }
 
 // Cancel order
 async function cancelOrder(orderId, btn) {
-  if (!confirm('Annuler cette commande ?')) return;
+  const ok = await dgModalConfirm('Cette commande sera annulée et le fournisseur ne sera pas notifié.', {
+    title: 'Annuler la commande', confirmText: 'Annuler la commande', danger: true,
+  });
+  if (!ok) return;
   btn.disabled = true;
   const r = await fetch('/analytics/orders-save.php', {
     method: 'POST', headers: {'Content-Type':'application/json'}, credentials:'same-origin',
@@ -521,12 +526,13 @@ async function cancelOrder(orderId, btn) {
   });
   const data = await r.json();
   if (data.ok) { showToast('Commande annulée'); setTimeout(()=>location.reload(), 1200); }
-  else { alert('Erreur: '+(data.error||'')); btn.disabled=false; }
+  else { await dgModalAlert('Erreur: '+(data.error||''), { danger: true }); btn.disabled=false; }
 }
 
 // Resend existing order
 async function resendOrder(orderId, btn) {
-  if (!confirm('Renvoyer l\'email fournisseur pour cette commande ?')) return;
+  const ok = await dgModalConfirm('Renvoyer l\'email fournisseur pour cette commande ?', { confirmText: 'Renvoyer' });
+  if (!ok) return;
   btn.disabled = true;
   const r = await fetch('/analytics/orders-save.php', {
     method: 'POST', headers: {'Content-Type':'application/json'}, credentials:'same-origin',
@@ -534,7 +540,7 @@ async function resendOrder(orderId, btn) {
   });
   const data = await r.json();
   if (data.ok) { showToast('Email renvoyé ✓'); btn.disabled=false; }
-  else { alert('Erreur: '+(data.error||'')); btn.disabled=false; }
+  else { await dgModalAlert('Erreur: '+(data.error||''), { danger: true }); btn.disabled=false; }
 }
 
 function showToast(msg) {

@@ -82,6 +82,7 @@ $activePage = 'assistant';
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php include __DIR__ . '/includes/sidebar.php'; ?>
+<?php include __DIR__ . '/includes/modal.php'; ?>
 
 <div class="main">
   <div class="topbar">
@@ -315,7 +316,10 @@ async function sendAssist() {
 }
 
 async function deleteConversation(id) {
-  if (!confirm('Supprimer cette conversation ?')) return;
+  const ok = await dgModalConfirm('Cette conversation sera définitivement supprimée.', {
+    title: 'Supprimer la conversation', confirmText: 'Supprimer', danger: true,
+  });
+  if (!ok) return;
   await fetch('/analytics/chat-api.php?action=delete', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
