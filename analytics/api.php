@@ -33,25 +33,24 @@ $getRoutes = [
     'etl_sync'  => "/analytics/etl/sync$full",
 ];
 
-// POST routes → forward the request body to FastAPI
+// POST routes → ETL control (forward the form body to FastAPI)
+// Chat now lives in chat-api.php (adds conversation persistence + history).
 $postRoutes = [
     'etl_test' => '/analytics/etl/test',
-    'chat'     => '/analytics/chat',
 ];
 
 $baseUrl = 'http://127.0.0.1:8000';
 
 if (isset($postRoutes[$type])) {
-    // Chat sends a raw JSON body (question + history); other POST routes send form fields.
     $url  = $baseUrl . $postRoutes[$type];
-    $body = $type === 'chat' ? (file_get_contents('php://input') ?: '{}') : json_encode($_POST);
+    $body = json_encode($_POST);
 
     $ctx = stream_context_create([
         'http' => [
             'method'        => 'POST',
             'header'        => "X-API-Key: $apiKey\r\nContent-Type: application/json\r\nAccept: application/json\r\n",
             'content'       => $body,
-            'timeout'       => $type === 'chat' ? 25 : 20,
+            'timeout'       => 20,
             'ignore_errors' => true,
         ],
     ]);

@@ -63,7 +63,7 @@
       <div class="chat-head-title">digiMind</div>
       <div class="chat-head-sub">Posez une question sur votre pharmacie</div>
     </div>
-    <a href="/analytics/assistant.php" class="chat-close" title="Ouvrir en plein écran" aria-label="Ouvrir en plein écran">
+    <a href="/analytics/assistant.php" class="chat-close" id="chatExpandLink" title="Ouvrir en plein écran" aria-label="Ouvrir en plein écran">
       <svg viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
     </a>
     <button class="chat-close" onclick="toggleChat()" aria-label="Fermer">
@@ -84,7 +84,7 @@
 </div>
 
 <script>
-let chatHistory = [];
+let chatConversationId = null;
 let chatOpen = false;
 
 function toggleChat() {
@@ -118,21 +118,23 @@ async function sendChat() {
   const typingEl = appendChatMsg('typing', 'digiMind réfléchit…');
 
   try {
-    const res = await fetch('/analytics/api.php?type=chat', {
+    const res = await fetch('/analytics/chat-api.php?action=send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, history: chatHistory }),
+      body: JSON.stringify({ conversation_id: chatConversationId || 0, question }),
     });
     const json = await res.json();
     typingEl.remove();
+
+    if (json.conversation_id) {
+      chatConversationId = json.conversation_id;
+      document.getElementById('chatExpandLink').href = '/analytics/assistant.php?c=' + chatConversationId;
+    }
 
     if (json.available === false || !json.reply) {
       appendChatMsg('error', json.error || 'digiMind est momentanément indisponible.');
     } else {
       appendChatMsg('bot', json.reply);
-      chatHistory.push({ role: 'user', content: question });
-      chatHistory.push({ role: 'assistant', content: json.reply });
-      chatHistory = chatHistory.slice(-8);
     }
   } catch (e) {
     typingEl.remove();
