@@ -4,6 +4,7 @@ Protected by API key (X-API-Key header or ?api_key= query param).
 """
 from fastapi import APIRouter, HTTPException, Request
 from sqlalchemy import text
+from datetime import datetime
 import math
 import os
 
@@ -129,10 +130,18 @@ def _build_chat_context(pid: int) -> str:
     token usage low and avoid the LLM inventing figures from partial rows.
     """
     summary = dashboard_summary(pid)
+    trends  = revenue_trends(pid, days=30)
     alerts  = generate_alerts(pid)[:8]
     inv     = get_inventory(pid)
 
-    lines = [
+    today = datetime.today().date().isoformat()
+    today_point = next((p for p in trends["series"] if p["date"] == today), None)
+    if today_point:
+        lines = [f"CA aujourd'hui ({today}): {today_point['revenue']:.0f} XAF, {today_point['transactions']} transaction(s)"]
+    else:
+        lines = [f"Aucune vente enregistrée aujourd'hui ({today}) pour l'instant."]
+
+    lines += [
         f"CA (30 derniers jours): {summary['total_revenue']:.0f} XAF, tendance {summary['revenue_trend']}%",
         f"Transactions (30j): {summary['total_tx']}, panier moyen: {summary['avg_basket']:.0f} XAF",
         f"Alertes critiques: {summary['alerts_critical']}, avertissements: {summary['alerts_warning']}",
@@ -174,8 +183,10 @@ def analytics_chat(body: ChatRequest, request: Request):
         f"Tu es digiMind, l'assistant IA analytique de la pharmacie {pharmacy_name}. "
         "Réponds en français, de façon concise et actionnable (quelques phrases, pas d'essai). "
         "Base-toi UNIQUEMENT sur les données ci-dessous — n'invente jamais de chiffres. "
-        "Si l'information demandée n'y figure pas, dis-le clairement et oriente vers la page "
-        "correspondante du tableau de bord plutôt que de deviner.\n\n"
+        "Si l'information demandée n'y figure pas, dis-le clairement. Tu peux orienter vers une page "
+        "du tableau de bord, mais UNIQUEMENT parmi celles-ci (n'invente aucun autre nom de page) : "
+        "Vue d'ensemble, Tendances, Inventaire, Alertes, Fournisseurs, Commandes, Synchronisation, "
+        "Paramètres, Mon compte.\n\n"
         f"Données actuelles de la pharmacie:\n{context}"
     )
 
