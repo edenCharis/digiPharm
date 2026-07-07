@@ -231,6 +231,7 @@ body.sb-col .logo-sub { display:none; }
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <?php require_once __DIR__ . '/includes/sidebar.php'; ?>
+<?php require_once __DIR__ . '/includes/chatbot.php'; ?>
 
 <div class="main">
   <div class="topbar">

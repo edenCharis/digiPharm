@@ -79,3 +79,15 @@ class DashboardSummary(BaseModel):
     insight_text: str        # Human-readable AI insight sentence
     model_quality: str       # "insufficient_data" | "learning" | "good" | "excellent"
     available: bool = True
+
+class ChatMessage(BaseModel):
+    role: str                # "user" | "assistant"
+    content: str
+
+class ChatRequest(BaseModel):
+    question: str
+    history: List[ChatMessage] = []
+
+class ChatResponse(BaseModel):
+    reply: str
+    available: bool = True
