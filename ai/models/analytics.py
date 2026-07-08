@@ -970,12 +970,12 @@ def search_product_sales(pharmacy_id: int, product_name: str, days: int = 90) ->
 
     return {
         "found":              True,
-        "matched_products":   df["product_name"].unique().tolist(),
+        "matched_products":   df["product_name"].unique().tolist()[:10],
         "period_days":        days,
         "total_quantity":     total_qty,
         "total_revenue":      round(total_rev, 0),
         "avg_daily_quantity": round(total_qty / days, 2),
-        "daily_series":       daily.to_dict("records"),
+        "daily_series":       daily.tail(20).to_dict("records"),
     }
 
 

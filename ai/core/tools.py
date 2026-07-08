@@ -14,6 +14,10 @@ from models.analytics import (
     deliveries_list, forecast_product_simple,
 )
 
+# Cap how many rows any single tool call hands back to the LLM — keeps
+# responses summarizable instead of turning into unreadable, truncated dumps.
+_MAX_LIST_ITEMS = 10
+
 TOOLS_SCHEMA = [
     {
         "type": "function",
@@ -150,26 +154,32 @@ def make_tool_executor(pharmacy_id: int):
                 return top_products_list(
                     pharmacy_id,
                     int(args.get("period_days", 30)),
-                    int(args.get("limit", 5)),
+                    min(int(args.get("limit", 5)), _MAX_LIST_ITEMS),
                     args.get("order_by", "revenue"),
                     bool(args.get("worst", False)),
                 )
 
             if name == "get_low_stock":
-                return low_stock_list(pharmacy_id, int(args.get("threshold_days", 14)))
+                items = low_stock_list(pharmacy_id, int(args.get("threshold_days", 14)))
+                return {"total_count": len(items), "items": items[:_MAX_LIST_ITEMS]}
 
             if name == "get_alerts":
                 alerts = generate_alerts(pharmacy_id)
                 sev = args.get("severity")
-                return [a for a in alerts if not sev or a["severity"] == sev]
+                if sev:
+                    alerts = [a for a in alerts if a["severity"] == sev]
+                order = {"critical": 0, "warning": 1, "info": 2}
+                alerts.sort(key=lambda a: order.get(a["severity"], 3))
+                return {"total_count": len(alerts), "items": alerts[:_MAX_LIST_ITEMS]}
 
             if name == "get_supplier_reliability":
                 return supplier_reliability(pharmacy_id)
 
             if name == "get_deliveries":
-                return deliveries_list(
+                items = deliveries_list(
                     pharmacy_id, args.get("supplier_name"), int(args.get("period_days", 90))
                 )
+                return {"total_count": len(items), "items": items[:_MAX_LIST_ITEMS]}
 
             if name == "get_forecast":
                 return forecast_product_simple(
