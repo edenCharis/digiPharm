@@ -942,3 +942,113 @@ def generate_brief(pharmacy_id: int) -> dict:
         "timeline":        timeline,
         "sections":        sections,
     }
+
+
+# ── Chat tool functions ─────────────────────────────────────────────────────
+# Each is called on-demand by the LLM (function calling) rather than
+# pre-stuffed into every prompt — keeps token usage proportional to what
+# the question actually needs.
+
+def search_product_sales(pharmacy_id: int, product_name: str, days: int = 90) -> dict:
+    """Sales history for products matching a (partial) name."""
+    df = aquery("""
+        SELECT sale_date, product_name, quantity, revenue
+        FROM ai_sales
+        WHERE pharmacy_id = :pid
+          AND product_name LIKE :name
+          AND sale_date >= DATE_SUB(CURDATE(), INTERVAL :days DAY)
+        ORDER BY sale_date
+    """, {"pid": pharmacy_id, "name": f"%{product_name}%", "days": days})
+
+    if df.empty:
+        return {"found": False, "message": f"Aucune vente trouvée pour '{product_name}' sur les {days} derniers jours."}
+
+    total_qty = float(df["quantity"].sum())
+    total_rev = float(df["revenue"].sum())
+    daily = df.groupby("sale_date").agg(quantity=("quantity", "sum"), revenue=("revenue", "sum")).reset_index()
+    daily["sale_date"] = daily["sale_date"].astype(str)
+
+    return {
+        "found":              True,
+        "matched_products":   df["product_name"].unique().tolist(),
+        "period_days":        days,
+        "total_quantity":     total_qty,
+        "total_revenue":      round(total_rev, 0),
+        "avg_daily_quantity": round(total_qty / days, 2),
+        "daily_series":       daily.to_dict("records"),
+    }
+
+
+def top_products_list(pharmacy_id: int, days: int = 30, limit: int = 5,
+                       order_by: str = "revenue", worst: bool = False) -> list[dict]:
+    """Best (or worst) selling products by revenue or quantity."""
+    col = "quantity" if order_by == "quantity" else "revenue"
+    direction = "ASC" if worst else "DESC"
+    df = aquery(f"""
+        SELECT product_name, SUM(quantity) AS quantity, SUM(revenue) AS revenue
+        FROM ai_sales
+        WHERE pharmacy_id = :pid
+          AND sale_date >= DATE_SUB(CURDATE(), INTERVAL :days DAY)
+        GROUP BY product_name
+        HAVING SUM(quantity) > 0
+        ORDER BY {col} {direction}
+        LIMIT :limit
+    """, {"pid": pharmacy_id, "days": days, "limit": limit})
+    if df.empty:
+        return []
+    df["revenue"] = df["revenue"].round(0)
+    return df.to_dict("records")
+
+
+def low_stock_list(pharmacy_id: int, threshold_days: int = 14) -> list[dict]:
+    """Products whose stock will run out within threshold_days, given recent sales pace."""
+    inv = get_inventory(pharmacy_id)
+    if inv.empty or "dos" not in inv.columns:
+        return []
+    low = inv[inv["dos"].notna() & (inv["dos"] < threshold_days)].sort_values("dos")
+    return low[["product_name", "stock_quantity", "dos"]].to_dict("records")
+
+
+def deliveries_list(pharmacy_id: int, supplier_name: str | None = None, days: int = 90) -> list[dict]:
+    """Recent deliveries, optionally filtered by supplier name."""
+    sql = """
+        SELECT source_delivery_id, supplier_name, delivery_date, status
+        FROM ai_deliveries
+        WHERE pharmacy_id = :pid
+          AND (delivery_date >= DATE_SUB(CURDATE(), INTERVAL :days DAY) OR delivery_date IS NULL)
+    """
+    params = {"pid": pharmacy_id, "days": days}
+    if supplier_name:
+        sql += " AND supplier_name LIKE :sname"
+        params["sname"] = f"%{supplier_name}%"
+    sql += " ORDER BY delivery_date DESC LIMIT 50"
+
+    df = aquery(sql, params)
+    if df.empty:
+        return []
+    df["delivery_date"] = df["delivery_date"].astype(str)
+    return df.to_dict("records")
+
+
+def forecast_product_simple(pharmacy_id: int, product_name: str, days: int = 14) -> dict:
+    """Lightweight demand forecast from 90-day average pace — same heuristic as the ERP-side model."""
+    df = aquery("""
+        SELECT product_name, quantity
+        FROM ai_sales
+        WHERE pharmacy_id = :pid
+          AND product_name LIKE :name
+          AND sale_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+    """, {"pid": pharmacy_id, "name": f"%{product_name}%"})
+
+    if df.empty:
+        return {"found": False, "message": f"Pas assez de données de vente pour prévoir '{product_name}'."}
+
+    avg_daily = float(df["quantity"].sum()) / 90.0
+    return {
+        "found":                    True,
+        "matched_products":         df["product_name"].unique().tolist(),
+        "avg_daily_demand":         round(avg_daily, 2),
+        "forecast_days":            days,
+        "predicted_quantity_total": round(avg_daily * days, 1),
+        "recommended_reorder_qty":  max(0, int(avg_daily * days * 1.2)),
+    }
