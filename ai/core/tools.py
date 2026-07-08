@@ -67,11 +67,16 @@ TOOLS_SCHEMA = [
         "type": "function",
         "function": {
             "name": "get_low_stock",
-            "description": "Produits en stock faible ou en rupture, avec un seuil de jours de stock restant ajustable.",
+            "description": (
+                "Produits en stock faible (prévisionnel, sous un seuil de jours de stock restant) OU "
+                "en rupture réelle maintenant (stock à zéro). Pour une question sur ce qui est 'en rupture' "
+                "au sens strict, utilise out_of_stock_only=true plutôt qu'un threshold_days élevé."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "threshold_days": {"type": "integer", "description": "Seuil en jours de stock restant", "default": 14},
+                    "threshold_days":    {"type": "integer", "description": "Seuil en jours de stock restant (ignoré si out_of_stock_only=true)", "default": 14},
+                    "out_of_stock_only": {"type": "boolean", "description": "true pour ne voir que les produits à stock zéro (rupture réelle)", "default": False},
                 },
             },
         },
@@ -160,7 +165,11 @@ def make_tool_executor(pharmacy_id: int):
                 )
 
             if name == "get_low_stock":
-                items = low_stock_list(pharmacy_id, int(args.get("threshold_days", 14)))
+                items = low_stock_list(
+                    pharmacy_id,
+                    int(args.get("threshold_days", 14)),
+                    bool(args.get("out_of_stock_only", False)),
+                )
                 return {"total_count": len(items), "items": items[:_MAX_LIST_ITEMS]}
 
             if name == "get_alerts":

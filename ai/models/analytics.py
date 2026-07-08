@@ -1000,12 +1000,17 @@ def top_products_list(pharmacy_id: int, days: int = 30, limit: int = 5,
     return df.to_dict("records")
 
 
-def low_stock_list(pharmacy_id: int, threshold_days: int = 14) -> list[dict]:
-    """Products whose stock will run out within threshold_days, given recent sales pace."""
+def low_stock_list(pharmacy_id: int, threshold_days: int = 14, out_of_stock_only: bool = False) -> list[dict]:
+    """Products low on stock (forecasted, by days-of-stock) or genuinely at zero right now."""
     inv = get_inventory(pharmacy_id)
-    if inv.empty or "dos" not in inv.columns:
+    if inv.empty:
         return []
-    low = inv[inv["dos"].notna() & (inv["dos"] < threshold_days)].sort_values("dos")
+    if out_of_stock_only:
+        low = inv[inv["stock_quantity"] <= 0].sort_values("product_name")
+    else:
+        if "dos" not in inv.columns:
+            return []
+        low = inv[inv["dos"].notna() & (inv["dos"] < threshold_days)].sort_values("dos")
     return low[["product_name", "stock_quantity", "dos"]].to_dict("records")
 
 
