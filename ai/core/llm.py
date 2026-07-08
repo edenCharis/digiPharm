@@ -5,6 +5,7 @@ Uses Groq's free-tier, OpenAI-compatible chat completions API.
 import json
 import logging
 import os
+import time
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -12,6 +13,34 @@ logger = logging.getLogger(__name__)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL   = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 GROQ_URL     = "https://api.groq.com/openai/v1/chat/completions"
+
+RATE_LIMIT_MESSAGE = (
+    "digiMind est très sollicité pour le moment (limite du service IA gratuit atteinte) "
+    "— réessayez dans une minute."
+)
+
+
+def _post_groq(payload: dict) -> dict:
+    """POST to Groq, with one short backoff retry on 429 before giving up."""
+    for attempt in range(2):
+        resp = httpx.post(
+            GROQ_URL,
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=30,
+        )
+        if resp.status_code == 429:
+            if attempt == 0:
+                wait = min(float(resp.headers.get("retry-after", 3)), 5)
+                logger.warning(f"[digiMind chat] Groq 429 — retrying in {wait}s")
+                time.sleep(wait)
+                continue
+            raise RuntimeError(RATE_LIMIT_MESSAGE)
+        resp.raise_for_status()
+        return resp.json()
 
 
 def ask_llm_with_tools(
@@ -38,24 +67,15 @@ def ask_llm_with_tools(
     messages.append({"role": "user", "content": question[:2000]})
 
     for _ in range(max_rounds):
-        resp = httpx.post(
-            GROQ_URL,
-            headers={
-                "Authorization": f"Bearer {GROQ_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": GROQ_MODEL,
-                "messages": messages,
-                "tools": tools_schema,
-                "tool_choice": "auto",
-                "temperature": 0.2,
-                "max_tokens": 800,
-            },
-            timeout=30,
-        )
-        resp.raise_for_status()
-        msg = resp.json()["choices"][0]["message"]
+        data = _post_groq({
+            "model": GROQ_MODEL,
+            "messages": messages,
+            "tools": tools_schema,
+            "tool_choice": "auto",
+            "temperature": 0.2,
+            "max_tokens": 800,
+        })
+        msg = data["choices"][0]["message"]
 
         tool_calls = msg.get("tool_calls")
         if not tool_calls:
