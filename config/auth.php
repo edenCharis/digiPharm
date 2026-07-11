@@ -54,8 +54,20 @@ class OTPAuth {
         return (time() - strtotime($row['created_at'])) >= 120;
     }
 
+    // Auto-create table if missing — called before any read or write to user_otp_rate,
+    // since isRateLimited() runs first and used to crash on a fresh/dropped table.
+    private function ensureOtpRateTable() {
+        $this->db->query("CREATE TABLE IF NOT EXISTS user_otp_rate (
+            id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            ip         VARCHAR(45) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_ip_time (ip, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    }
+
     // Returns true if this IP has exceeded max login attempts in the last minute
     private function isRateLimited($ip) {
+        $this->ensureOtpRateTable();
         $row = $this->db->fetch(
             "SELECT COUNT(*) AS cnt FROM user_otp_rate
              WHERE ip = :ip AND created_at > DATE_SUB(NOW(), INTERVAL 1 MINUTE)",
@@ -65,13 +77,7 @@ class OTPAuth {
     }
 
     private function recordLoginAttempt($ip) {
-        // Auto-create table if missing (runs once)
-        $this->db->query("CREATE TABLE IF NOT EXISTS user_otp_rate (
-            id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            ip         VARCHAR(45) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_ip_time (ip, created_at)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $this->ensureOtpRateTable();
 
         $this->db->query(
             "INSERT INTO user_otp_rate (ip) VALUES (:ip)",
