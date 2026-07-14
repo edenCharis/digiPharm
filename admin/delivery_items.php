@@ -176,7 +176,7 @@ if (empty($date) || !strtotime($date)) {
                     $priceCession = floatval($_POST['priceCession'] ?? 0);
                     $ASD = floatval($_POST['ASD'] ?? 0);
                     $statutTVA = $_POST['statutTVA'] ?? 'Oui';
-                    $categoryId = intval($_POST['categoryId'] ?? 0) ?: null;
+                    $categoryId = (!empty($_POST['categoryId']) && $_POST['categoryId'] !== '0') ? $_POST['categoryId'] : null;
                     
                     // Validation
                     if (empty($productCode) || empty($productName) || $quantity <= 0 || $priceCession <= 0 || $publicPrice <= 0) {

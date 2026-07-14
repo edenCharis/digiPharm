@@ -33,11 +33,11 @@ try {
                     $sellingPrice = floatval($_POST['sellingPrice']);
                     $vatRate = floatval($_POST['vatRate']);
                     $expiryDate = $_POST['expiryDate'];
-                    $categoryId = intval($_POST['categoryId']);
-                    $supplierId = intval($_POST['supplierId']);
+                    $categoryId = (!empty($_POST['categoryId']) && $_POST['categoryId'] !== '0') ? $_POST['categoryId'] : null;
+                    $supplierId = (!empty($_POST['supplierId']) && $_POST['supplierId'] !== '0') ? $_POST['supplierId'] : null;
                     $code = trim($_POST['code']);
                     $statut_TVA = $_POST['statut_TVA'];
-                    
+
                     if (!empty($name) && !empty($code) && $price > 0 && $sellingPrice > 0) {
                         // Check if code already exists
                         $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND pharmacy_id = ?";
@@ -78,11 +78,11 @@ try {
                     $sellingPrice = floatval($_POST['sellingPrice']);
                     $vatRate = floatval($_POST['vatRate']);
                     $expiryDate = $_POST['expiryDate'];
-                    $categoryId = intval($_POST['categoryId']);
-                    $supplierId = intval($_POST['supplierId']);
+                    $categoryId = (!empty($_POST['categoryId']) && $_POST['categoryId'] !== '0') ? $_POST['categoryId'] : null;
+                    $supplierId = (!empty($_POST['supplierId']) && $_POST['supplierId'] !== '0') ? $_POST['supplierId'] : null;
                     $code = trim($_POST['code']);
                     $statut_TVA = $_POST['statut_TVA'];
-                    
+
                     if (!empty($name) && !empty($code) && $price > 0 && $sellingPrice > 0 && !empty($id)) {
                         // Check if code already exists for other products
                         $checkSQL = "SELECT COUNT(*) as count FROM product WHERE code = ? AND id != ? AND pharmacy_id = ?";

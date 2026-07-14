@@ -33,8 +33,8 @@ try {
                     $sellingPrice = floatval($_POST['sellingPrice']);
                     $vatRate = floatval($_POST['vatRate']);
                     $expiryDate = $_POST['expiryDate'];
-                    $categoryId = intval($_POST['categoryId']);
-                    $supplierId = intval($_POST['supplierId']);
+                    $categoryId = (!empty($_POST['categoryId']) && $_POST['categoryId'] !== '0') ? $_POST['categoryId'] : null;
+                    $supplierId = (!empty($_POST['supplierId']) && $_POST['supplierId'] !== '0') ? $_POST['supplierId'] : null;
                     $code = trim($_POST['code']);
                     $statut_TVA = $_POST['statut_TVA'];
 
@@ -78,8 +78,8 @@ try {
                     $sellingPrice = floatval($_POST['sellingPrice']);
                     $vatRate = floatval($_POST['vatRate']);
                     $expiryDate = $_POST['expiryDate'];
-                    $categoryId = intval($_POST['categoryId']);
-                    $supplierId = intval($_POST['supplierId']);
+                    $categoryId = (!empty($_POST['categoryId']) && $_POST['categoryId'] !== '0') ? $_POST['categoryId'] : null;
+                    $supplierId = (!empty($_POST['supplierId']) && $_POST['supplierId'] !== '0') ? $_POST['supplierId'] : null;
                     $code = trim($_POST['code']);
                     $statut_TVA = $_POST['statut_TVA'];
 
