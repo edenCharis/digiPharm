@@ -29,12 +29,14 @@ class Mailer
             $mail->Port       = SMTP_PORT;
             $mail->CharSet    = 'UTF-8';
 
+            $mail->XMailer = ' ';
             $mail->setFrom(SMTP_USERNAME, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'digiPharm');
             $mail->addAddress($to, $toName);
+            $mail->addReplyTo(SMTP_USERNAME, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'digiPharm');
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $htmlBody;
-            $mail->AltBody = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $htmlBody));
+            $mail->AltBody = self::toPlainText($htmlBody);
 
             return $mail->send();
         } catch (MailerException $e) {
@@ -44,6 +46,22 @@ class Mailer
             error_log('Mailer::send error: ' . $e->getMessage());
             return false;
         }
+    }
+
+    private static function toPlainText(string $html): string
+    {
+        $text = $html;
+        $text = preg_replace('/<style[^>]*>.*?<\/style>/si', '', $text);
+        $text = preg_replace('/<head[^>]*>.*?<\/head>/si', '', $text);
+        $text = str_ireplace(['</p>', '</h1>', '</h2>', '</h3>', '</tr>', '</div>'], "\n", $text);
+        $text = str_ireplace(['<br>', '<br/>', '<br />'], "\n", $text);
+        $text = str_ireplace('</td>', '  ', $text);
+        $text = strip_tags($text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/[ \t]+/', ' ', $text);
+        $text = preg_replace('/\n +/', "\n", $text);
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+        return trim($text);
     }
 
     // ─── Transactional templates ──────────────────────────────────────────────
