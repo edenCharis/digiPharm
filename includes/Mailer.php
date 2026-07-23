@@ -12,7 +12,7 @@ class Mailer
     public static function send(string $to, string $toName, string $subject, string $htmlBody): bool
     {
         if (!defined('SMTP_HOST')) {
-            require_once dirname(__DIR__) . '/env.php';
+            require_once dirname(__DIR__) . '/config/env.php';
         }
         try {
             require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -21,15 +21,15 @@ class Mailer
             $mail->isSMTP();
             $mail->Host       = SMTP_HOST;
             $mail->SMTPAuth   = true;
-            $mail->Username   = SMTP_USER;
-            $mail->Password   = SMTP_PASS;
+            $mail->Username   = SMTP_USERNAME;
+            $mail->Password   = SMTP_PASSWORD;
             $mail->SMTPSecure = (defined('SMTP_ENCRYPTION') && SMTP_ENCRYPTION === 'ssl')
                 ? PHPMailer::ENCRYPTION_SMTPS
                 : PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = SMTP_PORT;
             $mail->CharSet    = 'UTF-8';
 
-            $mail->setFrom(SMTP_USER, 'digiPharm');
+            $mail->setFrom(SMTP_USERNAME, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'digiPharm');
             $mail->addAddress($to, $toName);
             $mail->isHTML(true);
             $mail->Subject = $subject;
