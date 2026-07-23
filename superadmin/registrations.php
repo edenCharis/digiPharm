@@ -231,10 +231,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     [$newPharmacyId, $regId]
                 );
 
-                $loginUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
-                Mailer::accountActivation($reg['email'], $reg['pharmacy_name'], $reg['responsible_name'], $username, $tempPass, $loginUrl);
+                $loginUrl  = 'https://pharma.digitaltechnologiescongo.com/';
+                $mailSent  = Mailer::accountActivation($reg['email'], $reg['pharmacy_name'], $reg['responsible_name'], $username, $tempPass, $loginUrl);
+                $mailNote  = $mailSent ? "Email envoyé à {$reg['email']}." : "<strong>⚠ Email non envoyé</strong> — vérifiez les logs SMTP.";
 
-                $flash = ['type' => 'success', 'msg' => "Compte activé pour <strong>{$reg['pharmacy_name']}</strong> (pharmacie #{$newPharmacyId}). Email envoyé à {$reg['email']}."];
+                $flash = ['type' => 'success', 'msg' => "Compte activé pour <strong>{$reg['pharmacy_name']}</strong> (pharmacie #{$newPharmacyId}). {$mailNote}"];
 
             } elseif ($action === 'reject' && $reg['status'] !== 'rejected') {
                 db_exec($db, "UPDATE pharmacy_registrations SET status='rejected' WHERE id=?", [$regId]);
