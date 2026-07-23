@@ -101,11 +101,13 @@ class OTPAuth {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = SMTP_PORT;
 
-            $mail->CharSet = 'UTF-8';
-            $mail->XMailer = ' ';
+            $mail->CharSet  = 'UTF-8';
+            $mail->XMailer  = ' ';
+            $mail->MessageID = '<' . uniqid('otp.', true) . '@digitaltechnologiescongo.com>';
             $mail->setFrom(SMTP_USERNAME, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'digiPharm');
             $mail->addAddress($email, $username);
             $mail->addReplyTo(SMTP_USERNAME, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'digiPharm');
+            $mail->addCustomHeader('List-Unsubscribe', '<mailto:' . SMTP_USERNAME . '?subject=unsubscribe>');
 
             $mail->isHTML(true);
             $mail->Subject = "digiPharm — Votre code de connexion";
