@@ -4,29 +4,38 @@ sa_check_auth();
 
 $db = sa_db();
 
+$error = '';
+
 // Ajouter un user
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'add_user') {
     $pharmacy_id = (int)$_POST['pharmacy_id'];
     $username    = trim($_POST['username']);
     $email       = trim($_POST['email']);
     $password    = $_POST['password'];
-    // Map form value to DB enum (uppercase)
     $role_map    = ['admin'=>'ADMIN','cashier'=>'CASHIER','seller'=>'SELLER','stock-manager'=>'STOCK-MANAGER'];
     $role        = $role_map[$_POST['role'] ?? 'admin'] ?? 'ADMIN';
     $hash        = password_hash($password, PASSWORD_BCRYPT);
     $uuid        = sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex(random_bytes(16)), 4));
 
-    $db->prepare("
-        INSERT INTO user (id, username, email, password, role, statut, pharmacy_id)
-        VALUES (?, ?, ?, ?, ?, 1, ?)
-    ")->execute([$uuid, $username, $email, $hash, $role, $pharmacy_id]);
-    header('Location: users.php?msg=created');
-    exit;
+    try {
+        $db->prepare("
+            INSERT INTO user (id, username, email, password, role, statut, pharmacy_id)
+            VALUES (?, ?, ?, ?, ?, 1, ?)
+        ")->execute([$uuid, $username, $email, $hash, $role, $pharmacy_id]);
+        header('Location: users.php?msg=created');
+        exit;
+    } catch (PDOException $e) {
+        $error = match(true) {
+            str_contains($e->getMessage(), 'Duplicate') => "Ce nom d'utilisateur ou email existe déjà.",
+            default => "Erreur base de données : " . htmlspecialchars($e->getMessage()),
+        };
+    }
 }
 
 // Supprimer un user
 if (isset($_GET['delete'])) {
-    $db->prepare("DELETE FROM user WHERE id=?")->execute([(int)$_GET['delete']]);
+    $uid = preg_replace('/[^a-f0-9\-]/i', '', $_GET['delete']);
+    $db->prepare("DELETE FROM user WHERE id = ?")->execute([$uid]);
     header('Location: users.php?msg=deleted');
     exit;
 }
@@ -49,6 +58,7 @@ require_once dirname(__DIR__) . '/config/layout_header.php';
 
 <?php if ($msg === 'created'): ?><div class="alert alert-success">✅ Compte créé.</div><?php endif; ?>
 <?php if ($msg === 'deleted'): ?><div class="alert alert-success">✅ Compte supprimé.</div><?php endif; ?>
+<?php if ($error): ?><div class="alert alert-danger">❌ <?= $error ?></div><?php endif; ?>
 
 <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:1.5rem;align-items:start;">
 
