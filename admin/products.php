@@ -1,6 +1,9 @@
 <?php
 session_start();
-if($_SESSION["role"] === "ADMIN" && $_SESSION["id"] == session_id()){
+if (($_SESSION['role'] ?? '') !== 'ADMIN' || ($_SESSION['id'] ?? '') !== session_id()) {
+    header('Location: ../index.php');
+    exit;
+}
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -1978,9 +1981,4 @@ function openExportModal() {
 </script>
 </body>
 </html>
-<?php
-} else {
-    header("Location: ../login.php");
-    exit();
-}
 ?>
