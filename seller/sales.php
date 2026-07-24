@@ -794,10 +794,10 @@ try {
                                             cr.opening_time,
                                             cr.status,
                                             cr.initial_amount,
-                                            (SELECT COUNT(*) FROM carts c WHERE c.cash_register_id = cr.id AND c.status = 'PENDING' AND c.pharmacy_id = ?) as pending_carts
+                                            (SELECT COUNT(*) FROM carts c WHERE c.cash_register_id = cr.id AND c.status = 'pending' AND c.pharmacy_id = ?) as pending_carts
                                         FROM cash_register cr
                                         JOIN user u ON u.id = cr.cashier_id
-                                        WHERE cr.status = 'OPEN' AND u.role = 'CASHIER' AND cr.pharmacy_id = ?
+                                        WHERE cr.status = 'open' AND u.role = 'CASHIER' AND cr.pharmacy_id = ?
                                         ORDER BY pending_carts ASC, u.username ASC
                                     ";
 

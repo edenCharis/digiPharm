@@ -14,8 +14,8 @@ try {
             $client_name = trim($_POST['name']);
             $client_tel = trim($_POST['tel']);
             // Insert client
-            $query = "INSERT INTO client (name, contact) VALUES (:name, :tel)";
-            $result = $db->query($query, ['name' => $client_name, 'tel' => $client_tel]);
+            $query = "INSERT INTO client (name, contact, pharmacy_id) VALUES (:name, :tel, :pharmacy_id)";
+            $result = $db->query($query, ['name' => $client_name, 'tel' => $client_tel, 'pharmacy_id' => $pharmacyId]);
             
             if ($result) {
                 $clientId = $pdo->lastInsertId();
