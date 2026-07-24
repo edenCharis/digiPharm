@@ -84,10 +84,10 @@ try {
     
     // Validate cash register exists and is open
     $cashRegisterQuery = "
-        SELECT cr.id, cr.cashier_id, cr.status, u.username as cashier_name 
-        FROM cash_register cr 
-        JOIN user u ON u.id = cr.cashier_id 
-        WHERE cr.id = ? AND cr.status = 'OPEN' 
+        SELECT cr.id, cr.cashier_id, cr.status, u.username as cashier_name
+        FROM cash_register cr
+        JOIN user u ON u.id = cr.cashier_id
+        WHERE cr.id = ? AND cr.status = 'open'
     ";
     $cashRegister = $db->fetch($cashRegisterQuery, [$cashRegisterId]);
     if (!$cashRegister) {
@@ -148,24 +148,25 @@ try {
         // Insert into carts table with cash_register_id
         $cartQuery = "
             INSERT INTO carts (
-                name, 
-                seller_id, 
-                client_id, 
-                cash_register_id, 
-                status, 
+                name,
+                seller_id,
+                client_id,
+                cash_register_id,
+                status,
+                pharmacy_id,
                 created_at
-            ) VALUES (?, ?, ?, ?, ?, NOW())
+            ) VALUES (?, ?, ?, ?, 'pending', ?, NOW())
         ";
-        
+
         // Generate cart name
         $cartName = 'Cart-' . date('YmdHis') . '-' . substr($sellerId, -4);
-        
+
         $cartParams = [
             $cartName,
             $sellerId,
             $clientId,
             $cashRegisterId,
-            'PENDING' // Status: PENDING until payment is validated
+            $pharmacyId,
         ];
         
         $cartId = $db->insert($cartQuery, $cartParams);
@@ -177,20 +178,21 @@ try {
         // Insert cart items WITHOUT reducing stock
         $itemQuery = "
             INSERT INTO cart_items (
-                cart_id, 
-                product_id, 
-                quantity, 
-                unit_price
-            ) VALUES (?, ?, ?, ?)
+                cart_id,
+                product_id,
+                quantity,
+                unit_price,
+                pharmacy_id
+            ) VALUES (?, ?, ?, ?, ?)
         ";
-        
+
         foreach ($productUpdates as $productUpdate) {
-            // Insert cart item
             $itemParams = [
                 $cartId,
                 $productUpdate['id'],
                 $productUpdate['quantity'],
-                $productUpdate['unit_price']
+                $productUpdate['unit_price'],
+                $pharmacyId,
             ];
             
             $itemResult = $db->insert($itemQuery, $itemParams);

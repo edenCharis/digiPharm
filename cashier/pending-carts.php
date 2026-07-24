@@ -1,6 +1,9 @@
 <?php
 session_start();
-if($_SESSION["role"] === "CASHIER" && $_SESSION["id"] == session_id()){
+if (($_SESSION['role'] ?? '') !== 'CASHIER' || ($_SESSION['id'] ?? '') !== session_id()) {
+    header('Location: ../index.php');
+    exit;
+}
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -721,6 +724,3 @@ try {
 </body>
 </html>
 
-<?php }else{
-    header("location: ../logout.php");
-}?>
