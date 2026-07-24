@@ -107,12 +107,14 @@ try {
     $cash_registerId = $cart['cash_register_id'];
     $currentDateTime = date('Y-m-d H:i:s');
 
+    $pharmacyId = (int)($cart['pharmacy_id'] ?? $_SESSION['pharmacy_id'] ?? 0);
+
     // Create sale record with cash details
     $saleQuery = "INSERT INTO sale (
         id, saleDate, totalAmount, totalVAT, discountAmount, invoiceNumber,
         cash_register_id, sellerId, clientId, cashReceived, changeAmount,
-        createdAt, updatedAt,cart
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        createdAt, updatedAt, cart, pharmacy_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $saleParams = [
         $saleId,
@@ -128,7 +130,8 @@ try {
         $change,
         $currentDateTime,
         $currentDateTime,
-        $cartId
+        $cartId,
+        $pharmacyId,
     ];
 
     // Debug: Log the parameter count
@@ -173,8 +176,8 @@ try {
         // Insert sale item
         $saleItemId = uniqid('SALEITEM_', true);
         $saleItemQuery = "INSERT INTO saleitem (
-            id, saleId, productId, quantity, unitPrice, discount, vatAmount, createdAt, updatedAt
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            id, saleId, productId, quantity, unitPrice, discount, vatAmount, createdAt, updatedAt, pharmacy_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $saleItemParams = [
             $saleItemId,
@@ -185,7 +188,8 @@ try {
             $itemDiscount,
             $itemVAT,
             $currentDateTime,
-            $currentDateTime
+            $currentDateTime,
+            $pharmacyId,
         ];
 
         // Debug: Log the parameter count
@@ -220,7 +224,6 @@ try {
     $db->commit();
 
     // ── AI event pipeline ─────────────────────────────────────────────────
-    $pharmacyId = (int) ($cart['pharmacy_id'] ?? $_SESSION['pharmacy_id'] ?? 0);
     if ($pharmacyId > 0) {
         $eventItems = array_map(fn($i) => [
             'product_id' => $i['product_id'],
