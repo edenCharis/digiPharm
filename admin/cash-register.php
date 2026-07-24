@@ -1,6 +1,9 @@
 <?php
 session_start();
-if($_SESSION["role"] === "ADMIN" && $_SESSION["id"] == session_id()){
+if (($_SESSION['role'] ?? '') !== 'ADMIN' || ($_SESSION['id'] ?? '') !== session_id()) {
+    header('Location: ../index.php');
+    exit;
+}
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -39,9 +42,10 @@ try {
                     $_SESSION['flash_message'] = "Ce caissier a déjà une caisse ouverte.";
                     $_SESSION['flash_message_type'] = 'error';
                 } else {
-                    $openSQL = "INSERT INTO cash_register (cashier_id, opening_time, status, initial_amount, final_amount, pharmacy_id)
-                               VALUES (?, NOW(), 'open', ?, 0, ?)";
-                    $result = $db->execute($openSQL, [$cashier_id, $initial_amount, $pharmacyId]);
+                    $registerId = sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex(random_bytes(16)), 4));
+                    $openSQL = "INSERT INTO cash_register (id, cashier_id, opening_time, status, initial_amount, final_amount, pharmacy_id)
+                               VALUES (?, ?, NOW(), 'open', ?, 0, ?)";
+                    $result = $db->execute($openSQL, [$registerId, $cashier_id, $initial_amount, $pharmacyId]);
                     
                     if ($result) {
                         $_SESSION['flash_message'] = "Caisse ouverte avec succès.";
@@ -1282,9 +1286,3 @@ function calculateDifference($expected, $actual) {
     </script>
 </body>
 </html>
-<?php
-} else {
-    header("Location: ../logout.php");
-    exit();
-}
-?>
