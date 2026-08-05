@@ -243,7 +243,12 @@ HTML;
             return ['success' => false, 'message' => 'Trop de tentatives. Réessayez dans une minute.'];
         }
 
-        $query = "SELECT id, username, email, role, password, pharmacy_id FROM user WHERE username = :username";
+        $query = "SELECT u.id, u.username, u.email, u.role, u.password, u.pharmacy_id,
+                         COALESCE(u.statut, 1) AS statut,
+                         COALESCE(p.status, 'active') AS pharmacy_status
+                  FROM user u
+                  LEFT JOIN pharmacies p ON p.id = u.pharmacy_id
+                  WHERE u.username = :username";
         $user = $this->db->fetch($query, ['username' => $username]);
 
         if (!$user) {
@@ -254,6 +259,14 @@ HTML;
         if (!password_verify($password, $user['password'])) {
             $this->recordLoginAttempt($ip);
             return ['success' => false, 'message' => 'Mot de passe incorrect'];
+        }
+
+        if ((int)$user['statut'] !== 1) {
+            return ['success' => false, 'message' => 'Compte désactivé. Contactez votre administrateur.'];
+        }
+
+        if ($user['pharmacy_status'] === 'suspended') {
+            return ['success' => false, 'message' => 'Votre pharmacie est suspendue. Contactez l\'équipe digiPharm.'];
         }
 
         // Emergency bypass: when OTP_BYPASS=true in env.php, skip email and log in directly.
@@ -333,11 +346,12 @@ HTML;
             $_SESSION['id']         = session_id();
             $_SESSION['login_time'] = time();
 
-            $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt)
-                         VALUES (:iduser, 'login_success', 'user', :recordId, 'Utilisateur connecté avec OTP', NOW())";
+            $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt, pharmacy_id)
+                         VALUES (:iduser, 'login_success', 'user', :recordId, 'Utilisateur connecté avec OTP', NOW(), :pharmacy_id)";
             $this->db->query($logQuery, [
-                'iduser' => $user['id'],
-                'recordId' => $user['id']
+                'iduser'      => $user['id'],
+                'recordId'    => $user['id'],
+                'pharmacy_id' => (int)($user['pharmacy_id'] ?? 1),
             ]);
 
             $redirectUrl = '';

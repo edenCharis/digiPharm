@@ -22,12 +22,13 @@ try {
                 
                 // Insert log entry (only if user is logged in)
                 if (isset($_SESSION['user_id'])) {
-                    $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt) 
-                                VALUES (:iduser, 'createquote', 'client', :recordId, 'Nouveau client ajouté', NOW())";
-                    
+                    $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt, pharmacy_id)
+                                VALUES (:iduser, 'createquote', 'client', :recordId, 'Nouveau client ajouté', NOW(), :pharmacy_id)";
+
                     $db->query($logQuery, [
-                        'iduser' => $_SESSION['user_id'],
-                        'recordId' => $clientId
+                        'iduser'      => $_SESSION['user_id'],
+                        'recordId'    => $clientId,
+                        'pharmacy_id' => $pharmacyId,
                     ]);
                 }
                 

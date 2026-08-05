@@ -106,6 +106,22 @@ try {
                     }
                     break;
                     
+                case 'toggle_user_status':
+                    $userId = (string)$_POST['user_id'];
+                    if ($userId === (string)$admin_id) {
+                        $message = 'Impossible de désactiver votre propre compte';
+                        $messageType = 'error';
+                    } else {
+                        $row = $db->fetch("SELECT statut FROM user WHERE id = ? AND pharmacy_id = ?", [$userId, $pharmacyId]);
+                        if ($row !== false && $row !== null) {
+                            $newStatut = ((int)($row['statut'] ?? 1)) ? 0 : 1;
+                            $db->query("UPDATE user SET statut = ? WHERE id = ? AND pharmacy_id = ?", [$newStatut, $userId, $pharmacyId]);
+                            $message = $newStatut ? 'Compte activé avec succès' : 'Compte désactivé avec succès';
+                            $messageType = 'success';
+                        }
+                    }
+                    break;
+
                 case 'delete_user':
                     $userId = (string)$_POST['user_id'];
                     
@@ -174,6 +190,7 @@ try {
 
     // Get users with pagination
     $usersSQL = "SELECT id, username, email, role, createdAt,
+                        COALESCE(statut, 1) as statut,
                         (SELECT COUNT(*) FROM carts WHERE seller_id = user.id AND pharmacy_id = ?) as total_sales
                  FROM user
                  $whereClause
@@ -599,7 +616,7 @@ function getRoleText($role) {
                                 <tr>
                                     <th>Utilisateur</th>
                                     <th>Rôle</th>
-                                   
+                                    <th>Statut</th>
                                     <th>Date création</th>
                                     <th>Actions</th>
                                 </tr>
@@ -622,7 +639,13 @@ function getRoleText($role) {
                                                 <?php echo getRoleText($user['role']); ?>
                                             </span>
                                         </td>
-                                      
+                                        <td>
+                                            <?php if ((int)$user['statut'] === 1): ?>
+                                                <span class="badge badge-success">Actif</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-secondary">Désactivé</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <span class="fw-semibold"><?php echo formatDate($user['createdAt']); ?></span>
                                         </td>
@@ -639,11 +662,18 @@ function getRoleText($role) {
                                                     <i data-lucide="edit"></i>
                                                 </button>
                                                 <?php if ($user['id'] != $admin_id): ?>
-                                                    <button type="button" 
-                                                            class="btn btn-outline-danger btn-sm delete-user-btn" 
+                                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Confirmer cette action ?')">
+                                                        <input type="hidden" name="action" value="toggle_user_status">
+                                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                                        <button type="submit" class="btn btn-sm <?php echo (int)$user['statut'] ? 'btn-outline-warning' : 'btn-outline-success'; ?>" title="<?php echo (int)$user['statut'] ? 'Désactiver' : 'Activer'; ?>">
+                                                            <i data-lucide="<?php echo (int)$user['statut'] ? 'user-x' : 'user-check'; ?>"></i>
+                                                        </button>
+                                                    </form>
+                                                    <button type="button"
+                                                            class="btn btn-outline-danger btn-sm delete-user-btn"
                                                             data-user-id="<?php echo $user['id']; ?>"
                                                             data-username="<?php echo htmlspecialchars($user['username']); ?>"
-                                                            data-bs-toggle="modal" 
+                                                            data-bs-toggle="modal"
                                                             data-bs-target="#deleteUserModal">
                                                         <i data-lucide="trash-2"></i>
                                                     </button>

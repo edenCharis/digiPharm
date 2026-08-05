@@ -455,19 +455,31 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
             .reports-container {
                 padding: 1rem;
             }
-            
+
             .report-filters {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .filter-group {
                 min-width: 100%;
             }
-            
+
             .financial-summary {
                 grid-template-columns: 1fr;
             }
+        }
+
+        @media print {
+            /* Hide everything except the report data */
+            .sidebar, nav, header, .report-filters, .report-tabs,
+            .export-buttons, .btn-export, .header-actions,
+            .page-header > *:not(.page-title) { display: none !important; }
+
+            body, .main-content, .content-area, .reports-container { padding: 0 !important; margin: 0 !important; }
+            .report-section { box-shadow: none !important; border: none !important; }
+            table { font-size: 11px; }
+            a { color: inherit !important; text-decoration: none !important; }
         }
     </style>
 </head>

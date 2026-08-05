@@ -18,14 +18,13 @@ try {
     $endDate = isset($_GET['end_date']) ? trim($_GET['end_date']) : date('Y-m-d');
     $sellerId = $_SESSION['user_id'] ?? null;
 
-    // Get sales data for the period
-    $sql = "SELECT 
+    // Get sales data for the period (filtered to this seller only)
+    $sql = "SELECT
                 p.name as product_name,
                 p.code as product_code,
                 c.name as category_name,
                 SUM(ci.quantity) as total_sold,
                 p.stock as current_stock,
-                ct.seller_id as seller,
                 ci.unit_price,
                 SUM(ci.quantity * ci.unit_price) as total_revenue
             FROM cart_items ci
@@ -33,11 +32,12 @@ try {
             INNER JOIN product p ON ci.product_id = p.id
             LEFT JOIN category c ON p.categoryId = c.id
             WHERE ct.status = 'completed'
+            AND ct.seller_id = ?
             AND DATE(ct.created_at) BETWEEN ? AND ?
             GROUP BY p.id, p.name, p.code, c.name, p.stock, ci.unit_price
             ORDER BY total_sold DESC";
-    
-    $salesData = $db->fetchAll($sql, [$startDate, $endDate]);
+
+    $salesData = $db->fetchAll($sql, [$sellerId, $startDate, $endDate]);
 
     // Get seller info
     $sellerSql = "SELECT username FROM user WHERE id = ?";

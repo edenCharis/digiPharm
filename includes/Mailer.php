@@ -66,6 +66,32 @@ class Mailer
 
     // ─── Transactional templates ──────────────────────────────────────────────
 
+    public static function sendOtp(string $email, string $username, string $otp): bool
+    {
+        $otpSpaced = implode(' ', str_split($otp));
+        $content = self::greeting($username)
+            . self::paragraph("Utilisez le code ci-dessous pour réinitialiser votre mot de passe digiPharm.")
+            . <<<HTML
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 28px;">
+  <tr>
+    <td align="center" bgcolor="#e8f5e9" style="background-color:#e8f5e9;border:2px solid #188038;border-radius:14px;padding:28px 24px;">
+      <div style="font-family:'Courier New',Courier,monospace;font-size:42px;font-weight:700;letter-spacing:12px;color:#188038;text-align:center;line-height:1;text-indent:12px;">{$otpSpaced}</div>
+      <p style="margin:14px 0 0;font-size:13px;color:#388e3c;text-align:center;">⏱&nbsp; Ce code expire dans <strong>10 minutes</strong></p>
+    </td>
+  </tr>
+</table>
+HTML
+            . self::highlight('🔒', 'digiPharm ne vous demandera <strong>jamais</strong> ce code par téléphone. Ne le partagez avec personne.')
+            . self::paragraph("Si vous n'avez pas demandé cette réinitialisation, ignorez simplement cet email.", '#9ca3af', '13px');
+
+        return self::send(
+            $email,
+            $username,
+            "digiPharm — Réinitialisation de votre mot de passe",
+            self::layout("Réinitialisation du mot de passe", $content)
+        );
+    }
+
     public static function registrationConfirmation(
         string $email,
         string $pharmacyName,

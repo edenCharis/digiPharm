@@ -209,23 +209,25 @@ try {
         // Log the transaction
         $logQuery = "
             INSERT INTO log (
-                userId, 
-                action, 
-                tableName, 
-                recordId, 
-                description, 
-                createdAt
-            ) VALUES (?, ?, ?, ?, ?, NOW())
+                userId,
+                action,
+                tableName,
+                recordId,
+                description,
+                createdAt,
+                pharmacy_id
+            ) VALUES (?, ?, ?, ?, ?, NOW(), ?)
         ";
-        
+
         $logDescription = "Panier créé et assigné (en attente de paiement) - ID: $cartId, Items: " . count($items) . ", Total: $totalAmount FCFA";
-        
+
         $logParams = [
             $_SESSION['user_id'],
             'create_cart',
             'carts',
             $cartId,
-            $logDescription
+            $logDescription,
+            $pharmacyId,
         ];
         
         $db->insert($logQuery, $logParams);

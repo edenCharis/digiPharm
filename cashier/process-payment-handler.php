@@ -208,14 +208,15 @@ try {
     $db->execute($updateCartQuery, [$cartId]);
 
     // Add log entry
-    $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt) 
-                 VALUES (?, ?, ?, ?, ?, NOW())";
+    $logQuery = "INSERT INTO log (userId, action, tableName, recordId, description, createdAt, pharmacy_id)
+                 VALUES (?, ?, ?, ?, ?, NOW(), ?)";
     $logParams = [
-        $_SESSION['user_id'], 
-        'payment', 
-        'sale', 
-        $saleId, 
-        "Paiement traité avec succès - Cash reçu: {$cashReceived} XAF, Rendu: {$change} XAF"
+        $_SESSION['user_id'],
+        'payment',
+        'sale',
+        $saleId,
+        "Paiement traité avec succès - Cash reçu: {$cashReceived} XAF, Rendu: {$change} XAF",
+        $pharmacyId,
     ];
     
     $db->execute($logQuery, $logParams);
