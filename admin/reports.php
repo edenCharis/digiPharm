@@ -152,6 +152,38 @@ $cashiers = $cashiersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Get data based on report type
 $report_data = [];
+function getMarginAnalysis($pdo, $pharmacyId) {
+    $sql = "SELECT p.name, p.code,
+                   c.name AS category,
+                   p.purchasePrice, p.sellingPrice, p.stock,
+                   (p.sellingPrice - p.purchasePrice) AS margin_amount,
+                   CASE WHEN p.purchasePrice > 0
+                        THEN ROUND(((p.sellingPrice - p.purchasePrice) / p.purchasePrice) * 100, 1)
+                        ELSE 0 END AS margin_pct
+            FROM product p
+            LEFT JOIN category c ON p.categoryId = c.id
+            WHERE p.pharmacy_id = ? AND p.sellingPrice > 0
+            ORDER BY margin_pct DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$pharmacyId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getInventoryValuation($pdo, $pharmacyId) {
+    $sql = "SELECT p.name, p.code,
+                   c.name AS category,
+                   p.stock, p.purchasePrice, p.sellingPrice,
+                   (p.stock * p.purchasePrice) AS purchase_value,
+                   (p.stock * p.sellingPrice)  AS sale_value
+            FROM product p
+            LEFT JOIN category c ON p.categoryId = c.id
+            WHERE p.pharmacy_id = ? AND p.stock > 0
+            ORDER BY purchase_value DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$pharmacyId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 switch ($report_type) {
     case 'sales':
         $report_data = getSalesReport($pdo, $date_from, $date_to, $pharmacyId, $cashier_filter, $product_filter);
@@ -164,6 +196,12 @@ switch ($report_type) {
         break;
     case 'cashiers':
         $report_data = getCashierPerformance($pdo, $date_from, $date_to, $pharmacyId);
+        break;
+    case 'margins':
+        $report_data = getMarginAnalysis($pdo, $pharmacyId);
+        break;
+    case 'valuation':
+        $report_data = getInventoryValuation($pdo, $pharmacyId);
         break;
 }
 
@@ -557,10 +595,20 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                     <i data-lucide="alert-triangle"></i>
                     Stock Faible
                 </button>
-                <button class="report-tab <?php echo $report_type === 'cashiers' ? 'active' : ''; ?>" 
+                <button class="report-tab <?php echo $report_type === 'cashiers' ? 'active' : ''; ?>"
                         onclick="changeReportType('cashiers')">
                     <i data-lucide="users"></i>
                     Performance
+                </button>
+                <button class="report-tab <?php echo $report_type === 'margins' ? 'active' : ''; ?>"
+                        onclick="changeReportType('margins')">
+                    <i data-lucide="percent"></i>
+                    Marges
+                </button>
+                <button class="report-tab <?php echo $report_type === 'valuation' ? 'active' : ''; ?>"
+                        onclick="changeReportType('valuation')">
+                    <i data-lucide="database"></i>
+                    Inventaire valorisé
                 </button>
             </div>
 
@@ -729,8 +777,88 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <?php elseif ($report_type === 'margins'): ?>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Catégorie</th>
+                                <th style="text-align:right;">Prix achat</th>
+                                <th style="text-align:right;">Prix vente</th>
+                                <th style="text-align:right;">Marge (FCFA)</th>
+                                <th style="text-align:right;">Marge (%)</th>
+                                <th style="text-align:right;">Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($report_data as $row):
+                                $pct = (float)$row['margin_pct'];
+                                $color = $pct >= 30 ? '#10b981' : ($pct >= 10 ? '#f59e0b' : '#ef4444');
+                            ?>
+                            <tr>
+                                <td>
+                                    <div><?php echo htmlspecialchars($row['name']); ?></div>
+                                    <div style="font-size:.72rem;opacity:.6;"><?php echo htmlspecialchars($row['code'] ?? ''); ?></div>
+                                </td>
+                                <td><?php echo htmlspecialchars($row['category'] ?? '—'); ?></td>
+                                <td style="text-align:right;" class="currency"><?php echo number_format((float)$row['purchasePrice'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;" class="currency"><?php echo number_format((float)$row['sellingPrice'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;" class="currency"><?php echo number_format((float)$row['margin_amount'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;font-weight:700;color:<?php echo $color; ?>;"><?php echo $pct; ?> %</td>
+                                <td style="text-align:right;"><?php echo number_format((int)$row['stock'], 0, ',', ' '); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <?php elseif ($report_type === 'valuation'): ?>
+                    <?php
+                        $total_purchase_val = array_sum(array_column($report_data, 'purchase_value'));
+                        $total_sale_val     = array_sum(array_column($report_data, 'sale_value'));
+                    ?>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+                        <div style="flex:1;min-width:160px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:.9rem 1.1rem;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#10b981;"><?php echo number_format($total_purchase_val, 0, ',', ' '); ?> FCFA</div>
+                            <div style="font-size:.72rem;opacity:.7;margin-top:.2rem;">Valeur au prix d'achat</div>
+                        </div>
+                        <div style="flex:1;min-width:160px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);border-radius:8px;padding:.9rem 1.1rem;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#3b82f6;"><?php echo number_format($total_sale_val, 0, ',', ' '); ?> FCFA</div>
+                            <div style="font-size:.72rem;opacity:.7;margin-top:.2rem;">Valeur au prix de vente</div>
+                        </div>
+                        <div style="flex:1;min-width:160px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:.9rem 1.1rem;">
+                            <div style="font-size:1.2rem;font-weight:700;color:#f59e0b;"><?php echo number_format($total_sale_val - $total_purchase_val, 0, ',', ' '); ?> FCFA</div>
+                            <div style="font-size:.72rem;opacity:.7;margin-top:.2rem;">Plus-value potentielle</div>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Produit</th>
+                                <th>Catégorie</th>
+                                <th style="text-align:right;">Stock</th>
+                                <th style="text-align:right;">Prix achat</th>
+                                <th style="text-align:right;">Valeur stock (achat)</th>
+                                <th style="text-align:right;">Valeur stock (vente)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($report_data as $row): ?>
+                            <tr>
+                                <td>
+                                    <div><?php echo htmlspecialchars($row['name']); ?></div>
+                                    <div style="font-size:.72rem;opacity:.6;"><?php echo htmlspecialchars($row['code'] ?? ''); ?></div>
+                                </td>
+                                <td><?php echo htmlspecialchars($row['category'] ?? '—'); ?></td>
+                                <td style="text-align:right;"><?php echo number_format((int)$row['stock'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;" class="currency"><?php echo number_format((float)$row['purchasePrice'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;font-weight:600;" class="currency"><?php echo number_format((float)$row['purchase_value'], 0, ',', ' '); ?></td>
+                                <td style="text-align:right;" class="currency"><?php echo number_format((float)$row['sale_value'], 0, ',', ' '); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                     <?php endif; ?>
-                    
+
                     <?php endif; ?>
                 </div>
             </div>

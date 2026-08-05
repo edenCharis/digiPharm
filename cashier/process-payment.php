@@ -355,6 +355,29 @@ try {
             box-shadow: none;
         }
 
+        .hold-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: 1.5px solid var(--ds-text-400);
+            border-radius: 0.5rem;
+            color: var(--ds-text-400);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .hold-btn:hover {
+            border-color: var(--ds-text-200);
+            color: var(--ds-text-200);
+        }
+
         .discount-section {
             border: 1px solid var(--ds-border);
             border-radius: 0.5rem;
@@ -864,6 +887,12 @@ try {
                                         Finaliser la vente
                                     </button>
                                 </form>
+
+                                <!-- Hold cart button -->
+                                <a href="pending-carts.php" class="hold-btn" title="Remettre ce panier en file d'attente et servir un autre client">
+                                    <i data-lucide="pause-circle"></i>
+                                    Mettre en attente
+                                </a>
                             </div>
                         </div>
                     </div>

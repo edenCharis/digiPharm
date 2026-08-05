@@ -1117,7 +1117,12 @@ try {
             <i data-lucide="eye"></i>
             Voir
         </button>
-       
+        <?php if (($sale['status'] ?? '') !== 'cancelled'): ?>
+        <a href="edit-sale.php?id=<?php echo $sale['cart_id']; ?>" class="btn-edit" title="Modifier / Retour">
+            <i data-lucide="edit-2"></i>
+            Modifier
+        </a>
+        <?php endif; ?>
     </div>
 </td>
                                     </tr>

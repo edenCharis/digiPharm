@@ -705,13 +705,18 @@ function timeAgo($datetime) {
                                                 <td class="supplier-date"><?php echo timeAgo($supplier['updatedAt']); ?></td>
                                                 <td>
                                                     <div class="action-buttons">
-                                                        <button class="btn-action btn-edit" 
-                                                                onclick="editSupplier(<?php echo htmlspecialchars(json_encode($supplier)); ?>)" 
+                                                        <a class="btn-action btn-view"
+                                                           href="supplier-detail.php?id=<?php echo $supplier['id']; ?>"
+                                                           title="Voir la fiche">
+                                                            <i data-lucide="eye"></i>
+                                                        </a>
+                                                        <button class="btn-action btn-edit"
+                                                                onclick="editSupplier(<?php echo htmlspecialchars(json_encode($supplier)); ?>)"
                                                                 title="Modifier">
                                                             <i data-lucide="edit"></i>
                                                         </button>
-                                                        <button class="btn-action btn-delete" 
-                                                                onclick="deleteSupplier(<?php echo $supplier['id']; ?>, '<?php echo htmlspecialchars($supplier['name']); ?>')" 
+                                                        <button class="btn-action btn-delete"
+                                                                onclick="deleteSupplier(<?php echo $supplier['id']; ?>, '<?php echo htmlspecialchars($supplier['name']); ?>')"
                                                                 title="Supprimer">
                                                             <i data-lucide="trash-2"></i>
                                                         </button>
