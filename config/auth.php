@@ -245,7 +245,8 @@ HTML;
 
         $query = "SELECT u.id, u.username, u.email, u.role, u.password, u.pharmacy_id,
                          COALESCE(u.statut, 1) AS statut,
-                         COALESCE(p.status, 'active') AS pharmacy_status
+                         COALESCE(p.status, 'active') AS pharmacy_status,
+                         p.trial_ends_at
                   FROM user u
                   LEFT JOIN pharmacies p ON p.id = u.pharmacy_id
                   WHERE u.username = :username";
@@ -267,6 +268,11 @@ HTML;
 
         if ($user['pharmacy_status'] === 'suspended') {
             return ['success' => false, 'message' => 'Votre pharmacie est suspendue. Contactez l\'équipe digiPharm.'];
+        }
+
+        if ($user['pharmacy_status'] === 'trial' && !empty($user['trial_ends_at'])
+            && strtotime($user['trial_ends_at']) < strtotime('today')) {
+            return ['success' => false, 'message' => 'Votre période d\'essai a expiré. Contactez l\'équipe digiPharm pour activer votre abonnement.'];
         }
 
         // Emergency bypass: when OTP_BYPASS=true in env.php, skip email and log in directly.
