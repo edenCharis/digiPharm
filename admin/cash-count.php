@@ -864,15 +864,28 @@ function formatDateTime($datetime) {
                         </div>
                     </div>
 
+                    <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:.75rem;align-items:flex-start;">
+                        <span style="font-size:1.25rem;flex-shrink:0;">ℹ️</span>
+                        <div>
+                            <div style="font-weight:600;color:#60a5fa;margin-bottom:.35rem;">Comment procéder au comptage ?</div>
+                            <ol style="margin:0;padding-left:1.2rem;font-size:.875rem;color:#94a3b8;line-height:1.8;">
+                                <li>Comptez physiquement tous les billets et pièces dans le tiroir-caisse.</li>
+                                <li>Pour chaque coupure, saisissez le <strong style="color:#e2e8f0;">nombre</strong> de billets ou pièces que vous avez comptés (ex: si vous avez 3 billets de 10 000, écrivez <strong style="color:#e2e8f0;">3</strong>).</li>
+                                <li>Le système calculera automatiquement le total et le comparera avec le montant théorique.</li>
+                                <li>Si un écart existe, saisissez une justification puis validez la clôture.</li>
+                            </ol>
+                        </div>
+                    </div>
+
                     <form method="POST" id="countingForm">
                         <input type="hidden" name="action" value="save_counting">
-                        
+
                         <div class="summary-grid">
                             <div>
                                 <div class="counting-section">
                                     <h3 class="section-title">
                                         <i data-lucide="banknote"></i>
-                                        Espèces - Billets et Pièces
+                                        Espèces — Billets et Pièces
                                     </h3>
                                   <div class="denominations-grid">
     <div class="bills-section">

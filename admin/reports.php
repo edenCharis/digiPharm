@@ -89,8 +89,8 @@ function getLowStockReport($pdo, $pharmacyId, $threshold = 10) {
                 p.stock,
                 s.name as supplier_name,
                 CASE
-                    WHEN p.stock = 0 THEN 'Out of Stock'
-                    WHEN p.stock <= 10 THEN 'Low Stock'
+                    WHEN p.stock = 0 THEN 'Rupture de stock'
+                    WHEN p.stock <= 10 THEN 'Stock critique'
                     ELSE 'Normal'
                 END as status
             FROM supplier s JOIN product p ON s.id = p.supplierId JOIN category c ON p.categoryId = c.id
@@ -169,6 +169,26 @@ function getMarginAnalysis($pdo, $pharmacyId) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getSellerPerformance($pdo, $date_from, $date_to, $pharmacyId) {
+    $sql = "SELECT
+                u.username,
+                COUNT(DISTINCT ct.id) as total_carts,
+                COALESCE(SUM(ci.quantity * ci.unit_price), 0) as total_sales,
+                COALESCE(AVG(ci.quantity * ci.unit_price), 0) as avg_per_item,
+                COALESCE(SUM(ci.quantity), 0) as total_items_sold
+            FROM carts ct
+            JOIN cart_items ci ON ci.cart_id = ct.id
+            JOIN user u ON ct.seller_id = u.id
+            WHERE ct.status = 'completed'
+              AND ct.pharmacy_id = ?
+              AND DATE(ct.created_at) BETWEEN ? AND ?
+            GROUP BY u.id, u.username
+            ORDER BY total_sales DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$pharmacyId, $date_from, $date_to]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function getInventoryValuation($pdo, $pharmacyId) {
     $sql = "SELECT p.name, p.code,
                    c.name AS category,
@@ -199,6 +219,9 @@ switch ($report_type) {
         break;
     case 'margins':
         $report_data = getMarginAnalysis($pdo, $pharmacyId);
+        break;
+    case 'sellers':
+        $report_data = getSellerPerformance($pdo, $date_from, $date_to, $pharmacyId);
         break;
     case 'valuation':
         $report_data = getInventoryValuation($pdo, $pharmacyId);
@@ -598,7 +621,12 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                 <button class="report-tab <?php echo $report_type === 'cashiers' ? 'active' : ''; ?>"
                         onclick="changeReportType('cashiers')">
                     <i data-lucide="users"></i>
-                    Performance
+                    Caissiers
+                </button>
+                <button class="report-tab <?php echo $report_type === 'sellers' ? 'active' : ''; ?>"
+                        onclick="changeReportType('sellers')">
+                    <i data-lucide="shopping-bag"></i>
+                    Vendeurs
                 </button>
                 <button class="report-tab <?php echo $report_type === 'margins' ? 'active' : ''; ?>"
                         onclick="changeReportType('margins')">
@@ -613,7 +641,7 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
             </div>
 
             <!-- Financial Summary -->
-            <?php if (in_array($report_type, ['sales', 'products', 'cashiers'])): ?>
+            <?php if (in_array($report_type, ['sales', 'products', 'cashiers', 'sellers'])): ?>
             <div class="financial-summary">
                 <div class="summary-card revenue">
                     <div class="summary-value"><?php echo number_format($financial_summary['total_revenue'] ?? 0, 0, ',', ' '); ?> FCFA</div>
@@ -643,14 +671,20 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                             'sales' => 'trending-up',
                             'products' => 'package',
                             'inventory' => 'alert-triangle',
-                            'cashiers' => 'users'
+                            'cashiers' => 'users',
+                            'sellers' => 'shopping-bag',
+                            'margins' => 'percent',
+                            'valuation' => 'database',
                         ];
-                        
+
                         $titles = [
                             'sales' => 'Rapport de Ventes',
                             'products' => 'Top Produits',
-                            'inventory' => 'Stock Faible',
-                            'cashiers' => 'Performance des Caissiers'
+                            'inventory' => 'Stock Critique',
+                            'cashiers' => 'Performance des Caissiers',
+                            'sellers' => 'Performance des Vendeurs',
+                            'margins' => 'Analyse des Marges',
+                            'valuation' => 'Inventaire Valorisé',
                         ];
                         ?>
                         <i data-lucide="<?php echo $icons[$report_type]; ?>"></i>
@@ -742,10 +776,17 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                             <tr>
                                 <td><?php echo htmlspecialchars($row['name']); ?></td>
                                 <td><?php echo htmlspecialchars($row['category']); ?></td>
-                                <td><?php echo number_format($row['stock_quantity'], 0, ',', ' '); ?></td>
-                                 <td><?php echo htmlspecialchars($row['supplier'] ?? 'N/A'); ?></td>
+                                <td><?php echo number_format((int)$row['stock'], 0, ',', ' '); ?></td>
+                                <td><?php echo htmlspecialchars($row['supplier_name'] ?? 'N/A'); ?></td>
                                 <td>
-                                    <span class="status-badge <?php echo strtolower(str_replace(' ', '-', $row['status'])); ?>">
+                                    <?php
+                                        $statusClass = match($row['status']) {
+                                            'Rupture de stock' => 'out-of-stock',
+                                            'Stock critique'   => 'low-stock',
+                                            default            => 'normal',
+                                        };
+                                    ?>
+                                    <span class="status-badge <?php echo $statusClass; ?>">
                                         <?php echo htmlspecialchars($row['status']); ?>
                                     </span>
                                 </td>
@@ -777,6 +818,39 @@ $financial_summary = getFinancialSummary($pdo, $date_from, $date_to, $pharmacyId
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <?php elseif ($report_type === 'sellers'): ?>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vendeur</th>
+                                <th>Ventes réalisées</th>
+                                <th>Chiffre d'affaires</th>
+                                <th>Panier moyen</th>
+                                <th>Articles vendus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($report_data)): ?>
+                            <tr><td colspan="5" style="text-align:center;padding:2rem;opacity:.5;">Aucune donnée pour cette période</td></tr>
+                            <?php else: ?>
+                            <?php foreach ($report_data as $i => $row): ?>
+                            <tr>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:.5rem;">
+                                        <span style="width:22px;height:22px;border-radius:50%;background:rgba(99,102,241,.2);color:#818cf8;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;"><?php echo $i + 1; ?></span>
+                                        <?php echo htmlspecialchars($row['username']); ?>
+                                    </div>
+                                </td>
+                                <td><?php echo number_format((int)$row['total_carts'], 0, ',', ' '); ?></td>
+                                <td class="currency"><?php echo number_format((float)$row['total_sales'], 0, ',', ' '); ?> FCFA</td>
+                                <td class="currency"><?php echo number_format((float)$row['avg_per_item'], 0, ',', ' '); ?> FCFA</td>
+                                <td><?php echo number_format((int)$row['total_items_sold'], 0, ',', ' '); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+
                     <?php elseif ($report_type === 'margins'): ?>
                     <table class="data-table">
                         <thead>
